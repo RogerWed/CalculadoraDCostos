@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Costos</title>
+    <link href="icon.jpg" rel="icon">	
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <style>
+        .card { margin: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: transform 0.3s; }
+        .card:hover { transform: translateY(-5px); }
+        .floating-alert { position: fixed; top: 20px; right: 20px; z-index: 1000; }
+        .price-table td { vertical-align: middle; }
+        .highlight { background-color: rgba(13, 110, 253, 0.1)!important; }
+		
+         footer {
+            text-align: center;
+            margin-top: 0px;
+            padding: 2px;
+            color: #666;
+            font-size: 0.9em;
+        }		
+    </style>
+</head>
+<body class="container-fluid">
+    <!-- Tasa BCV -->
+    <div class="card mt-3 animate__animated animate__fadeInDown">
+        <div class="card-body">
+            <h5 class="card-title text-primary">📈 Tasa BCV</h5>
+            <div class="input-group">
+                <input type="number" id="tasaBcv" class="form-control" step="0.0001" placeholder="Tasa de cambio BS/USD">
+                <button class="btn btn-primary" onclick="ProductManager.saveBcvRate()">Actualizar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gestión de Productos -->
+    <div class="card animate__animated animate__fadeInUp">
+        <div class="card-body">
+            <h5 class="card-title text-success">📦 Gestión de Productos</h5>
+            <form id="productForm" onsubmit="event.preventDefault(); ProductManager.saveProduct()">
+                <div class="mb-3">
+                    <input type="text" class="form-control" id="productName" placeholder="Nombre del producto" required>
+                </div>
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <input type="number" class="form-control" id="totalCost" step="0.01" placeholder="Costo total (USD)" required>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="number" class="form-control" id="units" placeholder="Unidades por producto" required>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="number" class="form-control" id="empaques" placeholder="Cantidad de empaques" required>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="number" class="form-control" id="profit" step="0.01" placeholder="% Ganancia" required>
+                    </div>
+                </div>
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-success animate__animated animate__pulse">💾 Guardar Producto</button>
+                    <button type="button" class="btn btn-warning" onclick="ProductManager.clearForm()">🧹 Limpiar Formulario</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Lista de Precios -->
+    <div class="card animate__animated animate__fadeInUp">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="card-title text-info">💵 Lista de Precios</h5>
+                <div>
+                    <button class="btn btn-danger me-2" onclick="ProductManager.resetSystem()">🔄 Reiniciar Sistema</button>
+                    <button class="btn btn-dark" onclick="ProductManager.generatePDF()">📄 Generar PDF</button>
+                </div>
+            </div>
+            <div id="priceList" class="table-responsive"></div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+	
+						    <footer class="footer">
+                                Copyright 2025 RogerWed. Todos los derechos reservados
+                            </footer>	
+    <script>
+        const ProductManager = {
+            currentEditingId: null,
+            products: JSON.parse(localStorage.getItem('products')) || [],
+            bcvRate: parseFloat(localStorage.getItem('bcvRate')) || 36,
+
+            init() {
+                document.getElementById('tasaBcv').value = this.bcvRate;
+                this.renderPriceList();
+            },
+
+            saveBcvRate() {
+                this.bcvRate = parseFloat(document.getElementById('tasaBcv').value);
+                localStorage.setItem('bcvRate', this.bcvRate);
+                this.showAlert('✅ Tasa BCV actualizada', 'success');
+                this.renderPriceList();
+            },
+
+            saveProduct() {
+                const product = {
+                    id: this.currentEditingId || Date.now(),
+                    name: document.getElementById('productName').value,
+                    totalCost: parseFloat(document.getElementById('totalCost').value),
+                    units: parseInt(document.getElementById('units').value),
+                    empaques: parseInt(document.getElementById('empaques').value),
+                    profit: parseFloat(document.getElementById('profit').value)
+                };
+
+                const index = this.products.findIndex(p => p.id === product.id);
+                if (index > -1) this.products[index] = product;
+                else this.products.push(product);
+
+                localStorage.setItem('products', JSON.stringify(this.products));
+                this.clearForm();
+                this.renderPriceList();
+                this.showAlert('📦 Producto guardado', 'success');
+            },
+
+            calculatePrices(product) {
+                const unitCost = product.totalCost / product.units;
+                const salePrice = unitCost * (1 + (product.profit / 100));
+                const wholesalePrice = salePrice * product.units;
+                const totalUnits = product.units * product.empaques;
+                const totalSalePrice = salePrice * totalUnits;
+                const utilityPerUnit = salePrice - unitCost;
+                const totalUtility = utilityPerUnit * totalUnits;
+                
+                return {
+                    unitCost: unitCost,
+                    salePrice: salePrice,
+                    wholesalePrice: wholesalePrice,
+                    totalSalePrice: totalSalePrice,
+                    utilityPerUnit: utilityPerUnit,
+                    totalUtility: totalUtility
+                };
+            },
+
+            editProduct(id) {
+                const product = this.products.find(p => p.id === id);
+                this.currentEditingId = id;
+                document.getElementById('productName').value = product.name;
+                document.getElementById('totalCost').value = product.totalCost;
+                document.getElementById('units').value = product.units;
+                document.getElementById('empaques').value = product.empaques;
+                document.getElementById('profit').value = product.profit;
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            },
+
+            deleteProduct(id) {
+                this.products = this.products.filter(p => p.id !== id);
+                localStorage.setItem('products', JSON.stringify(this.products));
+                this.renderPriceList();
+                this.showAlert('🗑️ Producto eliminado', 'danger');
+            },
+
+            renderPriceList() {
+                const container = document.getElementById('priceList');
+                container.innerHTML = '';
+                
+                const table = document.createElement('table');
+                table.className = 'table table-hover price-table animate__animated animate__fadeIn';
+                table.innerHTML = `
+                    <thead class="table-primary">
+                        <tr>
+                            <th>Producto</th>
+                            <th>Costo Unitario</th>
+                            <th>Precio Venta</th>
+                            <th>Precio Mayor</th>
+                            <th>Venta Total</th>
+                            <th>Utilidad</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${this.products.map(product => {
+                            const prices = this.calculatePrices(product);
+                            return `
+                                <tr>
+                                    <td>${product.name}</td>
+                                    <td>
+                                        <div class="text-success">$${prices.unitCost.toFixed(2)}</div>
+                                        <div class="text-info">Bs ${(prices.unitCost * this.bcvRate).toFixed(2)}</div>
+                                    </td>
+                                    <td>
+                                        <div class="text-success">$${prices.salePrice.toFixed(2)}</div>
+                                        <div class="text-info">Bs ${(prices.salePrice * this.bcvRate).toFixed(2)}</div>
+                                    </td>
+                                    <td>
+                                        <div class="text-success">$${prices.wholesalePrice.toFixed(2)}</div>
+                                        <div class="text-info">Bs ${(prices.wholesalePrice * this.bcvRate).toFixed(2)}</div>
+                                    </td>
+                                    <td>
+                                        <div class="text-success">$${prices.totalSalePrice.toFixed(2)}</div>
+                                        <div class="text-info">Bs ${(prices.totalSalePrice * this.bcvRate).toFixed(2)}</div>
+                                    </td>
+                                    <td>
+                                        <div class="text-success">$${prices.utilityPerUnit.toFixed(2)}/unid</div>
+                                        <div class="text-info">Total: $${prices.totalUtility.toFixed(2)}</div>
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-sm btn-warning me-2" onclick="ProductManager.editProduct(${product.id})">✏️</button>
+                                        <button class="btn btn-sm btn-danger" onclick="ProductManager.deleteProduct(${product.id})">🗑️</button>
+                                    </td>
+                                </tr>
+                            `;
+                        }).join('')}
+                    </tbody>
+                `;
+                
+                container.appendChild(table);
+            },
+
+            generatePDF() {
+                const doc = new jspdf.jsPDF();
+                const date = new Date().toLocaleDateString();
+                
+                // Encabezado
+                doc.setFontSize(18);
+                doc.text(`Cierre del día - ${date}`, 14, 22);
+                doc.setFontSize(12);
+                doc.text(`Tasa BCV: ${this.bcvRate} BS/USD`, 14, 30);
+
+                // Configuración de la tabla
+                const headers = [
+                    'Producto',
+                    'Costo Unitario',
+                    'Precio Venta',
+                    'Precio Mayor',
+                    'Venta Total',
+                    'Utilidad'
+                ];
+
+                const data = this.products.map(product => {
+                    const prices = this.calculatePrices(product);
+                    return [
+                        product.name,
+                        `$${prices.unitCost.toFixed(2)}\nBs ${(prices.unitCost * this.bcvRate).toFixed(2)}`,
+                        `$${prices.salePrice.toFixed(2)}\nBs ${(prices.salePrice * this.bcvRate).toFixed(2)}`,
+                        `$${prices.wholesalePrice.toFixed(2)}\nBs ${(prices.wholesalePrice * this.bcvRate).toFixed(2)}`,
+                        `$${prices.totalSalePrice.toFixed(2)}\nBs ${(prices.totalSalePrice * this.bcvRate).toFixed(2)}`,
+                        `$${prices.totalUtility.toFixed(2)}\nBs ${(prices.totalUtility * this.bcvRate).toFixed(2)}`
+                    ];
+                });
+
+                // Generar tabla
+                doc.autoTable({
+                    startY: 40,
+                    head: [headers],
+                    body: data,
+                    theme: 'grid',
+                    styles: { fontSize: 8, cellPadding: 2 },
+                    headerStyles: { fillColor: [13, 110, 253], textColor: 255 },
+                    columnStyles: {
+                        0: { cellWidth: 25 },
+                        1: { cellWidth: 25 },
+                        2: { cellWidth: 25 },
+                        3: { cellWidth: 25 },
+                        4: { cellWidth: 25 },
+                        5: { cellWidth: 30 }
+                    }
+                });
+
+                doc.save(`reporte_${date.replace(/\//g, '-')}.pdf`);
+            },
+
+            clearForm() {
+                document.getElementById('productForm').reset();
+                this.currentEditingId = null;
+            },
+
+            resetSystem() {
+                localStorage.clear();
+                this.products = [];
+                this.bcvRate = 36;
+                this.init();
+                this.showAlert('⚠️ Sistema reiniciado', 'warning');
+            },
+
+            showAlert(message, type) {
+                const alert = document.createElement('div');
+                alert.className = `alert alert-${type} floating-alert animate__animated animate__bounceIn`;
+                alert.innerHTML = `
+                    ${message}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                `;
+                
+                document.body.appendChild(alert);
+                setTimeout(() => {
+                    alert.classList.remove('animate__bounceIn');
+                    alert.classList.add('animate__fadeOut');
+                    setTimeout(() => alert.remove(), 500);
+                }, 3000);
+            }
+        };
+
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', () => ProductManager.init());
+    </script>
+</body>
+</html>
