@@ -1,4 +1,4 @@
-﻿Template Name: Calculadora de Costos
+﻿WebApp: Calculadora de Costos
 Author: Ig:@Pcheco07 , ©2025 RogerWed.  
 Dev:RogerWed
 License: Ig:@Pcheco07
