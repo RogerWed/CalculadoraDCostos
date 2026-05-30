@@ -1,10 +1,10 @@
-const CACHE_NAME = 'aquaventa-v9.5.1';
+const CACHE_NAME = 'Costos-v2.5.1';
 const urlsToCache = [
   '/',
   '/index.html',
   '/manifest.json',
-  '/icon.png',
-  '/icon.png'
+  '/icon.jpg',
+  '/icon.jpg'
 ];
 
 // Instalación
