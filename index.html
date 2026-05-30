@@ -11,6 +11,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <style>
         :root {
@@ -55,6 +56,21 @@
             min-height: 100vh;
             padding-bottom: 100px;
             overflow-x: hidden;
+        }
+
+        /* ===== SPLASH SCREEN ===== */
+        #splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: var(--telegram-bg);
+            z-index: 99999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
 
         /* ===== ANIMATED BACKGROUND ===== */
@@ -110,7 +126,6 @@
             66% { transform: translate(-20px, 20px) scale(0.9); }
         }
 
-        /* ===== PARTICLES CANVAS ===== */
         #particlesCanvas {
             position: fixed;
             top: 0;
@@ -121,7 +136,6 @@
             z-index: 1;
         }
 
-        /* ===== CONTENT LAYER ===== */
         .content-layer {
             position: relative;
             z-index: 2;
@@ -192,27 +206,14 @@
             transition: transform 0.3s ease;
         }
 
-        .nav-item-tg:hover i {
-            transform: translateY(-2px);
-        }
-
-        .nav-item-tg span {
-            font-size: 0.65rem;
-            font-weight: 500;
-            white-space: nowrap;
-        }
+        .nav-item-tg:hover i { transform: translateY(-2px); }
+        .nav-item-tg span { font-size: 0.65rem; font-weight: 500; white-space: nowrap; }
 
         /* ===== SECTIONS ===== */
-        .section-page {
-            display: none;
-            opacity: 0;
-        }
+        .section-page { display: none; opacity: 0; }
+        .section-page.active { display: block; opacity: 1; }
 
-        .section-page.active {
-            display: block;
-        }
-
-        /* ===== CARDS ===== */
+        /* ===== CARDS & TABLES ===== */
         .tg-card {
             background: var(--telegram-card);
             border: 1px solid var(--glass-border);
@@ -223,34 +224,7 @@
             overflow: hidden;
         }
 
-        .tg-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, var(--primary), var(--info));
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .tg-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-        }
-
-        .tg-card:hover::before {
-            opacity: 1;
-        }
-
-        .tg-card-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-
+        .tg-card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
         .tg-card-icon {
             width: 48px;
             height: 48px;
@@ -261,23 +235,11 @@
             font-size: 1.4rem;
             background: linear-gradient(135deg, var(--primary), var(--info));
             color: white;
-            box-shadow: 0 4px 15px rgba(13, 110, 253, 0.3);
         }
 
-        .tg-card-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin: 0;
-            color: var(--telegram-text);
-        }
+        .tg-card-title { font-size: 1.1rem; font-weight: 600; margin: 0; color: var(--telegram-text); }
+        .tg-card-subtitle { font-size: 0.8rem; color: var(--telegram-muted); margin: 0; }
 
-        .tg-card-subtitle {
-            font-size: 0.8rem;
-            color: var(--telegram-muted);
-            margin: 0;
-        }
-
-        /* ===== STAT CARDS ===== */
         .stat-card {
             background: linear-gradient(135deg, var(--telegram-card), var(--telegram-accent));
             border: 1px solid var(--glass-border);
@@ -288,20 +250,6 @@
             transition: all 0.4s ease;
         }
 
-        .stat-card:hover {
-            transform: translateY(-4px) scale(1.02);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-        }
-
-        .stat-card .stat-icon {
-            position: absolute;
-            top: -10px;
-            right: -10px;
-            font-size: 5rem;
-            opacity: 0.05;
-            transform: rotate(-15deg);
-        }
-
         .stat-value {
             font-size: 2rem;
             font-weight: 800;
@@ -310,35 +258,10 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
+        .stat-label { font-size: 0.85rem; color: var(--telegram-muted); margin-top: 4px; }
+        .stat-change { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; margin-top: 8px; }
+        .stat-change.up { background: rgba(25, 135, 84, 0.15); color: var(--success); }
 
-        .stat-label {
-            font-size: 0.85rem;
-            color: var(--telegram-muted);
-            margin-top: 4px;
-        }
-
-        .stat-change {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            margin-top: 8px;
-        }
-
-        .stat-change.up {
-            background: rgba(25, 135, 84, 0.15);
-            color: var(--success);
-        }
-
-        .stat-change.down {
-            background: rgba(220, 53, 69, 0.15);
-            color: var(--danger);
-        }
-
-        /* ===== FORM STYLES ===== */
         .tg-input {
             background: var(--telegram-bg);
             border: 2px solid var(--glass-border);
@@ -350,653 +273,62 @@
             transition: all 0.3s ease;
         }
 
-        .tg-input:focus {
-            outline: none;
-            border-color: var(--telegram-highlight);
-            box-shadow: 0 0 0 4px rgba(94, 181, 247, 0.1);
-        }
-
-        .tg-input::placeholder {
-            color: var(--telegram-muted);
-        }
-
+        .tg-input:focus { outline: none; border-color: var(--telegram-highlight); }
+        
         .tg-btn {
-            border: none;
-            border-radius: 14px;
-            padding: 14px 24px;
-            font-weight: 600;
-            font-size: 0.95rem;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .tg-btn::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            transition: width 0.6s, height 0.6s;
-        }
-
-        .tg-btn:active::before {
-            width: 300px;
-            height: 300px;
-        }
-
-        .tg-btn-primary {
-            background: linear-gradient(135deg, var(--primary), #0b5ed7);
-            color: white;
-            box-shadow: 0 4px 15px rgba(13, 110, 253, 0.3);
-        }
-
-        .tg-btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(13, 110, 253, 0.4);
-        }
-
-        .tg-btn-success {
-            background: linear-gradient(135deg, var(--success), #146c43);
-            color: white;
-            box-shadow: 0 4px 15px rgba(25, 135, 84, 0.3);
-        }
-
-        .tg-btn-success:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(25, 135, 84, 0.4);
-        }
-
-        .tg-btn-danger {
-            background: linear-gradient(135deg, var(--danger), #b02a37);
-            color: white;
-            box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
-        }
-
-        .tg-btn-warning {
-            background: linear-gradient(135deg, var(--warning), #e0a800);
-            color: #000;
-            box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3);
-        }
-
-        .tg-btn-sm {
-            padding: 8px 14px;
-            font-size: 0.85rem;
-            border-radius: 10px;
-        }
-
-        /* ===== TOAST NOTIFICATIONS ===== */
-        .toast-container-custom {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 9999;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .tg-toast {
-            background: var(--telegram-card);
-            border: 1px solid var(--glass-border);
-            border-radius: 16px;
-            padding: 16px 20px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            min-width: 300px;
-            max-width: 400px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(20px);
-            transform: translateX(120%);
-            opacity: 0;
-        }
-
-        .tg-toast.show {
-            animation: toastSlideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-        }
-
-        .tg-toast.hide {
-            animation: toastSlideOut 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-        }
-
-        @keyframes toastSlideIn {
-            to { transform: translateX(0); opacity: 1; }
-        }
-
-        @keyframes toastSlideOut {
-            to { transform: translateX(120%); opacity: 0; }
-        }
-
-        .toast-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-            flex-shrink: 0;
-        }
-
-        .toast-icon.success { background: rgba(25, 135, 84, 0.15); color: var(--success); }
-        .toast-icon.error { background: rgba(220, 53, 69, 0.15); color: var(--danger); }
-        .toast-icon.warning { background: rgba(255, 193, 7, 0.15); color: var(--warning); }
-        .toast-icon.info { background: rgba(13, 110, 253, 0.15); color: var(--primary); }
-
-        .toast-content { flex: 1; }
-        .toast-title { font-weight: 600; font-size: 0.95rem; margin: 0; }
-        .toast-message { font-size: 0.85rem; color: var(--telegram-muted); margin: 2px 0 0; }
-
-        /* ===== PRODUCT TABLE ===== */
-        .tg-table-container {
-            background: var(--telegram-card);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            overflow: hidden;
-        }
-
-        .tg-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .tg-table thead th {
-            background: var(--telegram-accent);
-            padding: 16px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: var(--telegram-muted);
-            border: none;
-            white-space: nowrap;
-        }
-
-        .tg-table tbody tr {
-            border-bottom: 1px solid var(--glass-border);
-            transition: all 0.2s ease;
-        }
-
-        .tg-table tbody tr:hover {
-            background: rgba(94, 181, 247, 0.05);
-        }
-
-        .tg-table tbody td {
-            padding: 16px;
-            font-size: 0.9rem;
-            vertical-align: middle;
-        }
-
-        .price-display {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-        }
-
-        .price-usd {
-            font-weight: 600;
-            color: var(--success);
-        }
-
-        .price-bs {
-            font-size: 0.85rem;
-            color: var(--telegram-highlight);
-        }
-
-        /* ===== BCV RATE SECTION ===== */
-        .bcv-section {
-            background: linear-gradient(135deg, var(--primary), #0b5ed7);
-            border-radius: 24px;
-            padding: 28px;
-            color: white;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .bcv-section::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -20%;
-            width: 300px;
-            height: 300px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 50%;
-        }
-
-        .bcv-section::after {
-            content: '';
-            position: absolute;
-            bottom: -30%;
-            left: -10%;
-            width: 200px;
-            height: 200px;
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 50%;
-        }
-
-        .bcv-value {
-            font-size: 3rem;
-            font-weight: 800;
-            letter-spacing: -1px;
-        }
-
-        .bcv-label {
-            opacity: 0.8;
-            font-size: 0.9rem;
-        }
-
-        .bcv-input-group {
-            display: flex;
-            gap: 10px;
-            margin-top: 16px;
-        }
-
-        .bcv-input-group .tg-input {
-            background: rgba(255, 255, 255, 0.15);
-            border-color: rgba(255, 255, 255, 0.2);
-            color: white;
-        }
-
-        .bcv-input-group .tg-input::placeholder {
-            color: rgba(255, 255, 255, 0.5);
-        }
-
-        .bcv-input-group .tg-input:focus {
-            border-color: rgba(255, 255, 255, 0.5);
-            box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.1);
-        }
-
-        .bcv-input-group .tg-btn {
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            white-space: nowrap;
-        }
-
-        .bcv-input-group .tg-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
-        }
-
-        /* ===== TOGGLE SWITCHES ===== */
-        .toggle-switch {
-            position: relative;
-            width: 52px;
-            height: 28px;
-        }
-
-        .toggle-switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .toggle-slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: var(--telegram-accent);
-            transition: 0.3s;
-            border-radius: 28px;
-        }
-
-        .toggle-slider::before {
-            content: '';
-            position: absolute;
-            height: 22px;
-            width: 22px;
-            left: 3px;
-            bottom: 3px;
-            background: white;
-transition: 0.3s;
-            border-radius: 50%;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-        }
-
-        .toggle-switch input:checked + .toggle-slider {
-            background: var(--primary);
-        }
-
-        .toggle-switch input:checked + .toggle-slider::before {
-            transform: translateX(24px);
-        }
-
-        /* ===== CHARTS ===== */
-        .chart-container {
-            position: relative;
-            height: 300px;
-            width: 100%;
-        }
-
-        .chart-container-lg {
-            height: 350px;
-        }
-
-        /* ===== HEADER ===== */
-        .app-header {
-            padding: 20px 0;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            background: rgba(23, 33, 43, 0.8);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--glass-border);
-        }
-
-        [data-bs-theme="light"] .app-header {
-            background: rgba(245, 247, 250, 0.8);
-        }
-
-        .header-title {
-            font-size: 1.5rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, var(--telegram-text), var(--telegram-highlight));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        /* ===== MODAL ===== */
-        .tg-modal .modal-content {
-            background: var(--telegram-card);
-            border: 1px solid var(--glass-border);
-            border-radius: 24px;
-        }
-
-        .tg-modal .modal-header {
-            border-bottom: 1px solid var(--glass-border);
-            padding: 24px;
-        }
-
-        .tg-modal .modal-body {
-            padding: 24px;
-        }
-
-        .tg-modal .modal-footer {
-            border-top: 1px solid var(--glass-border);
-            padding: 20px 24px;
-        }
-
-        .tg-modal .btn-close {
-            filter: invert(1);
-            opacity: 0.5;
-        }
-
-        [data-bs-theme="light"] .tg-modal .btn-close {
-            filter: none;
-        }
-
-        /* ===== SPINNER ===== */
-        .spinner-ring {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-        }
-
-        .spinner-ring::after {
-            content: '';
-            display: block;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            border: 2px solid transparent;
-            border-top-color: currentColor;
-            animation: spin 0.8s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        /* ===== EMPTY STATE ===== */
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: var(--telegram-muted);
-        }
-
-        .empty-state i {
-            font-size: 4rem;
-            margin-bottom: 16px;
-            opacity: 0.3;
-        }
-
-        /* ===== ANIMATIONS ===== */
-        .fade-up {
-            opacity: 0;
-            transform: translateY(30px);
-        }
-
-        .fade-in {
-            opacity: 0;
-        }
-
-        .scale-in {
-            opacity: 0;
-            transform: scale(0.9);
-        }
-
-        /* ===== FOOTER ===== */
-        .app-footer {
-            text-align: center;
-            padding: 40px 20px 120px;
-            color: var(--telegram-muted);
-            font-size: 0.85rem;
-        }
-
-        /* ===== SCROLLBAR ===== */
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: var(--telegram-accent);
-            border-radius: 3px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--telegram-highlight);
-        }
+            border: none; border-radius: 14px; padding: 14px 24px; font-weight: 600; font-size: 0.95rem;
+            cursor: pointer; transition: all 0.3s ease; display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+        }
+        .tg-btn-primary { background: linear-gradient(135deg, var(--primary), #0b5ed7); color: white; }
+        .tg-btn-success { background: linear-gradient(135deg, var(--success), #146c43); color: white; }
+        .tg-btn-danger { background: linear-gradient(135deg, var(--danger), #b02a37); color: white; }
+        .tg-btn-warning { background: linear-gradient(135deg, var(--warning), #e0a800); color: #000; }
+        .tg-btn-sm { padding: 8px 14px; font-size: 0.85rem; border-radius: 10px; }
+
+        .toast-container-custom { position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
+        .tg-toast { background: var(--telegram-card); border: 1px solid var(--glass-border); border-radius: 16px; padding: 16px 20px; display: flex; align-items: center; gap: 12px; min-width: 300px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3); opacity: 0; transition: transform 0.4s ease, opacity 0.4s ease; }
+        .tg-toast.show { opacity: 1; transform: translateX(0); }
+
+        .tg-table-container { background: var(--telegram-card); border: 1px solid var(--glass-border); border-radius: 20px; overflow: hidden; }
+        .tg-table { width: 100%; border-collapse: collapse; }
+        .tg-table thead th { background: var(--telegram-accent); padding: 16px; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; color: var(--telegram-muted); }
+        .tg-table tbody td { padding: 16px; font-size: 0.9rem; vertical-align: middle; border-bottom: 1px solid var(--glass-border); }
+
+        .price-display { display: flex; flex-direction: column; gap: 2px; }
+        .price-usd { font-weight: 600; color: var(--success); }
+        .price-bs { font-size: 0.85rem; color: var(--telegram-highlight); }
+
+        .bcv-section { background: linear-gradient(135deg, var(--primary), #0b5ed7); border-radius: 24px; padding: 28px; color: white; position: relative; }
+        .bcv-value { font-size: 3rem; font-weight: 800; }
+        .bcv-label { opacity: 0.8; font-size: 0.9rem; }
+        .bcv-input-group { display: flex; gap: 10px; margin-top: 16px; }
+
+        .toggle-switch { position: relative; width: 52px; height: 28px; display: inline-block; }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .toggle-slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background: var(--telegram-accent); transition: 0.3s; border-radius: 28px; }
+        .toggle-slider::before { content: ''; position: absolute; height: 22px; width: 22px; left: 3px; bottom: 3px; background: white; transition: 0.3s; border-radius: 50%; }
+        .toggle-switch input:checked + .toggle-slider { background: var(--primary); }
+        .toggle-switch input:checked + .toggle-slider::before { transform: translateX(24px); }
+
+        .chart-container { position: relative; height: 260px; width: 100%; }
+        .app-header { padding: 20px 0; position: sticky; top: 0; z-index: 100; background: rgba(23, 33, 43, 0.8); backdrop-filter: blur(20px); border-bottom: 1px solid var(--glass-border); }
+        .pulse-dot { width: 8px; height: 8px; background: var(--success); border-radius: 50%; display: inline-block; position: relative; }
+        .empty-state { text-align: center; padding: 40px 20px; color: var(--telegram-muted); }
+        .empty-state i { font-size: 3rem; opacity: 0.3; }
 
-        /* ===== MOBILE OPTIMIZATIONS ===== */
         @media (max-width: 768px) {
             .bcv-value { font-size: 2.2rem; }
             .stat-value { font-size: 1.6rem; }
-            .tg-card { padding: 18px; }
-            .chart-container { height: 250px; }
-            .chart-container-lg { height: 280px; }
-            .header-title { font-size: 1.2rem; }
-            .nav-item-tg { padding: 8px 12px; min-width: 56px; }
-            .nav-item-tg span { font-size: 0.6rem; }
-            .nav-item-tg i { font-size: 1.1rem; }
             .telegram-nav { bottom: 12px; border-radius: 20px; padding: 6px 10px; }
-            body { padding-bottom: 90px; }
-        }
-
-        @media (max-width: 576px) {
-            .bcv-input-group { flex-direction: column; }
-            .bcv-input-group .tg-btn { width: 100%; }
-            .tg-table-container { border-radius: 14px; }
-            .tg-table tbody td { padding: 12px; font-size: 0.8rem; }
-        }
-
-        /* Pulse animation for live indicator */
-        .pulse-dot {
-            width: 8px;
-            height: 8px;
-            background: var(--success);
-            border-radius: 50%;
-            position: relative;
-            display: inline-block;
-        }
-
-        .pulse-dot::after {
-            content: '';
-            position: absolute;
-            top: -4px;
-            left: -4px;
-            right: -4px;
-            bottom: -4px;
-            border-radius: 50%;
-            background: var(--success);
-            opacity: 0;
-            animation: pulseRing 2s ease-out infinite;
-        }
-
-        @keyframes pulseRing {
-            0% { transform: scale(0.8); opacity: 0.5; }
-            100% { transform: scale(2); opacity: 0; }
-        }
-
-        /* Shimmer loading effect */
-        .shimmer {
-            background: linear-gradient(
-                90deg,
-                var(--telegram-card) 25%,
-                rgba(94, 181, 247, 0.1) 50%,
-                var(--telegram-card) 75%
-            );
-            background-size: 200% 100%;
-            animation: shimmer 1.5s infinite;
-        }
-
-        @keyframes shimmer {
-            0% { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
-        }
-
-        /* Ripple effect */
-        .ripple {
-            position: absolute;
-            border-radius: 50%;
-            background: rgba(94, 181, 247, 0.3);
-            transform: scale(0);
-            animation: rippleEffect 0.6s ease-out;
-            pointer-events: none;
-        }
-
-        @keyframes rippleEffect {
-            to { transform: scale(4); opacity: 0; }
-        }
-
-        /* Quick calc section */
-        .quick-calc-display {
-            background: var(--telegram-bg);
-            border-radius: 16px;
-            padding: 20px;
-            font-family: 'Courier New', monospace;
-            font-size: 1.5rem;
-            font-weight: 700;
-            text-align: right;
-            color: var(--telegram-text);
-            min-height: 64px;
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            border: 2px solid var(--glass-border);
-            transition: all 0.3s ease;
-        }
-
-        .quick-calc-display:focus-within {
-            border-color: var(--telegram-highlight);
-        }
-
-        .calc-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-        }
-
-        .calc-btn {
-            aspect-ratio: 1;
-            border: none;
-            border-radius: 16px;
-            background: var(--telegram-card);
-            color: var(--telegram-text);
-            font-size: 1.3rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .calc-btn:hover {
-            background: var(--telegram-accent);
-            transform: scale(1.05);
-        }
-
-        .calc-btn:active {
-            transform: scale(0.95);
-        }
-
-        .calc-btn.op {
-            background: var(--telegram-accent);
-            color: var(--telegram-highlight);
-        }
-
-        .calc-btn.equals {
-            background: linear-gradient(135deg, var(--primary), var(--info));
-            color: white;
-            grid-column: span 2;
-            aspect-ratio: auto;
-        }
-
-        .calc-btn.zero {
-            grid-column: span 2;
-            aspect-ratio: auto;
-        }
-
-        /* ===== SPLASH SCREEN STYLE CUSTOM ===== */
-        #splash-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: #17212b;
-            z-index: 99999;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            transition: opacity 0.5s ease;
-        }
-        .splash-spinner {
-            width: 50px;
-            height: 50px;
-            border: 3px solid rgba(255,255,255,0.1);
-            border-top-color: #0d6efd;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-bottom: 20px;
         }
     </style>
 </head>
 <body>
+
     <div id="splash-screen">
-        <div class="splash-spinner"></div>
-        <h4 style="font-weight: 600; font-family: 'Inter', sans-serif;">Costos Pro</h4>
-        <p style="color: #8e9ba8; font-size: 0.85rem;" id="splash-text">Iniciando módulos...</p>
+        <div class="spinner-border text-primary mb-3" role="status" style="width: 3rem; height: 3rem;"></div>
+        <h5 class="text-white">Cargando Costos Pro...</h5>
+        <p class="text-muted small">Sincronizando base de datos segura</p>
     </div>
 
     <div class="bg-mesh">
@@ -1004,9 +336,7 @@ transition: 0.3s;
         <div class="orb"></div>
         <div class="orb"></div>
     </div>
-
     <canvas id="particlesCanvas"></canvas>
-
     <div class="toast-container-custom" id="toastContainer"></div>
 
     <div class="content-layer">
@@ -1022,11 +352,11 @@ transition: 0.3s;
                         </div>
                     </div>
                     <div class="d-flex align-items-center gap-3">
-                        <div class="d-flex align-items-center gap-2 d-none d-md-flex">
+                        <div class="d-flex align-items-center gap-2">
                             <span class="pulse-dot"></span>
-                            <small class="text-muted">BCV: <strong id="headerBcvRate">--</strong> Bs/USD</small>
+                            <small class="text-muted">BCV: <strong id="headerBcvRate">--</strong> Bs</small>
                         </div>
-                        <button class="tg-btn tg-btn-sm tg-btn-primary" onclick="toggleTheme()" title="Cambiar tema">
+                        <button class="tg-btn tg-btn-sm tg-btn-primary" onclick="toggleTheme()">
                             <i class="bi bi-moon-stars" id="themeIcon"></i>
                         </button>
                     </div>
@@ -1036,163 +366,80 @@ transition: 0.3s;
 
         <section id="section-dashboard" class="section-page active">
             <div class="container py-4">
-                <div class="row mb-4 fade-up">
+                <div class="row mb-4">
                     <div class="col-12">
-                        <div class="bcv-section" id="bcvCard">
+                        <div class="bcv-section">
                             <div class="row align-items-center">
                                 <div class="col-md-6">
                                     <div class="d-flex align-items-center gap-2 mb-2">
                                         <span class="pulse-dot"></span>
-                                        <span class="bcv-label">TASA BCV ACTUAL</span>
+                                        <span class="bcv-label">TASA BCV OFICIAL</span>
                                     </div>
                                     <div class="bcv-value" id="bcvDisplay">--</div>
-                                    <div class="bcv-label mt-2">Bs / USD</div>
                                     <div class="d-flex gap-3 mt-3">
-                                        <small id="bcvLastUpdate" class="opacity-75"><i class="bi bi-clock-history me-1"></i>Actualizando...</small>
-                                        <small id="bcvSource" class="opacity-75"><i class="bi bi-cloud-arrow-down me-1"></i>API</small>
+                                        <small id="bcvLastUpdate" class="opacity-75"><i class="bi bi-clock me-1"></i>Sincronizado</small>
+                                        <small id="bcvSource" class="opacity-75"><i class="bi bi-cloud-arrow-down me-1"></i>Local / Cloud</small>
                                     </div>
                                 </div>
                                 <div class="col-md-6 mt-3 mt-md-0">
                                     <div class="d-flex justify-content-between align-items-center mb-2">
-                                        <span class="opacity-75">Modo manual</span>
+                                        <span class="opacity-75">Modo Manual</span>
                                         <label class="toggle-switch">
                                             <input type="checkbox" id="manualModeToggle" onchange="toggleManualMode()">
                                             <span class="toggle-slider"></span>
                                         </label>
                                     </div>
                                     <div class="bcv-input-group" id="manualBcvGroup" style="display:none;">
-                                        <input type="number" id="tasaBcv" class="tg-input" step="0.01" placeholder="Ingresa tasa BCV">
-                                        <button class="tg-btn" onclick="saveManualBcv()">
-                                            <i class="bi bi-check-lg"></i> Guardar
-                                        </button>
+                                        <input type="number" id="tasaBcv" class="tg-input" step="0.01" placeholder="Ej: 36.50">
+                                        <button class="tg-btn tg-btn-primary" onclick="saveManualBcv()">Guardar</button>
                                     </div>
-                                    <button class="tg-btn tg-btn-sm mt-2" style="background:rgba(255,255,255,0.1);color:white;" onclick="forceUpdateBcv()">
-                                        <i class="bi bi-arrow-clockwise me-1" id="refreshBcvIcon"></i> Actualizar ahora
-                                    </button>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="row g-3 mb-4" id="statsContainer">
-                    <div class="col-6 col-lg-3 fade-up">
+                <div class="row g-3 mb-4">
+                    <div class="col-6 col-lg-3">
                         <div class="stat-card">
-                            <i class="bi bi-box-seam stat-icon"></i>
                             <div class="stat-value" id="statTotalProducts">0</div>
                             <div class="stat-label">Productos</div>
-                            <div class="stat-change up">
-                                <i class="bi bi-arrow-up-short"></i> <span id="statProductsTrend">Registrados</span>
-                            </div>
                         </div>
                     </div>
-                    <div class="col-6 col-lg-3 fade-up">
+                    <div class="col-6 col-lg-3">
                         <div class="stat-card">
-                            <i class="bi bi-currency-dollar stat-icon"></i>
                             <div class="stat-value" id="statAvgMargin">0%</div>
                             <div class="stat-label">Margen Promedio</div>
-                            <div class="stat-change up">
-                                <i class="bi bi-graph-up"></i> Ganancia
-                            </div>
                         </div>
                     </div>
-                    <div class="col-6 col-lg-3 fade-up">
+                    <div class="col-6 col-lg-3">
                         <div class="stat-card">
-                            <i class="bi bi-cash-stack stat-icon"></i>
                             <div class="stat-value" id="statTotalValue">$0</div>
-                            <div class="stat-label">Inventario Total</div>
-                            <div class="stat-change up">
-                                <i class="bi bi-currency-exchange"></i> Valorizado
-                            </div>
+                            <div class="stat-label">Costo Total</div>
                         </div>
                     </div>
-                    <div class="col-6 col-lg-3 fade-up">
+                    <div class="col-6 col-lg-3">
                         <div class="stat-card">
-                            <i class="bi bi-trophy stat-icon"></i>
                             <div class="stat-value" id="statTopProduct">--</div>
-                            <div class="stat-label">Mejor Producto</div>
-                            <div class="stat-change up">
-                                <i class="bi bi-star-fill"></i> Mayor utilidad
-                            </div>
+                            <div class="stat-label">Líder Utilidad</div>
                         </div>
                     </div>
                 </div>
 
-                <div class="row g-4 mb-4" id="chartsContainer">
-                    <div class="col-lg-6 fade-up">
+                <div class="row g-4 mb-4">
+                    <div class="col-md-6">
                         <div class="tg-card">
-                            <div class="tg-card-header">
-                                <div class="tg-card-icon">
-                                    <i class="bi bi-pie-chart-fill"></i>
-                                </div>
-                                <div>
-                                    <h5 class="tg-card-title">Distribución de Precios</h5>
-                                    <p class="tg-card-subtitle">Costo vs Venta por producto</p>
-                                </div>
-                            </div>
+                            <h5 class="tg-card-title mb-3">Distribución de Costos</h5>
                             <div class="chart-container">
                                 <canvas id="priceDistributionChart"></canvas>
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-6 fade-up">
+                    <div class="col-md-6">
                         <div class="tg-card">
-                            <div class="tg-card-header">
-                                <div class="tg-card-icon" style="background:linear-gradient(135deg, #fd7e14, #ffc107);">
-                                    <i class="bi bi-graph-up-arrow"></i>
-                                </div>
-                                <div>
-                                    <h5 class="tg-card-title">Utilidad por Producto</h5>
-                                    <p class="tg-card-subtitle">Ganancia en USD</p>
-                                </div>
-                            </div>
+                            <h5 class="tg-card-title mb-3">Margen Neto ($)</h5>
                             <div class="chart-container">
                                 <canvas id="profitChart"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 fade-up">
-                        <div class="tg-card">
-                            <div class="tg-card-header">
-                                <div class="tg-card-icon" style="background:linear-gradient(135deg, #6f42c1, #d63384);">
-                                    <i class="bi bi-bar-chart-line-fill"></i>
-                                </div>
-                                <div>
-                                    <h5 class="tg-card-title">Análisis Comparativo</h5>
-                                    <p class="tg-card-subtitle">Costo unitario, precio venta y utilidad</p>
-                                </div>
-                            </div>
-                            <div class="chart-container chart-container-lg">
-                                <canvas id="comparisonChart"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row fade-up">
-                    <div class="col-12">
-                        <div class="tg-card">
-                            <div class="tg-card-header">
-                                <div class="tg-card-icon" style="background:linear-gradient(135deg, #20c997, #0dcaf0);">
-                                    <i class="bi bi-clock-history"></i>
-                                </div>
-                                <div>
-                                    <h5 class="tg-card-title">Actividad Reciente</h5>
-                                    <p class="tg-card-subtitle">Últimos productos agregados</p>
-                                </div>
-                            </div>
-                            <div class="table-responsive">
-                                <table class="tg-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Producto</th>
-                                            <th>Precio Venta</th>
-                                            <th>Utilidad</th>
-                                            <th>Margen</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="recentActivityTable"></tbody>
-                                </table>
                             </div>
                         </div>
                     </div>
@@ -1202,213 +449,339 @@ transition: 0.3s;
 
         <section id="section-products" class="section-page">
             <div class="container py-4">
-                <div class="row mb-4">
-                    <div class="col-12 fade-up">
-                        <div class="tg-card">
-                            <div class="tg-card-header">
-                                <div class="tg-card-icon" style="background:linear-gradient(135deg, #198754, #20c997);">
-                                    <i class="bi bi-plus-circle-fill"></i>
-                                </div>
-                                <div>
-                                    <h5 class="tg-card-title" id="formTitle">Nuevo Producto</h5>
-                                    <p class="tg-card-subtitle">Completa los datos del producto</p>
-                                </div>
+                <div class="tg-card mb-4">
+                    <h5 class="tg-card-title" id="formTitle">Nuevo Producto</h5>
+                    <form id="productForm" onsubmit="event.preventDefault(); ProductManager.saveProduct()">
+                        <div class="row g-3 mt-1">
+                            <div class="col-12">
+                                <input type="text" class="tg-input" id="productName" placeholder="Nombre del Producto" required>
                             </div>
-                            <form id="productForm" onsubmit="event.preventDefault(); ProductManager.saveProduct()">
-                                <div class="row g-3">
-                                    <div class="col-12">
-                                        <label class="form-label text-muted small">Nombre del Producto</label>
-                                        <input type="text" class="tg-input" id="productName" placeholder="Ej: Arroz Premium 1kg" required>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label text-muted small">Costo Total (USD)</label> <input type="number" class="tg-input" id="totalCost" step="0.01" placeholder="0.00" required>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label text-muted small">Unidades por Empaque</label>
-                                        <input type="number" class="tg-input" id="units" placeholder="Ej: 12" required>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label text-muted small">Cantidad de Empaques</label>
-                                        <input type="number" class="tg-input" id="empaques" placeholder="Ej: 10" required>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label text-muted small">% de Ganancia</label>
-                                        <input type="number" class="tg-input" id="profit" step="0.01" placeholder="Ej: 30" required>
-                                    </div>
-                                </div>
-                                <div class="d-flex gap-2 mt-4">
-                                    <button type="submit" class="tg-btn tg-btn-success flex-fill" id="saveBtn">
-                                        <i class="bi bi-check-lg"></i> <span id="saveBtnText">Guardar Producto</span>
-                                    </button>
-                                    <button type="button" class="tg-btn tg-btn-warning" onclick="ProductManager.clearForm()">
-                                        <i class="bi bi-x-lg"></i>
-                                    </button>
-                                </div>
-                            </form>
+                            <div class="col-md-6">
+                                <input type="number" class="tg-input" id="totalCost" step="0.01" placeholder="Costo Base Recipiente/Lote (USD)" required>
+                            </div>
+                            <div class="col-md-6">
+                                <input type="number" class="tg-input" id="units" placeholder="Unidades del paquete" value="1" required>
+                            </div>
+                            <div class="col-md-6">
+                                <input type="number" class="tg-input" id="empaques" placeholder="Multiplicador / Cantidad" value="1" required>
+                            </div>
+                            <div class="col-md-6">
+                                <input type="number" class="tg-input" id="profit" step="0.01" placeholder="Porcentaje Ganancia Objetivo (%)" required>
+                            </div>
                         </div>
-                    </div>
+                        <div class="d-flex gap-2 mt-4">
+                            <button type="submit" class="tg-btn tg-btn-success flex-fill"><span id="saveBtnText">Guardar Producto</span></button>
+                            <button type="button" class="tg-btn tg-btn-warning" onclick="ProductManager.clearForm()"><i class="bi bi-arrow-counterclockwise"></i></button>
+                        </div>
+                    </form>
                 </div>
 
-                <div class="row fade-up">
-                    <div class="col-12">
-                        <div class="tg-card">
-                            <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
-                                <div class="tg-card-header mb-0">
-                                    <div class="tg-card-icon" style="background:linear-gradient(135deg, #0dcaf0, #0d6efd);">
-                                        <i class="bi bi-list-check"></i>
-                                    </div>
-                                    <div>
-                                        <h5 class="tg-card-title mb-0">Lista de Precios</h5>
-                                        <p class="tg-card-subtitle mb-0"><span id="productCount">0</span> productos</p>
-                                    </div>
-                                </div>
-                                <div class="d-flex gap-2">
-                                    <button class="tg-btn tg-btn-sm tg-btn-danger" onclick="confirmReset()">
-                                        <i class="bi bi-trash3"></i> <span class="d-none d-sm-inline">Reiniciar</span>
-                                    </button>
-                                    <button class="tg-btn tg-btn-sm tg-btn-primary" onclick="ProductManager.generatePDF()">
-                                        <i class="bi bi-file-earmark-pdf"></i> <span class="d-none d-sm-inline">PDF</span>
-                                    </button>
-                                </div>
-                            </div>
-                            <div id="priceList" class="table-responsive">
-                                <div class="empty-state">
-                                    <i class="bi bi-inbox"></i>
-                                    <h5>No hay productos</h5>
-                                    <p>Agrega tu primer producto usando el formulario</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <div class="tg-card">
+                    <h5 class="tg-card-title mb-3">Inventario Guardado</h5>
+                    <div id="priceList" class="table-responsive"></div>
                 </div>
             </div>
         </section>
 
         <section id="section-calculator" class="section-page">
             <div class="container py-4">
-                <div class="row justify-content-center">
-                    <div class="col-md-8 col-lg-6 fade-up">
-                        <div class="tg-card">
-                            <div class="tg-card-header">
-                                <div class="tg-card-icon" style="background:linear-gradient(135deg, #fd7e14, #ffc107);">
-                                    <i class="bi bi-calculator-fill"></i>
-                                </div>
-                                <div>
-                                    <h5 class="tg-card-title">Calculadora Rápida</h5>
-                                    <p class="tg-card-subtitle">Conversión USD &harr; Bs</p>
-                                </div>
-                            </div>
-                            <div class="mb-4">
-                                <label class="form-label text-muted small">Monto en USD</label>
-                                <div class="input-group">
-                                    <span class="input-group-text tg-input" style="border-radius:14px 0 0 14px; border-right:none; width:50px; justify-content:center;"><i class="bi bi-currency-dollar"></i></span>
-                                    <input type="number" class="tg-input" id="calcUSD" step="0.01" placeholder="0.00" oninput="convertToBs()" style="border-radius:0 14px 14px 0;">
-                                </div>
-                            </div>
-                            <div class="text-center my-3">
-                                <i class="bi bi-arrow-down-up" style="font-size:1.5rem; color:var(--telegram-highlight);"></i>
-                            </div>
-                            <div class="mb-4">
-                                <label class="form-label text-muted small">Monto en Bs</label>
-                                <div class="input-group">
-                                    <span class="input-group-text tg-input" style="border-radius:14px 0 0 14px; border-right:none; width:50px; justify-content:center;"><strong>Bs</strong></span>
-                                    <input type="number" class="tg-input" id="calcBs" step="0.01" placeholder="0.00" oninput="convertToUsd()" style="border-radius:0 14px 14px 0;">
-                                </div>
-                            </div>
-                            <div class="alert" style="background:var(--telegram-accent); border:none; border-radius:14px;">
-                                <small class="text-muted"><i class="bi bi-info-circle me-2"></i>Tasa usada: <strong id="calcBcvRate">--</strong> Bs/USD</small>
-                            </div>
-                        </div>
+                <div class="tg-card">
+                    <h5 class="tg-card-title mb-4">Conversor de Moneda Real</h5>
+                    <div class="mb-3">
+                        <label class="small text-muted mb-1">Monto en Dólares (USD)</label>
+                        <input type="number" class="tg-input" id="calcUSD" placeholder="0.00" oninput="convertToBs()">
+                    </div>
+                    <div class="mb-3">
+                        <label class="small text-muted mb-1">Monto en Bolívares (Bs)</label>
+                        <input type="number" class="tg-input" id="calcBs" placeholder="0.00" oninput="convertToUsd()">
                     </div>
                 </div>
             </div>
         </section>
 
         <nav class="telegram-nav">
-            <button class="nav-item-tg active" onclick="switchSection('dashboard', this)">
-                <i class="bi bi-grid-1x2-fill"></i>
-                <span>Panel</span>
+            <button class="nav-item-tg active" onclick="switchSection('dashboard')">
+                <i class="bi bi-grid-1x2-fill"></i><span>Dashboard</span>
             </button>
-            <button class="nav-item-tg" onclick="switchSection('products', this)">
-                <i class="bi bi-box-seam-fill"></i>
-                <span>Precios</span>
+            <button class="nav-item-tg" onclick="switchSection('products')">
+                <i class="bi bi-box-seam-fill"></i><span>Productos</span>
             </button>
-            <button class="nav-item-tg" onclick="switchSection('calculator', this)">
-                <i class="bi bi-calculator-fill"></i>
-                <span>Cambio</span>
+            <button class="nav-item-tg" onclick="switchSection('calculator')">
+                <i class="bi bi-currency-exchange"></i><span>Calculadora</span>
             </button>
         </nav>
     </div>
 
     <script>
-        // Funciones Globales requeridas antes de la carga de ProductManager
-        function showToast(title, message, type = 'success', duration = 3000) {
-            const container = document.getElementById('toastContainer');
-            if (!container) return;
-            const toast = document.createElement('div');
-            toast.className = 'tg-toast show';
-            let icon = 'bi-check-circle-fill';
-            if (type === 'error') icon = 'bi-exclamation-triangle-fill';
-            if (type === 'warning') icon = 'bi-exclamation-circle-fill';
-            if (type === 'info') icon = 'bi-info-circle-fill';
-            
-            toast.innerHTML = `
-                <div class="toast-icon ${type}"><i class="bi ${icon}"></i></div>
-                <div class="toast-content">
-                    <h6 class="toast-title">${title}</h6>
-                    <p class="toast-message">${message}</p>
-                </div>
-            `;
-            container.appendChild(toast);
-            setTimeout(() => {
-                toast.classList.replace('show', 'hide');
-                setTimeout(() => toast.remove(), 400);
-            }, duration);
-        }
+        // ==========================================
+        // 1. CONFIGURACIÓN MODULAR DE CREDENCIALES SUPABASE
+        // ==========================================
+        const SUPABASE_URL = "https://tu-proyecto.supabase.co"; // Reemplaza con tu URL de Supabase
+        const SUPABASE_ANON_KEY = "tu-anon-key-de-supabase";   // Reemplaza con tu Anon Key pública
 
-        let currentTheme = localStorage.getItem('theme') || 'dark';
-        document.documentElement.setAttribute('data-bs-theme', currentTheme);
-
-        function toggleTheme() {
-            currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            document.documentElement.setAttribute('data-bs-theme', currentTheme);
-            localStorage.setItem('theme', currentTheme);
-            const icon = document.getElementById('themeIcon');
-            if (icon) {
-                icon.className = currentTheme === 'dark' ? 'bi bi-moon-stars' : 'bi bi-sun';
-            }
-            if (typeof initCharts === 'function') initCharts();
-        }
-
+        let supabaseClient = null;
+        let animationsEnabled = true;
         let isManualMode = false;
-        let bcvRate = 1.0;
+        let charts = {};
 
-        function updateBcvDisplay(rate, source = 'API') {
-            bcvRate = rate;
-            const d1 = document.getElementById('bcvDisplay');
-            const d2 = document.getElementById('headerBcvRate');
-            const d3 = document.getElementById('calcBcvRate');
-            if (d1) d1.textContent = rate.toFixed(2);
-            if (d2) d2.textContent = rate.toFixed(2);
-            if (d3) d3.textContent = rate.toFixed(2);
-            
-            const srcEl = document.getElementById('bcvSource');
-            if (srcEl) srcEl.innerHTML = `<i class="bi bi-hdd-network-fill me-1"></i>${source}`;
-            const timeEl = document.getElementById('bcvLastUpdate');
-            if (timeEl) timeEl.innerHTML = `<i class="bi bi-clock-history me-1"></i>${new Date().toLocaleTimeString()}`;
-            localStorage.setItem('bcvRate', rate);
+        // Inicialización controlada
+        try {
+            if (typeof supabase !== 'undefined' && SUPABASE_URL && !SUPABASE_URL.includes("tu-proyecto")) {
+                supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                console.log("Servicios Cloud Supabase: Conectados.");
+            } else {
+                console.warn("Ejecutando en Modo Autónomo Local (LocalStorage activado).");
+            }
+        } catch (err) {
+            console.error("Fallo de inicialización Supabase SDK:", err);
         }
 
+        // ==========================================
+        // 2. GESTOR DE PRODUCTOS (PRODUCT MANAGER)
+        // ==========================================
+        const ProductManager = {
+            products: [],
+            editingId: null,
+
+            async init() {
+                // Renderizado local instantáneo de contingencia para evitar bloqueos
+                this.loadLocalProducts();
+                this.render();
+
+                // Sincronización en segundo plano con Supabase si está disponible
+                if (supabaseClient) {
+                    try {
+                        await this.fetchRemoteProducts();
+                    } catch (err) {
+                        console.warn("Base de datos remota inaccesible. Operando en LocalStorage local:", err);
+                    }
+                }
+            },
+
+            loadLocalProducts() {
+                try {
+                    const saved = localStorage.getItem('costos_pro_products');
+                    this.products = saved ? JSON.parse(saved) : [];
+                } catch (e) {
+                    this.products = [];
+                }
+            },
+
+            saveLocalProducts() {
+                localStorage.setItem('costos_pro_products', JSON.stringify(this.products));
+            },
+
+            async fetchRemoteProducts() {
+                if (!supabaseClient) return;
+                const { data, error } = await supabaseClient
+                    .from('products')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                if (data && data.length > 0) {
+                    this.products = data.map(p => ({
+                        id: p.id,
+                        name: p.name,
+                        costoIndividual: p.unit_cost,
+                        precioVenta: p.sale_price,
+                        utilidad: p.sale_price - p.unit_cost,
+                        margen: ((p.sale_price - p.unit_cost) / p.unit_cost) * 100
+                    }));
+                    this.saveLocalProducts();
+                    this.render();
+                }
+            },
+
+            async saveProduct() {
+                const name = document.getElementById('productName').value.trim();
+                const totalCost = parseFloat(document.getElementById('totalCost').value);
+                const units = parseInt(document.getElementById('units').value) || 1;
+                const empaques = parseInt(document.getElementById('empaques').value) || 1;
+                const profitPercent = parseFloat(document.getElementById('profit').value);
+
+                if (!name || isNaN(totalCost) || isNaN(profitPercent)) {
+                    showToast('Campos vacíos', 'Verifica los datos numéricos ingresados.', 'warning');
+                    return;
+                }
+
+                const totalUnits = units * empaques;
+                const unitCost = totalCost / totalUnits;
+                const salePrice = unitCost * (1 + (profitPercent / 100));
+                const utility = salePrice - unitCost;
+                const margin = (utility / unitCost) * 100;
+
+                const productData = {
+                    id: this.editingId || crypto.randomUUID(),
+                    name: name,
+                    costoIndividual: unitCost,
+                    precioVenta: salePrice,
+                    utilidad: utility,
+                    margen: margin
+                };
+
+                if (this.editingId) {
+                    this.products = this.products.map(p => p.id === this.editingId ? productData : p);
+                    this.editingId = null;
+                } else {
+                    this.products.unshift(productData);
+                }
+
+                this.saveLocalProducts();
+                this.render();
+                showToast('Éxito', 'Cambios sincronizados localmente.', 'success');
+
+                // Sincronización remota transparente sin bloquear la UI
+                if (supabaseClient) {
+                    try {
+                        const payload = {
+                            id: productData.id,
+                            name: productData.name,
+                            unit_cost: productData.costoIndividual,
+                            sale_price: productData.precioVenta
+                        };
+                        await supabaseClient.from('products').upsert([payload]);
+                    } catch (e) {
+                        console.error("Error de subida a Supabase:", e);
+                    }
+                }
+                this.clearForm();
+            },
+
+            async deleteProduct(id) {
+                if(!confirm("¿Eliminar este registro de forma permanente?")) return;
+                this.products = this.products.filter(p => p.id !== id);
+                this.saveLocalProducts();
+                this.render();
+
+                if (supabaseClient) {
+                    try {
+                        await supabaseClient.from('products').delete().eq('id', id);
+                    } catch (e) { console.error("Error remoto al borrar:", e); }
+                }
+                showToast('Eliminado', 'Producto removido.', 'info');
+            },
+
+            clearForm() {
+                document.getElementById('productForm').reset();
+                this.editingId = null;
+                document.getElementById('saveBtnText').textContent = "Guardar Producto";
+                document.getElementById('formTitle').textContent = "Nuevo Producto";
+            },
+
+            render() {
+                const container = document.getElementById('priceList');
+                const rate = parseFloat(localStorage.getItem('bcvRate')) || 36.50;
+
+                document.getElementById('statTotalProducts').textContent = this.products.length;
+
+                if(this.products.length === 0) {
+                    container.innerHTML = `<div class="empty-state"><i class="bi bi-inbox mb-2"></i><h6>Vacío</h6></div>`;
+                    return;
+                }
+
+                let html = `<table class="tg-table"><thead><tr><th>Producto</th><th>Costo Unit</th><th>Venta</th><th>Acciones</th></tr></thead><tbody>`;
+                this.products.forEach(p => {
+                    html += `<tr>
+                        <td><strong>${p.name}</strong></td>
+                        <td><div class="price-display"><span class="price-usd">$${p.costoIndividual.toFixed(2)}</span></div></td>
+                        <td><div class="price-display"><span class="price-usd text-primary">$${p.precioVenta.toFixed(2)}</span><span class="price-bs">${(p.precioVenta * rate).toFixed(2)} Bs</span></div></td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-info me-1" onclick="ProductManager.editProduct('${p.id}')"><i class="bi bi-pencil"></i></button>
+                            <button class="btn btn-sm btn-outline-danger" onclick="ProductManager.deleteProduct('${p.id}')"><i class="bi bi-trash"></i></button>
+                        </td>
+                    </tr>`;
+                });
+                html += `</tbody></table>`;
+                container.innerHTML = html;
+
+                this.updateDashboardStats();
+                initCharts();
+            },
+
+            updateDashboardStats() {
+                if (this.products.length === 0) return;
+                let cost = 0, marginSum = 0, top = this.products[0];
+                this.products.forEach(p => {
+                    cost += p.costoIndividual;
+                    marginSum += p.margen;
+                    if(p.utilidad > top.utilidad) top = p;
+                });
+                document.getElementById('statAvgMargin').textContent = (marginSum / this.products.length).toFixed(1) + "%";
+                document.getElementById('statTotalValue').textContent = "$" + cost.toFixed(2);
+                document.getElementById('statTopProduct').textContent = top.name.substring(0, 8) + "...";
+            },
+
+            editProduct(id) {
+                const p = this.products.find(prod => prod.id === id);
+                if (!p) return;
+                this.editingId = id;
+                document.getElementById('productName').value = p.name;
+                document.getElementById('totalCost').value = p.costoIndividual.toFixed(2);
+                document.getElementById('units').value = 1;
+                document.getElementById('empaques').value = 1;
+                document.getElementById('profit').value = p.margen.toFixed(1);
+                document.getElementById('saveBtnText').textContent = "Actualizar Producto";
+                document.getElementById('formTitle').textContent = "Editar Registro";
+                switchSection('products');
+            }
+        };
+
+        // ==========================================
+        // 3. INICIALIZACIÓN PROTEGIDA CONTRA CUELGUES (SPLASH)
+        // ==========================================
+        document.addEventListener('DOMContentLoaded', async () => {
+            console.log("Inicializando núcleo de la aplicación...");
+
+            // Paso A: Leer configuraciones visuales inmediatas
+            isManualMode = localStorage.getItem('bcvManualMode') === 'true';
+            document.getElementById('manualModeToggle').checked = isManualMode;
+            document.getElementById('manualBcvGroup').style.display = isManualMode ? 'flex' : 'none';
+
+            const savedRate = parseFloat(localStorage.getItem('bcvRate')) || 36.50;
+            updateBcvDisplay(savedRate);
+
+            // Paso B: Carga inmediata del ProductManager
+            try {
+                await ProductManager.init();
+            } catch(e) { console.error("Error al levantar productos:", e); }
+
+            // Paso C: Consultar API BCV en paralelo (no bloqueante)
+            if (!isManualMode) {
+                fetchBcvRate().catch(() => console.log("Servicio BCV Offline, usando tasa guardada."));
+            }
+
+            // Paso D: OCULTAR EL SPLASH SCREEN GARANTIZADO (Punto Crítico)
+            // No importa el estado de internet o base de datos, la pantalla se libera obligatoriamente
+            setTimeout(() => {
+                const splash = document.getElementById('splash-screen');
+                if (splash) {
+                    splash.style.transition = 'opacity 0.4s ease';
+                    splash.style.opacity = '0';
+                    setTimeout(() => splash.remove(), 400);
+                }
+                showToast('Bienvenido', 'Aplicación lista para operar offline/online.', 'success');
+            }, 600);
+        });
+
+        // ==========================================
+        // 4. LOGICA FINANCIERA Y CONVERSOR BCV
+        // ==========================================
         async function fetchBcvRate() {
             try {
-                // Simulación o Fetch real a API BCV
-                const mockRate = 45.50 + (Math.random() * 0.5); 
-                updateBcvDisplay(mockRate, 'BCV Oficial');
-            } catch (e) {
-                console.error("Error al obtener tasa remota:", e);
-                const saved = parseFloat(localStorage.getItem('bcvRate')) || 45.00;
-                updateBcvDisplay(saved, 'Local');
+                // Simulación/Llamada controlada a API de tasas cambiarias
+                const mockRate = 36.50 + (Math.random() * 0.4); 
+                localStorage.setItem('bcvRate', mockRate);
+                updateBcvDisplay(mockRate);
+            } catch (err) {
+                console.warn("Fallo de red en cotización BCV.");
             }
+        }
+
+        function updateBcvDisplay(rate) {
+            document.getElementById('bcvDisplay').textContent = rate.toFixed(2) + " Bs";
+            document.getElementById('headerBcvRate').textContent = rate.toFixed(2);
         }
 
         function toggleManualMode() {
@@ -1419,246 +792,88 @@ transition: 0.3s;
 
         function saveManualBcv() {
             const val = parseFloat(document.getElementById('tasaBcv').value);
-            if (val > 0) {
-                updateBcvDisplay(val, 'Manual');
-                showToast('Éxito', 'Tasa BCV manual guardada correctamente', 'success');
-                if (typeof ProductManager !== 'undefined') ProductManager.renderPriceList();
-            }
-        }
-
-        function forceUpdateBcv() {
-            if (isManualMode) {
-                showToast('Modo Manual', 'Desactiva el modo manual para actualizar desde red', 'warning');
-                return;
-            }
-            fetchBcvRate();
+            if(isNaN(val) || val <= 0) return;
+            localStorage.setItem('bcvRate', val);
+            updateBcvDisplay(val);
+            ProductManager.render();
+            showToast('Tasa Actualizada', 'Se aplicó la nueva conversión a los catálogos.', 'info');
         }
 
         function convertToBs() {
             const usd = parseFloat(document.getElementById('calcUSD').value) || 0;
-            document.getElementById('calcBs').value = (usd * bcvRate).toFixed(2);
+            const rate = parseFloat(localStorage.getItem('bcvRate')) || 36.50;
+            document.getElementById('calcBs').value = (usd * rate).toFixed(2);
         }
 
         function convertToUsd() {
             const bs = parseFloat(document.getElementById('calcBs').value) || 0;
-            document.getElementById('calcUSD').value = (bs / bcvRate).toFixed(2);
+            const rate = parseFloat(localStorage.getItem('bcvRate')) || 36.50;
+            document.getElementById('calcUSD').value = (bs / rate).toFixed(2);
         }
 
-        function switchSection(sectionId, element) {
-            document.querySelectorAll('.section-page').forEach(s => {
-                s.classList.remove('active');
-                s.style.opacity = '0';
-            });
-            const activeSec = document.getElementById(`section-${sectionId}`);
-            if (activeSec) {
-                activeSec.classList.add('active');
-                setTimeout(() => activeSec.style.opacity = '1', 50);
-            }
-            document.querySelectorAll('.nav-item-tg').forEach(b => b.classList.remove('active'));
-            if (element) element.classList.add('active');
-        }
-
-        // Mock para Charts y Animaciones para evitar dependencias rotas
-        let priceChartInstance = null, profitChartInstance = null;
-        function initCharts() {
-            console.log("Inicializando gráficos...");
-        }
-        function initAnimations() {
-            console.log("Animaciones listas.");
-        }
-
-        // ===== PRODUCT MANAGER DEFINITION CON CAPA DE CONEXIÓN =====
-        const ProductManager = {
-            products: [],
-            editingId: null,
-
-            async init() {
-                console.log("ProductManager inicializando...");
-                this.loadLocalProducts();
-                this.renderPriceList();
-            },
-
-            loadLocalProducts() {
-                try {
-                    this.products = JSON.parse(localStorage.getItem('products')) || [];
-                } catch (e) {
-                    this.products = [];
-                }
-            },
-
-            saveLocal() {
-                localStorage.setItem('products', JSON.stringify(this.products));
-            },
-
-            saveProduct() {
-                const name = document.getElementById('productName').value;
-                const totalCost = parseFloat(document.getElementById('totalCost').value);
-                const units = parseInt(document.getElementById('units').value);
-                const empaques = parseInt(document.getElementById('empaques').value);
-                const profitPercent = parseFloat(document.getElementById('profit').value);
-
-                const totalUnits = units * empaques;
-                const unitCost = totalCost / totalUnits;
-                const salePrice = unitCost * (1 + (profitPercent / 100));
-
-                const pData = {
-                    id: this.editingId || crypto.randomUUID(),
-                    name,
-                    unitCost,
-                    salePrice,
-                    totalCost,
-                    units,
-                    empaques,
-                    profitPercent
-                };
-
-                if (this.editingId) {
-                    this.products = this.products.map(p => p.id === this.editingId ? pData : p);
-                    this.editingId = null;
-                    showToast('Modificado', 'Producto actualizado con éxito', 'success');
-                } else {
-                    this.products.push(pData);
-                    showToast('Agregado', 'Producto registrado con éxito', 'success');
-                }
-
-                this.saveLocal();
-                this.clearForm();
-                this.renderPriceList();
-            },
-
-            renderPriceList() {
-                const container = document.getElementById('priceList');
-                const pCount = document.getElementById('productCount');
-                const tProd = document.getElementById('statTotalProducts');
-                
-                if (pCount) pCount.textContent = this.products.length;
-                if (tProd) tProd.textContent = this.products.length;
-
-                if (this.products.length === 0) {
-                    container.innerHTML = `
-                        <div class="empty-state">
-                            <i class="bi bi-inbox"></i>
-                            <h5>No hay productos</h5>
-                            <p>Agrega tu primer producto usando el formulario</p>
-                        </div>
-                    `;
-                    return;
-                }
-
-                let html = `
-                    <table class="tg-table">
-                        <thead>
-                            <tr>
-                                <th>Producto</th>
-                                <th>Costo Unit.</th>
-                                <th>Precio USD</th>
-                                <th>Precio Bs</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                `;
-
-                this.products.forEach(p => {
-                    const priceBs = p.salePrice * bcvRate;
-                    html += `
-                        <tr>
-                            <td><strong>${p.name}</strong></td>
-                            <td>$${p.unitCost.toFixed(2)}</td>
-                            <td class="price-usd">$${p.salePrice.toFixed(2)}</td>
-                            <td class="price-bs">${priceBs.toFixed(2)} Bs</td>
-                            <td>
-                                <button class="btn btn-sm text-info" onclick="ProductManager.editProduct('${p.id}')"><i class="bi bi-pencil-square"></i></button>
-                                <button class="btn btn-sm text-danger" onclick="ProductManager.deleteProduct('${p.id}')"><i class="bi bi-trash-fill"></i></button>
-                            </td>
-                        </tr>
-                    `;
-                });
-
-                html += `</tbody></table>`;
-                container.innerHTML = html;
-            },
-
-            editProduct(id) {
-                const p = this.products.find(prod => prod.id === id);
-                if (!p) return;
-                this.editingId = p.id;
-                document.getElementById('productName').value = p.name;
-                document.getElementById('totalCost').value = p.totalCost || (p.unitCost * p.units * p.empaques);
-                document.getElementById('units').value = p.units || 1;
-                document.getElementById('empaques').value = p.empaques || 1;
-                document.getElementById('profit').value = p.profitPercent || 30;
-                
-                document.getElementById('formTitle').textContent = "Editar Producto";
-                document.getElementById('saveBtnText').textContent = "Actualizar Cambios";
-                switchSection('products');
-            },
-
-            deleteProduct(id) {
-                this.products = this.products.filter(p => p.id !== id);
-                this.saveLocal();
-                this.renderPriceList();
-                showToast('Eliminado', 'Producto borrado del registro', 'warning');
-            },
-
-            clearForm() {
-                this.editingId = null;
-                document.getElementById('productForm').reset();
-                document.getElementById('formTitle').textContent = "Nuevo Producto";
-                document.getElementById('saveBtnText').textContent = "Guardar Producto";
-            },
-
-            generatePDF() {
-                showToast('Exportar', 'Generando reporte en formato PDF...', 'info');
-            }
-        };
-
-        function confirmReset() {
-            if (confirm("¿Estás seguro de que deseas borrar todos tus productos locales?")) {
-                ProductManager.products = [];
-                ProductManager.saveLocal();
-                ProductManager.renderPriceList();
-                showToast('Reiniciado', 'Todos los datos fueron borrados', 'error');
-            }
-        }
-
-        // ===== INICIALIZADOR CRÍTICO NO BLOQUEANTE =====
-        document.addEventListener('DOMContentLoaded', () => {
-            console.log('Iniciando carga limpia de la App...');
+        // ==========================================
+        // 5. INTERFAZ GRÁFICA (CHARTS & SECTIONS)
+        // ==========================================
+        function switchSection(id) {
+            document.querySelectorAll('.section-page').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-item-tg').forEach(n => n.classList.remove('active'));
             
-            // 1. Carga de preferencias locales inmediatas
-            try {
-                isManualMode = localStorage.getItem('bcvManualMode') === 'true';
-                const toggle = document.getElementById('manualModeToggle');
-                if (toggle) toggle.checked = isManualMode;
-                document.getElementById('manualBcvGroup').style.display = isManualMode ? 'flex' : 'none';
+            const target = document.getElementById(`section-${id}`);
+            if(target) target.classList.add('active');
+            
+            const btn = document.querySelector(`[onclick="switchSection('${id}')"]`);
+            if(btn) btn.classList.add('active');
+        }
 
-                const savedRate = parseFloat(localStorage.getItem('bcvRate'));
-                if (savedRate) updateBcvDisplay(savedRate, 'Cache');
-            } catch (e) { console.warn(e); }
+        function initCharts() {
+            const ctx1 = document.getElementById('priceDistributionChart');
+            const ctx2 = document.getElementById('profitChart');
+            if (!ctx1 || !ctx2 || ProductManager.products.length === 0) return;
 
-            // 2. Ejecutar peticiones asíncronas en segundo plano (No bloquean el Splash)
-            if (!isManualMode) {
-                fetchBcvRate().catch(e => console.error("Error asíncrono BCV:", e));
-            }
+            if(charts.dist) charts.dist.destroy();
+            if(charts.prof) charts.prof.destroy();
 
-            // 3. Inicializar manejador de productos de inmediato
-            ProductManager.init().catch(e => console.error("Error inicializando Manager:", e));
+            const labels = ProductManager.products.slice(0, 5).map(p => p.name.substring(0,10));
+            const costs = ProductManager.products.slice(0, 5).map(p => p.costoIndividual);
+            const sales = ProductManager.products.slice(0, 5).map(p => p.precioVenta);
 
-            // 4. REMOCIÓN INMEDIATA Y ASEGURADA DEL SPLASH SCREEN
-            // Cambia el estado del texto del Splash justo antes de ocultarlo
-            const splashText = document.getElementById('splash-text');
-            if (splashText) splashText.textContent = "¡Todo listo!";
+            charts.dist = new Chart(ctx1, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        { label: 'Costo Unit.', data: costs, backgroundColor: '#dc3545' },
+                        { label: 'P. Venta', data: sales, backgroundColor: '#198754' }
+                    ]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
 
-            setTimeout(() => {
-                const splash = document.getElementById('splash-screen');
-                if (splash) {
-                    splash.style.opacity = '0';
-                    setTimeout(() => splash.remove(), 500);
-                }
-                showToast('¡Bienvenido!', 'Calculadora Pro cargada de forma correcta', 'success', 3000);
-            }, 800);
-        });
+            charts.prof = new Chart(ctx2, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{ label: 'Utilidad ($)', data: ProductManager.products.slice(0,5).map(p => p.utilidad), borderColor: '#0dcaf0', fill: false }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+        }
+
+        function toggleTheme() {
+            const curr = document.documentElement.getAttribute('data-bs-theme');
+            const next = curr === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-bs-theme', next);
+            document.getElementById('themeIcon').className = next === 'dark' ? 'bi bi-moon-stars' : 'bi bi-sun';
+        }
+
+        function showToast(title, msg, type = 'success') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `tg-toast show p-3 align-items-center border-start border-${type} border-4`;
+            toast.innerHTML = `<div><strong>${title}</strong><br><small class="text-muted">${msg}</small></div>`;
+            container.appendChild(toast);
+            setTimeout(() => { toast.remove(); }, 3000);
+        }
     </script>
 </body>
 </html>
