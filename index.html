@@ -77,6 +77,10 @@
             gap: 12px; cursor: pointer; transition: 0.3s; margin-top: 20px;
         }
         .google-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+        .error-message {
+            background: rgba(220,53,69,0.15); color: var(--danger); padding: 10px;
+            border-radius: 12px; font-size: 0.85rem; margin-top: 20px;
+        }
 
         /* Main App */
         #appContainer { display: none; }
@@ -135,6 +139,10 @@
         <h3 class="mt-3">Calculadora de Costos Pro</h3>
         <p class="text-muted">Inicia sesión para gestionar tus productos</p>
         <button id="googleLoginBtn" class="google-btn"><i class="bi bi-google"></i> Continuar con Google</button>
+        <div id="loginError" class="error-message" style="display: none;"></div>
+        <div class="mt-3 small text-muted">
+            <i class="bi bi-info-circle"></i> Asegúrate de que la URL actual esté configurada en Supabase (Authorized Redirect URIs)
+        </div>
     </div>
 </div>
 
@@ -162,7 +170,7 @@
             </div>
         </header>
 
-        <!-- Sección Dashboard -->
+        <!-- Secciones (Dashboard, Productos, Calculadora, Ajustes) - mismas que antes -->
         <section id="section-dashboard" class="section-page active">
             <div class="container py-4">
                 <div class="row mb-4">
@@ -196,11 +204,10 @@
                     <div class="col-lg-6"><div class="tg-card"><div class="tg-card-header"><div class="tg-card-icon" style="background:linear-gradient(135deg,#fd7e14,#ffc107);"><i class="bi bi-graph-up-arrow"></i></div><div><h5 class="tg-card-title">Utilidad por Producto</h5></div></div><div class="chart-container"><canvas id="profitChart"></canvas></div></div></div>
                     <div class="col-12"><div class="tg-card"><div class="tg-card-header"><div class="tg-card-icon" style="background:linear-gradient(135deg,#6f42c1,#d63384);"><i class="bi bi-bar-chart-line-fill"></i></div><div><h5 class="tg-card-title">Análisis Comparativo</h5></div></div><div class="chart-container chart-container-lg"><canvas id="comparisonChart"></canvas></div></div></div>
                 </div>
-                <div class="row"><div class="col-12"><div class="tg-card"><div class="tg-card-header"><div class="tg-card-icon"><i class="bi bi-clock-history"></i></div><div><h5 class="tg-card-title">Actividad Reciente</h5></div></div><div class="table-responsive"><table class="tg-table"><thead><tr><th>Producto</th><th>Precio Venta</th><th>Utilidad</th><th>Margen</th></tr></thead><tbody id="recentActivityTable"></tbody></table></div></div></div></div>
+                <div class="row"><div class="col-12"><div class="tg-card"><div class="tg-card-header"><div class="tg-card-icon"><i class="bi bi-clock-history"></i></div><div><h5 class="tg-card-title">Actividad Reciente</h5></div></div><div class="table-responsive"><table class="tg-table"><thead><tr><th>Producto</th><th>Precio Venta</th><th>Utilidad</th><th>Margen</th></tr></thead><tbody id="recentActivityTable"></tbody></tr></div></div></div></div>
             </div>
         </section>
 
-        <!-- Sección Productos -->
         <section id="section-products" class="section-page">
             <div class="container py-4">
                 <div class="row mb-4"><div class="col-12"><div class="tg-card"><div class="tg-card-header"><div class="tg-card-icon"><i class="bi bi-plus-circle-fill"></i></div><div><h5 class="tg-card-title" id="formTitle">Nuevo Producto</h5></div></div><form id="productForm" onsubmit="event.preventDefault(); ProductManager.saveProduct()"><div class="row g-3"><div class="col-12"><label>Nombre</label><input type="text" class="tg-input" id="productName" required></div><div class="col-md-6"><label>Costo Total (USD)</label><input type="number" class="tg-input" id="totalCost" step="0.01" required></div><div class="col-md-6"><label>Unidades por Empaque</label><input type="number" class="tg-input" id="units" required></div><div class="col-md-6"><label>Cantidad de Empaques</label><input type="number" class="tg-input" id="empaques" required></div><div class="col-md-6"><label>% de Ganancia</label><input type="number" class="tg-input" id="profit" step="0.01" required></div></div><div class="d-flex gap-2 mt-4"><button type="submit" class="tg-btn tg-btn-success flex-fill" id="saveBtn">Guardar Producto</button><button type="button" class="tg-btn tg-btn-warning" onclick="ProductManager.clearForm()">Limpiar</button></div></form></div></div></div>
@@ -208,12 +215,10 @@
             </div>
         </section>
 
-        <!-- Sección Calculadora -->
         <section id="section-calculator" class="section-page">
             <div class="container py-4"><div class="row justify-content-center"><div class="col-md-8 col-lg-6"><div class="tg-card"><div class="tg-card-header"><div class="tg-card-icon"><i class="bi bi-calculator-fill"></i></div><div><h5 class="tg-card-title">Calculadora Rápida</h5></div></div><div class="mb-4"><label>Monto en USD</label><div class="input-group"><span class="input-group-text tg-input">$</span><input type="number" class="tg-input" id="calcUSD" step="0.01" oninput="convertToBs()"></div></div><div class="text-center my-3"><i class="bi bi-arrow-down-up"></i></div><div class="mb-4"><label>Monto en Bs</label><div class="input-group"><span class="input-group-text tg-input">Bs</span><input type="number" class="tg-input" id="calcBs" step="0.01" oninput="convertToUsd()"></div></div><div class="alert" style="background:var(--telegram-accent);"><small>Tasa usada: <strong id="calcBcvRate">--</strong> Bs/USD</small></div></div></div></div></div>
         </section>
 
-        <!-- Sección Ajustes -->
         <section id="section-settings" class="section-page">
             <div class="container py-4"><div class="row justify-content-center"><div class="col-md-8 col-lg-6"><div class="tg-card mb-4"><div class="tg-card-header"><div class="tg-card-icon"><i class="bi bi-bank"></i></div><div><h5 class="tg-card-title">Configuración BCV</h5></div></div><div class="mb-4"><label>Tasa BCV Actual</label><input type="number" class="tg-input" id="settingsBcv" step="0.01" placeholder="Tasa manual" value="36"><button class="tg-btn tg-btn-primary mt-2 w-100" onclick="saveBcvSettings()">Guardar Tasa</button></div></div></div></div></div>
         </section>
@@ -247,30 +252,45 @@
 
 <script>
     // ==================== SUPABASE CONFIGURACIÓN ====================
-    const SUPABASE_URL = 'https://fngbhhehzmnkumijunhh.supabase.co';
-    const SUPABASE_ANON_KY = 'sb_publishable_qEZm7RuDXO6fulH_FaQ--A_msdtmJhT';
-    const supabase = supabaseJs.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const SUPABASE_URL = "https://fngbhhehzmnkumijunhh.supabase.co";
+    const SUPABASE_ANON_KEY = "sb_publishable_qEZm7RuDXO6fulH_FaQ--A_msdtmJhT";
+    const supabase = supabaseJs.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+        auth: { flowType: 'pkce' } // Mejor para OAuth
+    });
 
     let currentUser = null;
     const loginContainer = document.getElementById('loginContainer');
     const appContainer = document.getElementById('appContainer');
+    const loginErrorDiv = document.getElementById('loginError');
 
     // Verificar sesión al cargar
     checkSession();
 
     async function checkSession() {
-        const { data: { session }, error } = await supabase.auth.getSession();
-        if (session && session.user) {
-            currentUser = session.user;
-            showApp();
-        } else {
-            showLogin();
+        try {
+            const { data: { session }, error } = await supabase.auth.getSession();
+            if (error) throw error;
+            if (session && session.user) {
+                currentUser = session.user;
+                showApp();
+            } else {
+                showLogin();
+            }
+        } catch (err) {
+            console.error('Error al verificar sesión:', err);
+            showLogin(`Error de conexión: ${err.message}`);
         }
     }
 
-    function showLogin() {
+    function showLogin(errorMessage = null) {
         loginContainer.style.display = 'flex';
         appContainer.style.display = 'none';
+        if (errorMessage) {
+            loginErrorDiv.style.display = 'block';
+            loginErrorDiv.innerText = errorMessage;
+        } else {
+            loginErrorDiv.style.display = 'none';
+        }
     }
 
     function showApp() {
@@ -297,20 +317,48 @@
     }
     document.getElementById('logoutBtn')?.addEventListener('click', logout);
 
-    // Login con Google
-    document.getElementById('googleLoginBtn')?.addEventListener('click', async () => {
-        const { error } = await supabase.auth.signInWithOAuth({
-            provider: 'google',
-            options: { redirectTo: window.location.origin }
+    // Login con Google con manejo de errores mejorado
+    const googleBtn = document.getElementById('googleLoginBtn');
+    if (googleBtn) {
+        googleBtn.addEventListener('click', async () => {
+            try {
+                // Deshabilitar botón temporalmente
+                googleBtn.disabled = true;
+                googleBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> Conectando...';
+                
+                const { error } = await supabase.auth.signInWithOAuth({
+                    provider: 'google',
+                    options: { 
+                        redirectTo: window.location.origin,
+                        queryParams: { access_type: 'offline', prompt: 'consent' }
+                    }
+                });
+                
+                if (error) {
+                    throw error;
+                }
+                // La redirección ocurre automáticamente
+            } catch (err) {
+                console.error('Error en login:', err);
+                googleBtn.disabled = false;
+                googleBtn.innerHTML = '<i class="bi bi-google"></i> Continuar con Google';
+                let userMessage = 'Error al iniciar sesión: ';
+                if (err.message.includes('provider is not enabled')) {
+                    userMessage += 'El inicio con Google no está habilitado en Supabase. Actívalo en Authentication > Providers.';
+                } else if (err.message.includes('redirect_uri')) {
+                    userMessage += 'La URL actual no está autorizada. Configura la URI de redirección en Supabase.';
+                } else {
+                    userMessage += err.message;
+                }
+                showLogin(userMessage);
+                showToast('Error', userMessage, 'error');
+            }
         });
-        if (error) {
-            console.error(error);
-            alert('Error al iniciar sesión: ' + error.message);
-        }
-    });
+    }
 
     // Escuchar cambios en la sesión (para cuando vuelve de OAuth)
     supabase.auth.onAuthStateChange((event, session) => {
+        console.log('Auth event:', event);
         if (event === 'SIGNED_IN' && session) {
             currentUser = session.user;
             showApp();
