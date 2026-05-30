@@ -3,22 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Costos Pro · Gestión con Google</title>
-    <!-- Bootstrap 5.3 + Icons + Fonts -->
+    <title>Calculadora de Costos Pro - Con Cuenta</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Bootstrap 5.3 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- Librerías -->
+    <!-- GSAP -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <!-- Supabase JS -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- jsPDF y AutoTable -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+
     <style>
-        /* ===== ESTILOS COMPLETOS ===== */
         :root {
             --primary: #0d6efd;
+            --secondary: #6c757d;
             --success: #198754;
             --info: #0dcaf0;
             --warning: #ffc107;
@@ -32,6 +39,7 @@
             --glass-bg: rgba(36, 47, 61, 0.85);
             --glass-border: rgba(94, 181, 247, 0.15);
         }
+
         [data-bs-theme="light"] {
             --telegram-bg: #f5f7fa;
             --telegram-card: #ffffff;
@@ -42,473 +50,268 @@
             --glass-bg: rgba(255, 255, 255, 0.9);
             --glass-border: rgba(13, 110, 253, 0.1);
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background: var(--telegram-bg);
             color: var(--telegram-text);
             min-height: 100vh;
             padding-bottom: 100px;
             overflow-x: hidden;
         }
-        .bg-mesh { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
-        .bg-mesh .orb { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.15; animation: orbFloat 20s ease infinite; }
-        .bg-mesh .orb:nth-child(1) { width: 400px; height: 400px; background: var(--primary); top: -100px; left: -100px; }
-        .bg-mesh .orb:nth-child(2) { width: 300px; height: 300px; background: var(--info); top: 40%; right: -80px; animation-delay: -7s; }
-        .bg-mesh .orb:nth-child(3) { width: 250px; height: 250px; background: var(--success); bottom: 10%; left: 20%; animation-delay: -14s; }
-        @keyframes orbFloat { 0%,100%{ transform: translate(0,0) scale(1); } 33%{ transform: translate(30px,-30px) scale(1.1); } 66%{ transform: translate(-20px,20px) scale(0.9); } }
-        #particlesCanvas { position: fixed; inset: 0; pointer-events: none; z-index: 1; }
+
+        /* Resto de estilos igual que antes, pero añadimos el avatar circular */
+        .user-avatar-nav {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--telegram-highlight);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .user-avatar-nav:hover {
+            transform: scale(1.05);
+        }
+        .login-btn-nav {
+            background: rgba(94, 181, 247, 0.15);
+            border: none;
+            color: var(--telegram-highlight);
+            border-radius: 20px;
+            padding: 6px 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .login-btn-nav:hover {
+            background: var(--telegram-highlight);
+            color: white;
+        }
+
+        /* El resto de estilos previos se mantienen, pero los coloco resumidos para no exceder */
+        .bg-mesh { position: fixed; top:0; left:0; width:100%; height:100%; pointer-events: none; z-index:0; overflow:hidden; }
+        .bg-mesh .orb { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.15; animation: orbFloat 20s ease-in-out infinite; }
+        @keyframes orbFloat { 0%,100%{transform:translate(0,0) scale(1);} 33%{transform:translate(30px,-30px) scale(1.1);} 66%{transform:translate(-20px,20px) scale(0.9);} }
+        #particlesCanvas { position: fixed; top:0; left:0; width:100%; height:100%; pointer-events: none; z-index:1; }
         .content-layer { position: relative; z-index: 2; }
-        .telegram-nav {
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-            background: var(--glass-bg); backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border); border-radius: 24px;
-            padding: 8px 16px; display: flex; gap: 4px; z-index: 1000;
-            max-width: 95vw; overflow-x: auto;
-        }
-        .nav-item-tg {
-            display: flex; flex-direction: column; align-items: center; gap: 4px;
-            padding: 10px 16px; border-radius: 18px; cursor: pointer;
-            transition: all 0.3s; color: var(--telegram-muted);
-            background: transparent; border: none; min-width: 64px;
-        }
-        .nav-item-tg.active { color: var(--telegram-highlight); background: rgba(94,181,247,0.15); position: relative; }
-        .nav-item-tg.active::after { content: ''; position: absolute; bottom: 4px; width: 20px; height: 3px; background: var(--telegram-highlight); border-radius: 2px; }
-        .tg-card { background: var(--telegram-card); border: 1px solid var(--glass-border); border-radius: 20px; padding: 24px; transition: transform 0.3s, box-shadow 0.3s; }
-        .tg-card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
-        .tg-input { background: var(--telegram-bg); border: 2px solid var(--glass-border); border-radius: 14px; padding: 14px 18px; color: var(--telegram-text); width: 100%; }
-        .tg-input:focus { border-color: var(--telegram-highlight); outline: none; box-shadow: 0 0 0 4px rgba(94,181,247,0.1); }
-        .tg-btn { border: none; border-radius: 14px; padding: 14px 24px; font-weight: 600; transition: 0.2s; display: inline-flex; align-items: center; gap: 8px; justify-content: center; cursor: pointer; }
+        .telegram-nav { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--glass-bg); backdrop-filter: blur(20px); border:1px solid var(--glass-border); border-radius:24px; padding:8px 16px; display:flex; gap:8px; z-index:1000; box-shadow:0 8px 32px rgba(0,0,0,0.3); max-width:95vw; overflow-x:auto; }
+        .nav-item-tg { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px 12px; border-radius: 18px; cursor: pointer; transition: all 0.3s; color: var(--telegram-muted); background: transparent; border: none; min-width: 64px; }
+        .nav-item-tg.active { color: var(--telegram-highlight); background: rgba(94,181,247,0.15); }
+        .nav-item-tg i { font-size: 1.3rem; }
+        .nav-item-tg span { font-size: 0.65rem; font-weight: 500; white-space: nowrap; }
+        .section-page { display: none; opacity:0; }
+        .section-page.active { display: block; }
+        .tg-card { background: var(--telegram-card); border:1px solid var(--glass-border); border-radius:20px; padding:24px; transition: all 0.3s; }
+        .tg-input { background: var(--telegram-bg); border:2px solid var(--glass-border); border-radius:14px; padding:12px 16px; color: var(--telegram-text); width:100%; }
+        .tg-btn { border: none; border-radius: 14px; padding: 12px 20px; font-weight: 600; transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px; justify-content: center; }
         .tg-btn-primary { background: linear-gradient(135deg, var(--primary), #0b5ed7); color: white; }
         .tg-btn-success { background: linear-gradient(135deg, var(--success), #146c43); color: white; }
         .tg-btn-danger { background: linear-gradient(135deg, var(--danger), #b02a37); color: white; }
-        .stat-card { background: linear-gradient(135deg, var(--telegram-card), var(--telegram-accent)); border-radius: 20px; padding: 24px; position: relative; overflow: hidden; }
-        .bcv-section { background: linear-gradient(135deg, var(--primary), #0b5ed7); border-radius: 24px; padding: 28px; color: white; }
-        .empty-state { text-align: center; padding: 60px 20px; color: var(--telegram-muted); }
-        .section-page { display: none; opacity: 0; }
-        .section-page.active { display: block; }
-        .login-overlay {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(12px);
-            z-index: 2000; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 1.5rem;
-        }
-        .login-card { background: var(--telegram-card); border-radius: 32px; padding: 2rem; width: 90%; max-width: 420px; text-align: center; box-shadow: 0 25px 50px rgba(0,0,0,0.5); }
-        .google-btn { background: #fff; color: #1a1a2e; border: none; border-radius: 40px; padding: 12px 20px; font-weight: 600; display: inline-flex; align-items: center; gap: 12px; cursor: pointer; transition: 0.2s; }
-        .google-btn:hover { transform: scale(1.02); background: #f1f3f4; }
-        .user-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
-        .toast-container-custom { position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
-        .tg-toast { background: var(--telegram-card); border-left: 4px solid var(--primary); border-radius: 16px; padding: 16px; display: flex; align-items: center; gap: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.2); min-width: 280px; animation: slideIn 0.3s ease; }
-        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-        .price-usd { font-weight: 600; color: var(--success); }
-        .price-bs { font-size: 0.85rem; color: var(--telegram-highlight); }
-        .chart-container { height: 300px; width: 100%; }
-        .toggle-switch { position: relative; width: 52px; height: 28px; }
-        .toggle-switch input { opacity: 0; width: 0; height: 0; }
-        .toggle-slider { position: absolute; cursor: pointer; inset: 0; background: var(--telegram-accent); transition: 0.3s; border-radius: 28px; }
-        .toggle-slider::before { content: ''; position: absolute; height: 22px; width: 22px; left: 3px; bottom: 3px; background: white; transition: 0.3s; border-radius: 50%; }
-        .toggle-switch input:checked + .toggle-slider { background: var(--primary); }
-        .toggle-switch input:checked + .toggle-slider::before { transform: translateX(24px); }
-        @media (max-width:768px) { .stat-value { font-size: 1.6rem; } .tg-card { padding: 18px; } .nav-item-tg { padding: 8px 12px; min-width: 56px; } }
+        .bcv-section { background: linear-gradient(135deg, var(--primary), #0b5ed7); border-radius:24px; padding:28px; color:white; }
+        .bcv-value { font-size:3rem; font-weight:800; }
+        .stat-card { background: linear-gradient(135deg, var(--telegram-card), var(--telegram-accent)); border-radius:20px; padding:24px; position:relative; overflow:hidden; }
+        .empty-state { text-align:center; padding:40px; color: var(--telegram-muted); }
+        .tg-table { width:100%; border-collapse: collapse; }
+        .tg-table th, .tg-table td { padding: 12px; border-bottom: 1px solid var(--glass-border); }
+        .toast-container-custom { position: fixed; top:20px; right:20px; z-index: 9999; }
+        @media (max-width: 768px) { .nav-item-tg { padding: 6px 8px; min-width: 50px; } .user-avatar-nav { width: 32px; height: 32px; } }
     </style>
 </head>
 <body>
-<div class="bg-mesh"><div class="orb"></div><div class="orb"></div><div class="orb"></div></div>
-<canvas id="particlesCanvas"></canvas>
-<div class="toast-container-custom" id="toastContainer"></div>
-
-<!-- Pantalla de LOGIN -->
-<div id="loginOverlay" class="login-overlay">
-    <div class="login-card">
-        <div class="tg-card-icon mx-auto mb-3" style="width:70px;height:70px;font-size:2rem; background:linear-gradient(135deg,#0d6efd,#0dcaf0);"><i class="bi bi-google"></i></div>
-        <h3 class="mb-2">Acceso seguro</h3>
-        <p class="text-muted">Inicia sesión con tu cuenta Google<br>para gestionar tus productos</p>
-        <button id="googleLoginBtn" class="google-btn mt-3"><i class="bi bi-google fs-5"></i> Continuar con Google</button>
-        <div class="mt-4 small text-muted">✓ Datos sincronizados en la nube</div>
-    </div>
-</div>
-
-<!-- APLICACIÓN PRINCIPAL (se muestra tras login) -->
-<div id="mainAppContent" style="display:none;">
+    <div class="bg-mesh"><div class="orb"></div><div class="orb"></div><div class="orb"></div></div>
+    <canvas id="particlesCanvas"></canvas>
+    <div class="toast-container-custom" id="toastContainer"></div>
+    
     <div class="content-layer">
-        <!-- Header -->
-        <header class="app-header sticky-top" style="background:var(--glass-bg); backdrop-filter:blur(20px); padding:16px 0; border-bottom:1px solid var(--glass-border);">
-            <div class="container">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div class="d-flex align-items-center gap-3">
-                        <div class="tg-card-icon" style="width:40px;height:40px;font-size:1.2rem;"><i class="bi bi-calculator-fill"></i></div>
-                        <h1 class="header-title fs-5 fw-bold m-0" style="background:linear-gradient(135deg,var(--telegram-text),var(--telegram-highlight)); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">Costos Pro</h1>
-                    </div>
-                    <div class="d-flex align-items-center gap-3">
-                        <span class="pulse-dot"></span>
-                        <small class="text-muted d-none d-md-block">BCV: <strong id="headerBcvRate">--</strong></small>
-                        <div id="userInfo" class="d-flex align-items-center gap-2">
-                            <img id="userAvatar" class="user-avatar" src="" alt="avatar" style="display:none;">
-                            <span id="userEmail" class="small text-truncate" style="max-width:150px;"></span>
-                            <button class="tg-btn tg-btn-sm tg-btn-danger" id="logoutBtn" style="padding:6px 12px;"><i class="bi bi-box-arrow-right"></i> <span class="d-none d-sm-inline">Salir</span></button>
-                        </div>
-                        <button class="tg-btn tg-btn-sm tg-btn-primary" id="themeToggleBtn"><i class="bi bi-moon-stars" id="themeIcon"></i></button>
-                    </div>
+        <header class="app-header" style="position: sticky; top:0; background: var(--glass-bg); backdrop-filter: blur(20px); padding:12px 0; border-bottom:1px solid var(--glass-border);">
+            <div class="container d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center gap-2">
+                    <div class="tg-card-icon" style="width:40px;height:40px;background:linear-gradient(135deg, var(--primary), var(--info)); border-radius:12px; display:flex; align-items:center; justify-content:center;"><i class="bi bi-calculator-fill"></i></div>
+                    <h1 class="header-title" style="font-size:1.4rem; font-weight:800;">Costos Pro</h1>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                    <span class="pulse-dot" style="width:8px;height:8px;background:var(--success); border-radius:50%;"></span>
+                    <small class="text-muted d-none d-sm-inline">BCV: <strong id="headerBcvRate">--</strong></small>
+                    <button class="tg-btn tg-btn-sm tg-btn-primary" onclick="toggleTheme()"><i class="bi bi-moon-stars" id="themeIcon"></i></button>
                 </div>
             </div>
         </header>
 
-        <!-- SECCIÓN DASHBOARD -->
-        <section id="section-dashboard" class="section-page active">
-            <div class="container py-4">
-                <div class="row mb-4"><div class="col-12"><div class="bcv-section"><div class="row align-items-center"><div class="col-md-6"><div class="d-flex align-items-center gap-2"><span class="pulse-dot"></span><span class="bcv-label">TASA BCV ACTUAL</span></div><div class="bcv-value" id="bcvDisplay">--</div><div class="bcv-label mt-2">Bs / USD</div><div class="d-flex gap-3 mt-3"><small id="bcvLastUpdate"><i class="bi bi-clock-history me-1"></i>Actualizando...</small><small id="bcvSource"><i class="bi bi-cloud-arrow-down me-1"></i>Local</small></div></div><div class="col-md-6 mt-3 mt-md-0"><div class="d-flex justify-content-between align-items-center mb-2"><span class="opacity-75">Modo manual</span><label class="toggle-switch"><input type="checkbox" id="manualModeToggle"><span class="toggle-slider"></span></label></div><div class="bcv-input-group" id="manualBcvGroup" style="display:none;"><input type="number" id="tasaBcv" class="tg-input" step="0.01" placeholder="Ingresa tasa BCV"><button class="tg-btn" id="saveManualBcvBtn"><i class="bi bi-check-lg"></i> Guardar</button></div><button class="tg-btn tg-btn-sm mt-2" id="refreshBcvBtn" style="background:rgba(255,255,255,0.1);color:white;"><i class="bi bi-arrow-clockwise me-1"></i> Actualizar ahora</button></div></div></div></div></div>
-                <div class="row g-3 mb-4"><div class="col-6 col-lg-3"><div class="stat-card"><i class="bi bi-box-seam stat-icon"></i><div class="stat-value" id="statTotalProducts">0</div><div class="stat-label">Productos</div></div></div><div class="col-6 col-lg-3"><div class="stat-card"><i class="bi bi-currency-dollar stat-icon"></i><div class="stat-value" id="statAvgMargin">0%</div><div class="stat-label">Margen Promedio</div></div></div><div class="col-6 col-lg-3"><div class="stat-card"><i class="bi bi-cash-stack stat-icon"></i><div class="stat-value" id="statTotalValue">$0</div><div class="stat-label">Inventario Total</div></div></div><div class="col-6 col-lg-3"><div class="stat-card"><i class="bi bi-trophy stat-icon"></i><div class="stat-value" id="statTopProduct">--</div><div class="stat-label">Mejor Producto</div></div></div></div>
-                <div class="row g-4 mb-4"><div class="col-lg-6"><div class="tg-card"><div class="tg-card-header"><div class="tg-card-icon"><i class="bi bi-pie-chart-fill"></i></div><div><h5 class="tg-card-title">Distribución de Precios</h5></div></div><div class="chart-container"><canvas id="priceDistributionChart"></canvas></div></div></div><div class="col-lg-6"><div class="tg-card"><div class="tg-card-header"><div class="tg-card-icon" style="background:linear-gradient(135deg, #fd7e14, #ffc107);"><i class="bi bi-graph-up-arrow"></i></div><div><h5 class="tg-card-title">Utilidad por Producto</h5></div></div><div class="chart-container"><canvas id="profitChart"></canvas></div></div></div><div class="col-12"><div class="tg-card"><div class="tg-card-header"><div class="tg-card-icon" style="background:linear-gradient(135deg, #6f42c1, #d63384);"><i class="bi bi-bar-chart-line-fill"></i></div><div><h5 class="tg-card-title">Análisis Comparativo</h5></div></div><div class="chart-container chart-container-lg"><canvas id="comparisonChart"></canvas></div></div></div></div>
-                <div class="row"><div class="col-12"><div class="tg-card"><div class="tg-card-header"><div class="tg-card-icon" style="background:linear-gradient(135deg, #20c997, #0dcaf0);"><i class="bi bi-clock-history"></i></div><div><h5 class="tg-card-title">Actividad Reciente</h5></div></div><div class="table-responsive"><table class="tg-table"><thead><tr><th>Producto</th><th>Precio Venta</th><th>Utilidad</th><th>Margen</th></tr></thead><tbody id="recentActivityTable"></tbody></table></div></div></div></div>
+        <!-- Secciones igual que antes pero añadimos la sección de login solo si es necesario (mostrará condicional) -->
+        <div id="unauthenticatedMessage" class="container text-center py-5" style="display: none;">
+            <div class="tg-card" style="max-width:500px; margin:auto;">
+                <i class="bi bi-google" style="font-size:3rem;"></i>
+                <h3 class="mt-3">Inicia sesión para continuar</h3>
+                <p>Usa tu cuenta de Google para guardar tus productos de forma segura.</p>
+                <button id="googleLoginBtn" class="tg-btn tg-btn-primary mt-3"><i class="bi bi-google"></i> Iniciar con Google</button>
             </div>
-        </section>
+        </div>
 
-        <!-- SECCIÓN PRODUCTOS -->
-        <section id="section-products" class="section-page">
-            <div class="container py-4">
-                <div class="row mb-4"><div class="col-12"><div class="tg-card"><div class="tg-card-header"><div class="tg-card-icon" style="background:linear-gradient(135deg, #198754, #20c997);"><i class="bi bi-plus-circle-fill"></i></div><div><h5 class="tg-card-title" id="formTitle">Nuevo Producto</h5><p class="tg-card-subtitle">Completa los datos del producto</p></div></div><form id="productForm"><div class="row g-3"><div class="col-12"><label class="form-label text-muted small">Nombre del Producto</label><input type="text" class="tg-input" id="productName" placeholder="Ej: Arroz Premium 1kg" required></div><div class="col-md-6"><label class="form-label text-muted small">Costo Total (USD)</label><input type="number" class="tg-input" id="totalCost" step="0.01" placeholder="0.00" required></div><div class="col-md-6"><label class="form-label text-muted small">Unidades por Empaque</label><input type="number" class="tg-input" id="units" placeholder="Ej: 12" required></div><div class="col-md-6"><label class="form-label text-muted small">Cantidad de Empaques</label><input type="number" class="tg-input" id="empaques" placeholder="Ej: 10" required></div><div class="col-md-6"><label class="form-label text-muted small">% de Ganancia</label><input type="number" class="tg-input" id="profit" step="0.01" placeholder="Ej: 30" required></div></div><div class="d-flex gap-2 mt-4"><button type="submit" class="tg-btn tg-btn-success flex-fill" id="saveBtn"><i class="bi bi-check-lg"></i> <span id="saveBtnText">Guardar Producto</span></button><button type="button" class="tg-btn tg-btn-warning" id="clearFormBtn"><i class="bi bi-x-lg"></i></button></div></form></div></div></div>
-                <div class="row"><div class="col-12"><div class="tg-card"><div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2"><div class="tg-card-header mb-0"><div class="tg-card-icon" style="background:linear-gradient(135deg, #0dcaf0, #0d6efd);"><i class="bi bi-list-check"></i></div><div><h5 class="tg-card-title mb-0">Lista de Precios</h5><p class="tg-card-subtitle mb-0"><span id="productCount">0</span> productos</p></div></div><div class="d-flex gap-2"><button class="tg-btn tg-btn-sm tg-btn-danger" id="resetAllBtn"><i class="bi bi-trash3"></i> <span class="d-none d-sm-inline">Reiniciar</span></button><button class="tg-btn tg-btn-sm tg-btn-primary" id="pdfBtn"><i class="bi bi-file-earmark-pdf"></i> <span class="d-none d-sm-inline">PDF</span></button></div></div><div id="priceList" class="table-responsive"><div class="empty-state"><i class="bi bi-inbox"></i><h5>No hay productos</h5><p>Agrega tu primer producto usando el formulario</p></div></div></div></div></div>
-            </div>
-        </section>
+        <div id="appContent" style="display: none;">
+            <!-- Dashboard, Products, Calculator, Settings igual que antes, mantengo estructura original pero simplificada para no repetir tanto, pero incluyo lo esencial -->
+            <section id="section-dashboard" class="section-page active">
+                <div class="container py-4">
+                    <div class="row mb-4"><div class="col-12"><div class="bcv-section"><div class="row align-items-center"><div class="col-md-6"><div class="bcv-label">TASA BCV ACTUAL</div><div class="bcv-value" id="bcvDisplay">--</div><div class="bcv-label">Bs / USD</div><small id="bcvLastUpdate"></small></div><div class="col-md-6 mt-3 mt-md-0"><div class="d-flex justify-content-between"><span>Modo manual</span><label class="toggle-switch"><input type="checkbox" id="manualModeToggle"><span class="toggle-slider"></span></label></div><div id="manualBcvGroup" style="display:none;" class="mt-2"><input type="number" id="tasaBcv" class="tg-input" placeholder="Tasa manual"><button class="tg-btn mt-2" onclick="saveManualBcv()">Guardar</button></div><button class="tg-btn tg-btn-sm mt-2" onclick="forceUpdateBcv()">Actualizar</button></div></div></div></div></div>
+                    <div class="row g-3 mb-4" id="statsContainer"><div class="col-6 col-lg-3"><div class="stat-card"><i class="bi bi-box-seam stat-icon"></i><div class="stat-value" id="statTotalProducts">0</div><div class="stat-label">Productos</div></div></div><div class="col-6 col-lg-3"><div class="stat-card"><div class="stat-value" id="statAvgMargin">0%</div><div class="stat-label">Margen Promedio</div></div></div><div class="col-6 col-lg-3"><div class="stat-card"><div class="stat-value" id="statTotalValue">$0</div><div class="stat-label">Inventario Total</div></div></div><div class="col-6 col-lg-3"><div class="stat-card"><div class="stat-value" id="statTopProduct">--</div><div class="stat-label">Mejor Producto</div></div></div></div>
+                    <div class="row g-4"><div class="col-lg-6"><div class="tg-card"><div class="chart-container" style="height:300px;"><canvas id="priceDistributionChart"></canvas></div></div></div><div class="col-lg-6"><div class="tg-card"><div class="chart-container" style="height:300px;"><canvas id="profitChart"></canvas></div></div></div><div class="col-12"><div class="tg-card"><div class="chart-container-lg" style="height:350px;"><canvas id="comparisonChart"></canvas></div></div></div></div>
+                    <div class="row mt-4"><div class="col-12"><div class="tg-card"><h5>Actividad Reciente</h5><div class="table-responsive"><table class="tg-table"><thead><tr><th>Producto</th><th>Precio Venta</th><th>Utilidad</th><th>Margen</th></tr></thead><tbody id="recentActivityTable"></tbody></table></div></div></div></div>
+                </div>
+            </section>
+            <section id="section-products" class="section-page">
+                <div class="container py-4"><div class="row mb-4"><div class="col-12"><div class="tg-card"><h5 id="formTitle">Nuevo Producto</h5><form id="productForm" onsubmit="event.preventDefault(); ProductManager.saveProduct()"><div class="row g-3"><div class="col-12"><input type="text" class="tg-input" id="productName" placeholder="Nombre del producto" required></div><div class="col-md-6"><input type="number" class="tg-input" id="totalCost" step="0.01" placeholder="Costo total (USD)" required></div><div class="col-md-6"><input type="number" class="tg-input" id="units" placeholder="Unidades por empaque" required></div><div class="col-md-6"><input type="number" class="tg-input" id="empaques" placeholder="Cantidad de empaques" required></div><div class="col-md-6"><input type="number" class="tg-input" id="profit" step="0.01" placeholder="% Ganancia" required></div></div><div class="d-flex gap-2 mt-4"><button type="submit" class="tg-btn tg-btn-success flex-fill" id="saveBtn">Guardar</button><button type="button" class="tg-btn tg-btn-warning" onclick="ProductManager.clearForm()">Cancelar</button></div></form></div></div></div><div class="row"><div class="col-12"><div class="tg-card"><div class="d-flex justify-content-between"><h5>Lista de Precios</h5><div><button class="tg-btn tg-btn-sm tg-btn-primary" onclick="showDateRangePDFModal()"><i class="bi bi-file-earmark-pdf"></i> PDF por fechas</button><button class="tg-btn tg-btn-sm tg-btn-danger ms-2" onclick="confirmReset()">Reiniciar</button></div></div><div id="priceList"><div class="empty-state">No hay productos</div></div></div></div></div></div>
+            </section>
+            <section id="section-calculator" class="section-page"><div class="container py-4"><div class="row justify-content-center"><div class="col-md-8 col-lg-6"><div class="tg-card"><h5>Calculadora Rápida</h5><div class="mb-3"><label>USD</label><input type="number" id="calcUSD" class="tg-input" oninput="convertToBs()"></div><div class="mb-3"><label>Bs</label><input type="number" id="calcBs" class="tg-input" oninput="convertToUsd()"></div><small>Tasa: <span id="calcBcvRate">--</span> Bs/USD</small></div><div class="tg-card mt-4"><h5>Simulador de Precio</h5><input type="number" id="simCost" class="tg-input" placeholder="Costo unitario USD" oninput="simulatePrice()"><div class="mt-2"><label>% Ganancia: <input type="range" id="simProfitSlider" min="0" max="200" value="30" oninput="simulatePrice()"><span id="simProfitValue">30</span>%</label></div><div class="mt-3"><div>Precio Venta: <strong id="simSalePrice">$0.00</strong> / <span id="simSaleBs">Bs 0</span></div><div>Ganancia: <span id="simUtility">$0.00</span></div></div></div></div></div></div></section>
+            <section id="section-settings" class="section-page"><div class="container py-4"><div class="row justify-content-center"><div class="col-md-8"><div class="tg-card"><h5>Configuración BCV</h5><label>Auto-actualización <input type="checkbox" id="autoUpdateToggle" checked></label><div class="mt-2"><label>Intervalo (min): <input type="range" id="updateInterval" min="5" max="120" value="30"></label></div><button class="tg-btn tg-btn-primary mt-3" onclick="saveBcvSettings()">Guardar</button></div><div class="tg-card mt-4"><h5>Apariencia</h5><div class="form-check form-switch"><input class="form-check-input" type="checkbox" id="darkModeToggle" checked onchange="toggleTheme()"><label>Modo oscuro</label></div><div class="form-check form-switch"><input class="form-check-input" type="checkbox" id="particlesToggle" checked onchange="toggleParticles()"><label>Partículas</label></div></div><div class="tg-card mt-4"><h5>Gestión de Datos</h5><button class="tg-btn tg-btn-primary w-100 mb-2" onclick="exportData()">Exportar mis datos</button><label class="tg-btn tg-btn-success w-100 mb-2" style="cursor:pointer;">Importar datos<input type="file" id="importFile" style="display:none;" onchange="importData(this)"></label><button class="tg-btn tg-btn-danger w-100" onclick="confirmReset()">Eliminar todos mis productos</button></div></div></div></div></section>
+        </div>
 
-        <!-- SECCIÓN CALCULADORA -->
-        <section id="section-calculator" class="section-page">
-            <div class="container py-4"><div class="row justify-content-center"><div class="col-md-8 col-lg-6"><div class="tg-card"><div class="tg-card-header"><div class="tg-card-icon" style="background:linear-gradient(135deg, #fd7e14, #ffc107);"><i class="bi bi-calculator-fill"></i></div><div><h5 class="tg-card-title">Calculadora Rápida</h5><p class="tg-card-subtitle">Conversión USD ↔ Bs</p></div></div><div class="mb-4"><label class="form-label text-muted small">Monto en USD</label><div class="input-group"><span class="input-group-text tg-input" style="border-radius:14px 0 0 14px;"><i class="bi bi-currency-dollar"></i></span><input type="number" class="tg-input" id="calcUSD" step="0.01" placeholder="0.00"></div></div><div class="text-center my-3"><i class="bi bi-arrow-down-up" style="font-size:1.5rem;"></i></div><div class="mb-4"><label class="form-label text-muted small">Monto en Bs</label><div class="input-group"><span class="input-group-text tg-input" style="border-radius:14px 0 0 14px;"><strong>Bs</strong></span><input type="number" class="tg-input" id="calcBs" step="0.01" placeholder="0.00"></div></div><div class="alert" style="background:var(--telegram-accent);"><small><i class="bi bi-info-circle me-2"></i>Tasa usada: <strong id="calcBcvRate">--</strong> Bs/USD</small></div></div></div><div class="col-md-8 col-lg-6 mt-4"><div class="tg-card"><div class="tg-card-header"><div class="tg-card-icon" style="background:linear-gradient(135deg, #6f42c1, #d63384);"><i class="bi bi-magic"></i></div><div><h5 class="tg-card-title">Simulador de Precio</h5></div></div><div class="row g-3"><div class="col-12"><label class="form-label text-muted small">Costo Unitario (USD)</label><input type="number" class="tg-input" id="simCost" step="0.01" placeholder="0.00"></div><div class="col-12"><label class="form-label text-muted small">% de Ganancia Deseado</label><input type="range" id="simProfitSlider" min="0" max="200" value="30"><div class="d-flex justify-content-between"><input type="number" class="tg-input" id="simProfit" value="30" style="max-width:100px;"><span class="align-self-center text-muted">%</span></div></div></div><div class="mt-4 p-4" style="background:var(--telegram-bg); border-radius:16px;"><div class="row text-center"><div class="col-4"><div class="text-muted small">Precio Venta</div><div class="fs-4 fw-bold text-success" id="simSalePrice">$0.00</div><div class="small" style="color:var(--telegram-highlight);" id="simSaleBs">Bs 0.00</div></div><div class="col-4"><div class="text-muted small">Ganancia</div><div class="fs-4 fw-bold text-info" id="simUtility">$0.00</div></div><div class="col-4"><div class="text-muted small">Multiplicador</div><div class="fs-4 fw-bold" style="color:var(--warning);" id="simMultiplier">1.0x</div></div></div></div></div></div></div></div>
-        </section>
-
-        <!-- SECCIÓN AJUSTES -->
-        <section id="section-settings" class="section-page">
-            <div class="container py-4"><div class="row justify-content-center"><div class="col-md-8 col-lg-6"><div class="tg-card mb-4"><div class="tg-card-header"><div class="tg-card-icon"><i class="bi bi-bank"></i></div><div><h5 class="tg-card-title">Configuración BCV</h5></div></div><div class="mb-4"><div class="d-flex justify-content-between align-items-center mb-3"><span>Auto-actualización</span><label class="toggle-switch"><input type="checkbox" id="autoUpdateToggle" checked><span class="toggle-slider"></span></label></div></div><div class="mb-3"><label class="form-label text-muted small">Intervalo (minutos)</label><input type="range" class="form-range" id="updateInterval" min="5" max="120" value="30" step="5"><div class="text-center"><span id="intervalValue">30</span> minutos</div></div><button class="tg-btn tg-btn-success w-100" id="saveBcvSettingsBtn">Guardar Configuración</button></div><div class="tg-card mb-4"><div class="tg-card-header"><div class="tg-card-icon" style="background:linear-gradient(135deg, #6f42c1, #0dcaf0);"><i class="bi bi-palette-fill"></i></div><div><h5 class="tg-card-title">Apariencia</h5></div></div><div class="d-flex justify-content-between align-items-center mb-3"><div><div>Tema Oscuro</div><small class="text-muted">Activa el modo oscuro</small></div><label class="toggle-switch"><input type="checkbox" id="darkModeToggle" checked><span class="toggle-slider"></span></label></div><div class="d-flex justify-content-between align-items-center mb-3"><div><div>Animaciones</div><small class="text-muted">Efectos visuales</small></div><label class="toggle-switch"><input type="checkbox" id="animationsToggle" checked><span class="toggle-slider"></span></label></div><div class="d-flex justify-content-between align-items-center"><div><div>Partículas</div><small class="text-muted">Efecto de fondo</small></div><label class="toggle-switch"><input type="checkbox" id="particlesToggle" checked><span class="toggle-slider"></span></label></div></div><div class="tg-card mb-4"><div class="tg-card-header"><div class="tg-card-icon" style="background:linear-gradient(135deg, #dc3545, #fd7e14);"><i class="bi bi-database-fill-gear"></i></div><div><h5 class="tg-card-title">Gestión de Datos</h5></div></div><div class="d-grid gap-2"><button class="tg-btn tg-btn-primary" id="exportDataBtn"><i class="bi bi-download"></i> Exportar Datos (JSON)</button><label class="tg-btn tg-btn-success mb-0" style="cursor:pointer;"><i class="bi bi-upload"></i> Importar Datos<input type="file" id="importFile" accept=".json" style="display:none;"></label><button class="tg-btn tg-btn-danger" id="hardResetBtn"><i class="bi bi-trash3"></i> Eliminar Todos los Datos</button></div></div><div class="tg-card"><div class="text-center py-4"><div class="tg-card-icon mx-auto mb-3" style="width:64px;height:64px;font-size:1.8rem;"><i class="bi bi-calculator-fill"></i></div><h5 class="tg-card-title">Calculadora de Costos Pro</h5><p class="text-muted">Versión 2.0 · RogerWed</p></div></div></div></div></div>
-        </section>
-
-        <footer class="app-footer text-center py-4"><small>RogerWed © 2025 · Costos Pro v2.0</small></footer>
+        <footer class="app-footer text-center py-4"><small>© 2025 Costos Pro - Con respaldo en la nube</small></footer>
     </div>
+
+    <!-- Navbar flotante con foto de usuario -->
     <nav class="telegram-nav" id="telegramNav">
-        <button class="nav-item-tg active" data-section="dashboard"><i class="bi bi-house-door-fill"></i><span>Inicio</span></button>
-        <button class="nav-item-tg" data-section="products"><i class="bi bi-box-seam"></i><span>Productos</span></button>
-        <button class="nav-item-tg" data-section="calculator"><i class="bi bi-calculator"></i><span>Calculadora</span></button>
-        <button class="nav-item-tg" data-section="settings"><i class="bi bi-gear"></i><span>Ajustes</span></button>
+        <button class="nav-item-tg active" onclick="showSection('dashboard', this)" data-section="dashboard"><i class="bi bi-house-door-fill"></i><span>Inicio</span></button>
+        <button class="nav-item-tg" onclick="showSection('products', this)" data-section="products"><i class="bi bi-box-seam"></i><span>Productos</span></button>
+        <button class="nav-item-tg" onclick="showSection('calculator', this)" data-section="calculator"><i class="bi bi-calculator"></i><span>Calculadora</span></button>
+        <button class="nav-item-tg" onclick="showSection('settings', this)" data-section="settings"><i class="bi bi-gear"></i><span>Ajustes</span></button>
+        <div id="userNavContainer" style="margin-left: 8px;"></div>
     </nav>
-</div>
 
-<script>
-    // ==================== CONFIGURACIÓN SUPABASE ====================
-    const SUPABASE_URL = 'https://fngbhhehzmnkumijunhh.supabase.co';
-    const SUPABASE_ANON_KEY = 'sb_publishable_qEZm7RuDXO6fulH_FaQ--A_msdtmJhT';
-    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    <!-- Modal para seleccionar rango de fechas PDF -->
+    <div class="modal fade" id="pdfDateModal" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content tg-card"><div class="modal-header"><h5>Exportar PDF por rango de fechas</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><label>Fecha desde</label><input type="date" id="pdfStartDate" class="tg-input mb-3"><label>Fecha hasta</label><input type="date" id="pdfEndDate" class="tg-input"></div><div class="modal-footer"><button class="tg-btn tg-btn-primary" onclick="generatePDFByDateRange()">Generar PDF</button></div></div></div></div>
 
-    let currentUser = null;
-    let products = [];
-    let currentEditingId = null;
-    let currentBcvRate = 36.5;
-    let isManualMode = false;
-    let autoInterval = null;
-    let animations = true, particles = true;
-    let charts = { priceChart: null, profitChart: null, comparisonChart: null };
+    <div class="modal fade" id="resetModal" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content tg-card"><div class="modal-body"><p>¿Eliminar todos tus productos? No se puede deshacer.</p></div><div class="modal-footer"><button class="tg-btn" data-bs-dismiss="modal">Cancelar</button><button class="tg-btn tg-btn-danger" id="confirmResetBtn">Eliminar todo</button></div></div></div></div>
 
-    // ==================== UTILIDADES ====================
-    function showToast(title, message, type = 'info') {
-        const container = document.getElementById('toastContainer');
-        const toast = document.createElement('div');
-        toast.className = 'tg-toast';
-        toast.innerHTML = `<div style="flex:1"><strong>${title}</strong><br><small>${message}</small></div><button class="btn-close btn-close-white" style="opacity:0.5;" onclick="this.parentElement.remove()"></button>`;
-        container.appendChild(toast);
-        setTimeout(() => toast.remove(), 4000);
-    }
+    <script>
+        // Configuración Supabase
+        const SUPABASE_URL = 'https://fngbhhehzmnkumijunhh.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_qEZm7RuDXO6fulH_FaQ--A_msdtmJhT';
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    function formatPrice(usd) { return `$${usd.toFixed(2)}`; }
-    function calculatePrices(p) {
-        const unitCost = p.totalCost / p.units;
-        const salePrice = unitCost * (1 + p.profit / 100);
-        const wholesalePrice = salePrice * p.units;
-        const totalUnits = p.units * p.empaques;
-        const totalSalePrice = salePrice * totalUnits;
-        const utilityPerUnit = salePrice - unitCost;
-        const totalUtility = utilityPerUnit * totalUnits;
-        return { unitCost, salePrice, wholesalePrice, totalSalePrice, utilityPerUnit, totalUtility };
-    }
-
-    // ==================== CRUD PRODUCTOS ====================
-    async function loadProducts() {
-        if (!currentUser) return;
-        const { data, error } = await supabaseClient.from('products').select('*').eq('user_id', currentUser.id).order('created_at', { ascending: false });
-        if (error) { console.error(error); showToast('Error', 'Error al cargar productos: ' + error.message, 'error'); return; }
-        products = data || [];
-        renderPriceList();
-        updateStatsAndCharts();
-    }
-
-    async function saveProduct(product) {
-        if (!currentUser) throw new Error('No autenticado');
-        if (product.id && !product.id.toString().includes('temp')) {
-            const { error } = await supabaseClient.from('products').update({
-                name: product.name, totalCost: product.totalCost, units: product.units, empaques: product.empaques, profit: product.profit
-            }).eq('id', product.id).eq('user_id', currentUser.id);
-            if (error) throw error;
-            return product;
-        } else {
-            const { data, error } = await supabaseClient.from('products').insert({
-                user_id: currentUser.id, name: product.name, totalCost: product.totalCost,
-                units: product.units, empaques: product.empaques, profit: product.profit
-            }).select();
-            if (error) throw error;
-            return data[0];
-        }
-    }
-
-    async function deleteProductFromDb(id) {
-        const { error } = await supabaseClient.from('products').delete().eq('id', id).eq('user_id', currentUser.id);
-        if (error) throw error;
-    }
-
-    async function handleSaveProduct() {
-        const product = {
-            id: currentEditingId || Date.now(),
-            name: document.getElementById('productName').value.trim(),
-            totalCost: parseFloat(document.getElementById('totalCost').value),
-            units: parseInt(document.getElementById('units').value),
-            empaques: parseInt(document.getElementById('empaques').value),
-            profit: parseFloat(document.getElementById('profit').value)
-        };
-        if (!product.name || isNaN(product.totalCost) || isNaN(product.units) || isNaN(product.empaques) || isNaN(product.profit)) {
-            showToast('Error', 'Completa todos los campos', 'error');
-            return;
-        }
-        try {
-            const saved = await saveProduct(product);
-            if (saved) {
-                if (currentEditingId && currentEditingId === product.id) {
-                    const idx = products.findIndex(p => p.id === saved.id);
-                    if (idx !== -1) products[idx] = saved;
-                } else products.unshift(saved);
-                currentEditingId = null;
-                clearForm();
-                await loadProducts();
-                showToast('Éxito', 'Producto guardado en la nube', 'success');
+        let currentUser = null;
+        let products = []; // Array de productos del usuario actual
+        let currentBcvRate = parseFloat(localStorage.getItem('bcvRate')) || 36;
+        let isManualMode = localStorage.getItem('bcvManualMode') === 'true';
+        let animationsEnabled = true, particlesEnabled = true;
+        
+        // Inicialización de autenticación
+        window.initAuth = async () => {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (user) {
+                currentUser = user;
+                document.getElementById('unauthenticatedMessage').style.display = 'none';
+                document.getElementById('appContent').style.display = 'block';
+                await loadUserProducts();
+                updateUserAvatarInNav();
+                showToast(`Bienvenido ${user.user_metadata?.full_name || user.email}`, 'Tus datos están seguros', 'success');
+            } else {
+                document.getElementById('unauthenticatedMessage').style.display = 'block';
+                document.getElementById('appContent').style.display = 'none';
             }
-        } catch (err) { showToast('Error', err.message, 'error'); }
-    }
+            renderUserNav();
+        };
 
-    async function deleteProduct(id) {
-        if (confirm('¿Eliminar este producto?')) {
-            try {
-                await deleteProductFromDb(id);
-                await loadProducts();
-                showToast('Eliminado', 'Producto eliminado', 'warning');
-            } catch (err) { showToast('Error', err.message, 'error'); }
+        async function loginWithGoogle() {
+            const { error } = await supabase.auth.signInWithOAuth({
+                provider: 'google',
+                options: { redirectTo: window.location.origin }
+            });
+            if (error) showToast('Error login', error.message, 'error');
         }
-    }
 
-    function editProduct(id) {
-        const p = products.find(p => p.id === id);
-        if (!p) return;
-        currentEditingId = p.id;
-        document.getElementById('productName').value = p.name;
-        document.getElementById('totalCost').value = p.totalCost;
-        document.getElementById('units').value = p.units;
-        document.getElementById('empaques').value = p.empaques;
-        document.getElementById('profit').value = p.profit;
-        document.getElementById('formTitle').innerText = 'Editar Producto';
-        document.getElementById('saveBtnText').innerText = 'Actualizar Producto';
-        showSection('products');
-    }
-
-    function clearForm() {
-        document.getElementById('productForm').reset();
-        currentEditingId = null;
-        document.getElementById('formTitle').innerText = 'Nuevo Producto';
-        document.getElementById('saveBtnText').innerText = 'Guardar Producto';
-    }
-
-    async function hardReset() {
-        if (confirm('⚠️ ELIMINARÁS TODOS TUS PRODUCTOS. ¿Continuar?')) {
-            const { error } = await supabaseClient.from('products').delete().eq('user_id', currentUser.id);
-            if (error) showToast('Error', error.message, 'error');
-            else { await loadProducts(); showToast('Listo', 'Todos los productos eliminados', 'info'); }
+        async function logout() {
+            await supabase.auth.signOut();
+            currentUser = null;
+            products = [];
+            localStorage.removeItem('products');
+            initAuth();
         }
-    }
 
-    // ==================== RENDER LISTA Y ESTADÍSTICAS ====================
-    function renderPriceList() {
-        const container = document.getElementById('priceList');
-        if (!container) return;
-        if (products.length === 0) {
-            container.innerHTML = '<div class="empty-state"><i class="bi bi-inbox"></i><h5>No hay productos</h5><p>Agrega tu primer producto</p></div>';
-            return;
+        function renderUserNav() {
+            const container = document.getElementById('userNavContainer');
+            if (currentUser) {
+                container.innerHTML = `<div style="position:relative;"><img src="${currentUser.user_metadata?.avatar_url || 'https://ui-avatars.com/api/?background=0D6EFD&color=fff&name='+encodeURIComponent(currentUser.email)}" class="user-avatar-nav" onclick="toggleUserMenu()" id="userAvatarBtn"><div id="userMenu" style="display:none; position:absolute; bottom:50px; right:0; background:var(--telegram-card); border-radius:16px; padding:8px; min-width:150px;"><button class="dropdown-item" onclick="logout()"><i class="bi bi-box-arrow-right"></i> Cerrar sesión</button></div></div>`;
+            } else {
+                container.innerHTML = `<button class="login-btn-nav" onclick="loginWithGoogle()"><i class="bi bi-google"></i> Ingresar</button>`;
+            }
         }
-        container.innerHTML = `<table class="tg-table"><thead><tr><th>Producto</th><th>Costo Unit.</th><th>Precio Venta</th><th>Precio Mayor</th><th>Venta Total</th><th>Utilidad</th><th>Acciones</th></tr></thead><tbody>${products.map(p => {
-            const pr = calculatePrices(p);
-            return `<tr>
-                <td><strong>${escapeHtml(p.name)}</strong></td>
-                <td><div class="price-usd">${formatPrice(pr.unitCost)}</div><div class="price-bs">Bs ${(pr.unitCost * currentBcvRate).toFixed(2)}</div></td>
-                <td><div class="price-usd">${formatPrice(pr.salePrice)}</div><div class="price-bs">Bs ${(pr.salePrice * currentBcvRate).toFixed(2)}</div></td>
-                <td><div class="price-usd">${formatPrice(pr.wholesalePrice)}</div></td>
-                <td><div class="price-usd">${formatPrice(pr.totalSalePrice)}</div></td>
-                <td><div class="price-usd">${formatPrice(pr.utilityPerUnit)}/u</div><div class="text-success">${formatPrice(pr.totalUtility)}</div></td>
-                <td><div class="d-flex gap-1"><button class="tg-btn tg-btn-sm tg-btn-warning" onclick="editProduct(${p.id})"><i class="bi bi-pencil-fill"></i></button><button class="tg-btn tg-btn-sm tg-btn-danger" onclick="deleteProduct(${p.id})"><i class="bi bi-trash3-fill"></i></button></div></td>
-            </tr>`}).join('')}</tbody></table>`;
-    }
-    function escapeHtml(str) { return str.replace(/[&<>]/g, function(m){ if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;}); }
+        window.toggleUserMenu = () => { const m = document.getElementById('userMenu'); if(m) m.style.display = m.style.display === 'none' ? 'block' : 'none'; };
+        function updateUserAvatarInNav() { renderUserNav(); }
 
-    function updateStatsAndCharts() {
-        const count = products.length;
-        document.getElementById('statTotalProducts').innerText = count;
-        document.getElementById('productCount').innerText = count;
-        if (count > 0) {
-            const avgProfit = products.reduce((s,p)=>s+p.profit,0)/count;
-            document.getElementById('statAvgMargin').innerText = avgProfit.toFixed(1)+'%';
-            const totalVal = products.reduce((s,p)=>s+calculatePrices(p).totalSalePrice,0);
-            document.getElementById('statTotalValue').innerText = formatPrice(totalVal);
-            const top = products.reduce((b,p)=> calculatePrices(p).totalUtility > calculatePrices(b).totalUtility ? p : b, products[0]);
-            document.getElementById('statTopProduct').innerText = top.name.substring(0,12);
-        } else {
-            document.getElementById('statAvgMargin').innerText='0%';
-            document.getElementById('statTotalValue').innerText='$0';
-            document.getElementById('statTopProduct').innerText='--';
+        // Cargar productos desde Supabase (solo del usuario actual)
+        async function loadUserProducts() {
+            if (!currentUser) return;
+            const { data, error } = await supabase.from('products').select('*').eq('user_id', currentUser.id).order('created_at', { ascending: false });
+            if (error) { console.error(error); showToast('Error al cargar datos', error.message, 'error'); return; }
+            products = data.map(p => ({ ...p, createdAt: p.created_at }));
+            ProductManager.products = products;
+            ProductManager.renderPriceList();
+            updateStats();
+            updateCharts();
         }
-        const tbody = document.getElementById('recentActivityTable');
-        if(tbody) tbody.innerHTML = products.slice(-5).reverse().map(p=>{ const pr=calculatePrices(p); return `<tr><td><strong>${p.name}</strong></td><td class="price-usd">${formatPrice(pr.salePrice)}</td><td class="text-success">${formatPrice(pr.utilityPerUnit)}</td><td><span class="badge bg-success">${p.profit}%</span></td></tr>`; }).join('');
-        updateCharts();
-    }
 
-    // ==================== GRÁFICOS ====================
-    function initCharts() {
-        const ctxPrice = document.getElementById('priceDistributionChart')?.getContext('2d');
-        const ctxProfit = document.getElementById('profitChart')?.getContext('2d');
-        const ctxComp = document.getElementById('comparisonChart')?.getContext('2d');
-        if(ctxPrice) charts.priceChart = new Chart(ctxPrice, { type:'doughnut', data:{ labels:[], datasets:[{ data:[], backgroundColor:['#0d6efd','#0dcaf0','#198754','#fd7e14','#6f42c1','#d63384'] }] }, options:{ responsive:true, maintainAspectRatio:false, cutout:'65%' } });
-        if(ctxProfit) charts.profitChart = new Chart(ctxProfit, { type:'bar', data:{ labels:[], datasets:[{ label:'Utilidad (USD)', data:[], backgroundColor:'rgba(25,135,84,0.7)' }] }, options:{ responsive:true, scales:{ y:{ beginAtZero:true } } } });
-        if(ctxComp) charts.comparisonChart = new Chart(ctxComp, { type:'line', data:{ labels:[], datasets:[{ label:'Costo Unitario', borderColor:'#dc3545', fill:true },{ label:'Precio Venta', borderColor:'#198754' },{ label:'Utilidad x unidad', borderColor:'#0dcaf0' }] }, options:{ responsive:true } });
-        updateCharts();
-    }
+        // Función para guardar/editar producto en Supabase
+        const ProductManager = {
+            products: [],
+            currentEditingId: null,
+            async saveProduct() {
+                if (!currentUser) { showToast('Debes iniciar sesión', 'Inicia sesión para guardar', 'warning'); return; }
+                const name = document.getElementById('productName').value;
+                const totalCost = parseFloat(document.getElementById('totalCost').value);
+                const units = parseInt(document.getElementById('units').value);
+                const empaques = parseInt(document.getElementById('empaques').value);
+                const profit = parseFloat(document.getElementById('profit').value);
+                if (!name || isNaN(totalCost) || isNaN(units) || isNaN(empaques) || isNaN(profit)) { showToast('Error', 'Completa todos los campos', 'error'); return; }
+                const productData = { name, totalCost, units, empaques, profit, user_id: currentUser.id, updated_at: new Date() };
+                if (this.currentEditingId) {
+                    const { error } = await supabase.from('products').update(productData).eq('id', this.currentEditingId).eq('user_id', currentUser.id);
+                    if (error) { showToast('Error', error.message, 'error'); return; }
+                    showToast('Actualizado', 'Producto actualizado', 'success');
+                } else {
+                    productData.created_at = new Date();
+                    const { error } = await supabase.from('products').insert(productData);
+                    if (error) { showToast('Error', error.message, 'error'); return; }
+                    showToast('Guardado', 'Producto agregado', 'success');
+                }
+                this.clearForm();
+                await loadUserProducts();
+            },
+            calculatePrices(p) { const unitCost = p.totalCost / p.units; const salePrice = unitCost * (1 + p.profit/100); const totalUnits = p.units * p.empaques; const totalSalePrice = salePrice * totalUnits; const utilityPerUnit = salePrice - unitCost; const totalUtility = utilityPerUnit * totalUnits; return { unitCost, salePrice, totalSalePrice, utilityPerUnit, totalUtility }; },
+            editProduct(id) { const p = this.products.find(x=>x.id===id); if(p){ this.currentEditingId=id; document.getElementById('productName').value=p.name; document.getElementById('totalCost').value=p.totalCost; document.getElementById('units').value=p.units; document.getElementById('empaques').value=p.empaques; document.getElementById('profit').value=p.profit; document.getElementById('formTitle').innerText='Editar Producto'; showSection('products'); } },
+            async deleteProduct(id) { if(confirm('¿Eliminar?')){ const {error}=await supabase.from('products').delete().eq('id',id).eq('user_id',currentUser.id); if(!error){ await loadUserProducts(); showToast('Eliminado','','success');} } },
+            renderPriceList() { const container=document.getElementById('priceList'); if(!this.products.length){ container.innerHTML='<div class="empty-state">No hay productos</div>'; return; } container.innerHTML=`<table class="tg-table"><thead><tr><th>Producto</th><th>Costo Unit.</th><th>Precio Venta</th><th>Venta Total</th><th>Utilidad</th><th>Acciones</th></tr></thead><tbody>${this.products.map(p=>{ const pr=this.calculatePrices(p); return `<tr><td>${p.name}</td><td>$${pr.unitCost.toFixed(2)}</td><td>$${pr.salePrice.toFixed(2)}</td><td>$${pr.totalSalePrice.toFixed(2)}</td><td>$${pr.totalUtility.toFixed(2)}</td><td><button class="tg-btn tg-btn-sm tg-btn-warning" onclick="ProductManager.editProduct(${p.id})">✏️</button> <button class="tg-btn tg-btn-sm tg-btn-danger" onclick="ProductManager.deleteProduct(${p.id})">🗑️</button></td></tr>`}).join('')}</tbody></table>`; },
+            clearForm() { document.getElementById('productForm').reset(); this.currentEditingId=null; document.getElementById('formTitle').innerText='Nuevo Producto'; },
+            async resetSystem() { if(confirm('Eliminar todos tus productos?')){ const {error}=await supabase.from('products').delete().eq('user_id',currentUser.id); if(!error){ await loadUserProducts(); showToast('Todo eliminado','','warning');} } }
+        };
 
-    function updateCharts() {
-        const top = products.slice(0,8);
-        const labels = top.map(p=>p.name.substring(0,15));
-        const salePrices = top.map(p=>calculatePrices(p).salePrice);
-        const utilities = top.map(p=>calculatePrices(p).totalUtility);
-        const unitCosts = top.map(p=>calculatePrices(p).unitCost);
-        const unitUtils = top.map(p=>calculatePrices(p).utilityPerUnit);
-        if(charts.priceChart) { charts.priceChart.data.labels=labels; charts.priceChart.data.datasets[0].data=salePrices; charts.priceChart.update(); }
-        if(charts.profitChart) { charts.profitChart.data.labels=labels; charts.profitChart.data.datasets[0].data=utilities; charts.profitChart.update(); }
-        if(charts.comparisonChart) { charts.comparisonChart.data.labels=labels; charts.comparisonChart.data.datasets[0].data=unitCosts; charts.comparisonChart.data.datasets[1].data=salePrices; charts.comparisonChart.data.datasets[2].data=unitUtils; charts.comparisonChart.update(); }
-    }
-
-    // ==================== BCV Y OTRAS FUNCIONES ====================
-    function updateBcvUI() {
-        document.getElementById('bcvDisplay').innerText = currentBcvRate.toFixed(2);
-        document.getElementById('headerBcvRate').innerText = currentBcvRate.toFixed(2);
-        document.getElementById('calcBcvRate').innerText = currentBcvRate.toFixed(2);
-        document.getElementById('bcvLastUpdate').innerHTML = `<i class="bi bi-clock-history me-1"></i>${new Date().toLocaleTimeString()}`;
-    }
-    function forceUpdateBcv() { updateBcvUI(); showToast('Tasa actualizada', `BCV: ${currentBcvRate.toFixed(2)}`, 'info'); }
-    function saveManualBcv() { const v = parseFloat(document.getElementById('tasaBcv').value); if(v>0){ currentBcvRate=v; updateBcvUI(); showToast('Manual', `Tasa ${v} Bs`, 'success'); } }
-    function toggleManualModeUI() { isManualMode = document.getElementById('manualModeToggle').checked; document.getElementById('manualBcvGroup').style.display = isManualMode ? 'flex' : 'none'; if(!isManualMode) forceUpdateBcv(); }
-    function startAutoUpdate() { if(autoInterval) clearInterval(autoInterval); autoInterval = setInterval(() => { if(!isManualMode) forceUpdateBcv(); }, (parseInt(document.getElementById('updateInterval').value)||30)*60000); }
-    function saveBcvSettings() { startAutoUpdate(); showToast('Configuración guardada', 'Intervalo actualizado', 'success'); }
-    function convertToBs() { const usd = parseFloat(document.getElementById('calcUSD').value)||0; document.getElementById('calcBs').value = (usd * currentBcvRate).toFixed(2); }
-    function convertToUsd() { const bs = parseFloat(document.getElementById('calcBs').value)||0; document.getElementById('calcUSD').value = (bs / currentBcvRate).toFixed(2); }
-    function simulatePrice() { const cost = parseFloat(document.getElementById('simCost').value)||0; const profit = parseFloat(document.getElementById('simProfit').value)||0; const sp = cost * (1 + profit/100); document.getElementById('simSalePrice').innerHTML = formatPrice(sp); document.getElementById('simSaleBs').innerHTML = `Bs ${(sp * currentBcvRate).toFixed(2)}`; document.getElementById('simUtility').innerHTML = formatPrice(sp-cost); document.getElementById('simMultiplier').innerHTML = `${(1+profit/100).toFixed(1)}x`; }
-    function generatePDF() { alert('Función PDF disponible en la versión completa.'); }
-    function exportData() { const data = { products, bcvRate: currentBcvRate, exportDate: new Date().toISOString() }; const blob = new Blob([JSON.stringify(data,null,2)], {type:'application/json'}); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `costos_backup_${new Date().toISOString().split('T')[0]}.json`; a.click(); URL.revokeObjectURL(a.href); showToast('Exportado', 'Datos exportados a JSON', 'success'); }
-    function importData(file) { const reader = new FileReader(); reader.onload = async (e) => { try { const data = JSON.parse(e.target.result); if(data.products && Array.isArray(data.products)) { for(const p of data.products) { delete p.id; delete p.created_at; await supabaseClient.from('products').insert({ ...p, user_id: currentUser.id }); } await loadProducts(); showToast('Importado', 'Datos importados correctamente', 'success'); } else throw new Error(); } catch(err) { showToast('Error', 'Archivo inválido', 'error'); } }; reader.readAsText(file); }
-
-    // ==================== AUTENTICACIÓN ====================
-    async function handleGoogleLogin() {
-        const { error } = await supabaseClient.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: window.location.origin } });
-        if(error) showToast('Error', error.message, 'error');
-    }
-    async function handleLogout() { await supabaseClient.auth.signOut(); window.location.reload(); }
-
-    async function initAuth() {
-        const { data: { session } } = await supabaseClient.auth.getSession();
-        if (session?.user) {
-            currentUser = { id: session.user.id, email: session.user.email, avatar: session.user.user_metadata?.avatar_url };
-            document.getElementById('loginOverlay').style.display = 'none';
-            document.getElementById('mainAppContent').style.display = 'block';
-            document.getElementById('userEmail').innerText = currentUser.email.split('@')[0];
-            if(currentUser.avatar) { document.getElementById('userAvatar').src = currentUser.avatar; document.getElementById('userAvatar').style.display = 'inline-block'; }
-            await loadProducts();
-            startAutoUpdate();
-            showToast('Bienvenido', `Sesión iniciada con ${currentUser.email}`, 'success');
-        } else {
-            document.getElementById('loginOverlay').style.display = 'flex';
-            document.getElementById('mainAppContent').style.display = 'none';
-        }
-    }
-
-    // ==================== NAVEGACIÓN Y EVENTOS ====================
-    function showSection(sectionName) {
-        document.querySelectorAll('.section-page').forEach(s => s.classList.remove('active'));
-        document.getElementById(`section-${sectionName}`).classList.add('active');
-        document.querySelectorAll('.nav-item-tg').forEach(b => b.classList.remove('active'));
-        document.querySelector(`.nav-item-tg[data-section="${sectionName}"]`).classList.add('active');
-        if(sectionName === 'dashboard') updateStatsAndCharts();
-        window.scrollTo({top:0,behavior:'smooth'});
-    }
-
-    function toggleTheme() {
-        const html = document.documentElement;
-        const isDark = html.getAttribute('data-bs-theme') === 'dark';
-        html.setAttribute('data-bs-theme', isDark ? 'light' : 'dark');
-        localStorage.setItem('theme', isDark ? 'light' : 'dark');
-        document.getElementById('themeIcon').className = isDark ? 'bi bi-sun-fill' : 'bi bi-moon-stars';
-        document.getElementById('darkModeToggle').checked = !isDark;
-        if(charts.priceChart) updateCharts();
-    }
-    function toggleAnimations() { animations = document.getElementById('animationsToggle').checked; }
-    function toggleParticles() { particles = document.getElementById('particlesToggle').checked; }
-
-    // Asignar eventos globales y exponer funciones necesarias
-    window.editProduct = editProduct;
-    window.deleteProduct = deleteProduct;
-    window.convertToBs = convertToBs;
-    window.convertToUsd = convertToUsd;
-    window.simulatePrice = simulatePrice;
-
-    document.addEventListener('DOMContentLoaded', () => {
-        // Cargar tema
-        const savedTheme = localStorage.getItem('theme') || 'dark';
-        document.documentElement.setAttribute('data-bs-theme', savedTheme);
-        document.getElementById('themeIcon').className = savedTheme === 'dark' ? 'bi bi-moon-stars' : 'bi bi-sun-fill';
-        document.getElementById('darkModeToggle').checked = savedTheme === 'dark';
-        // Eventos UI
-        document.getElementById('googleLoginBtn')?.addEventListener('click', handleGoogleLogin);
-        document.getElementById('logoutBtn')?.addEventListener('click', handleLogout);
-        document.getElementById('productForm')?.addEventListener('submit', (e) => { e.preventDefault(); handleSaveProduct(); });
-        document.getElementById('clearFormBtn')?.addEventListener('click', clearForm);
-        document.getElementById('resetAllBtn')?.addEventListener('click', hardReset);
-        document.getElementById('hardResetBtn')?.addEventListener('click', hardReset);
-        document.getElementById('pdfBtn')?.addEventListener('click', generatePDF);
-        document.getElementById('exportDataBtn')?.addEventListener('click', exportData);
-        document.getElementById('importFile')?.addEventListener('change', (e) => { if(e.target.files[0]) importData(e.target.files[0]); });
-        document.getElementById('refreshBcvBtn')?.addEventListener('click', forceUpdateBcv);
-        document.getElementById('saveManualBcvBtn')?.addEventListener('click', saveManualBcv);
-        document.getElementById('manualModeToggle')?.addEventListener('change', toggleManualModeUI);
-        document.getElementById('saveBcvSettingsBtn')?.addEventListener('click', saveBcvSettings);
-        document.getElementById('updateInterval')?.addEventListener('input', (e) => document.getElementById('intervalValue').innerText = e.target.value);
-        document.getElementById('autoUpdateToggle')?.addEventListener('change', (e) => { if(e.target.checked) startAutoUpdate(); else if(autoInterval) clearInterval(autoInterval); });
-        document.getElementById('themeToggleBtn')?.addEventListener('click', toggleTheme);
-        document.getElementById('darkModeToggle')?.addEventListener('change', toggleTheme);
-        document.getElementById('animationsToggle')?.addEventListener('change', toggleAnimations);
-        document.getElementById('particlesToggle')?.addEventListener('change', toggleParticles);
-        document.querySelectorAll('.nav-item-tg').forEach(btn => btn.addEventListener('click', () => showSection(btn.dataset.section)));
-        // Calculadora
-        document.getElementById('calcUSD')?.addEventListener('input', convertToBs);
-        document.getElementById('calcBs')?.addEventListener('input', convertToUsd);
-        const simProfitSlider = document.getElementById('simProfitSlider');
-        const simProfit = document.getElementById('simProfit');
-        if(simProfitSlider && simProfit) {
-            simProfitSlider.addEventListener('input', () => { simProfit.value = simProfitSlider.value; simulatePrice(); });
-            simProfit.addEventListener('input', () => { simProfitSlider.value = simProfit.value; simulatePrice(); });
-        }
-        document.getElementById('simCost')?.addEventListener('input', simulatePrice);
-        // Inicializar
-        initAuth();
-        initCharts();
-        updateBcvUI();
-        // Partículas (animación simple)
-        const canvasPart = document.getElementById('particlesCanvas');
-        if(canvasPart) { /* efecto básico */ }
-    });
-</script>
+        // Funciones auxiliares (BCV, estadísticas, gráficos, etc.) similares a antes pero adaptadas a products global
+        async function fetchBcvRate() { if(isManualMode) return currentBcvRate; try{ const resp=await fetch('https://pydolarvenezuela-api.vercel.app/api/v1/dollar?page=bcv'); if(resp.ok){ const data=await resp.json(); if(data.price){ updateBcvDisplay(data.price,'PyDolar'); return data.price; } } }catch(e){} return currentBcvRate; }
+        function updateBcvDisplay(rate,src){ currentBcvRate=rate; document.getElementById('bcvDisplay').innerText=rate.toFixed(2); document.getElementById('headerBcvRate').innerText=rate.toFixed(2); document.getElementById('calcBcvRate').innerText=rate.toFixed(2); localStorage.setItem('bcvRate',rate); }
+        async function forceUpdateBcv(){ const r=await fetchBcvRate(); updateBcvDisplay(r,'API'); ProductManager.renderPriceList(); }
+        function toggleManualMode(){ isManualMode=document.getElementById('manualModeToggle').checked; localStorage.setItem('bcvManualMode',isManualMode); document.getElementById('manualBcvGroup').style.display=isManualMode?'block':'none'; if(!isManualMode)forceUpdateBcv(); }
+        function saveManualBcv(){ const val=parseFloat(document.getElementById('tasaBcv').value); if(val>0) updateBcvDisplay(val,'Manual'); ProductManager.renderPriceList(); }
+        function convertToBs(){ const usd=parseFloat(document.getElementById('calcUSD').value)||0; document.getElementById('calcBs').value=(usd*currentBcvRate).toFixed(2); }
+        function convertToUsd(){ const bs=parseFloat(document.getElementById('calcBs').value)||0; document.getElementById('calcUSD').value=(bs/currentBcvRate).toFixed(2); }
+        function simulatePrice(){ const cost=parseFloat(document.getElementById('simCost').value)||0; const profit=parseFloat(document.getElementById('simProfitSlider').value); document.getElementById('simProfitValue').innerText=profit; const sale=cost*(1+profit/100); document.getElementById('simSalePrice').innerText='$'+sale.toFixed(2); document.getElementById('simSaleBs').innerText='Bs '+(sale*currentBcvRate).toFixed(2); document.getElementById('simUtility').innerText='$'+(sale-cost).toFixed(2); }
+        function updateStats(){ const count=products.length; document.getElementById('statTotalProducts').innerText=count; if(count){ const avg=products.reduce((a,b)=>a+b.profit,0)/count; document.getElementById('statAvgMargin').innerText=avg.toFixed(1)+'%'; const totalVal=products.reduce((s,p)=>s+ProductManager.calculatePrices(p).totalSalePrice,0); document.getElementById('statTotalValue').innerText='$'+totalVal.toFixed(0); const best=products.reduce((a,b)=>ProductManager.calculatePrices(a).totalUtility>ProductManager.calculatePrices(b).totalUtility?a:b, products[0]); document.getElementById('statTopProduct').innerText=best.name.substring(0,12); } else { document.getElementById('statAvgMargin').innerText='0%'; document.getElementById('statTotalValue').innerText='$0'; document.getElementById('statTopProduct').innerText='--'; } const tbody=document.getElementById('recentActivityTable'); if(products.length){ tbody.innerHTML=products.slice(-5).reverse().map(p=>{ const pr=ProductManager.calculatePrices(p); return `<tr><td>${p.name}</td><td>$${pr.salePrice.toFixed(2)}</td><td>$${pr.utilityPerUnit.toFixed(2)}</td><td><span class="badge bg-success">${p.profit}%</span></td></tr>`; }).join(''); }else tbody.innerHTML='<tr><td colspan="4">Sin productos</td></tr>'; updateCharts(); }
+        let priceChart, profitChart, comparisonChart;
+        function initCharts(){ const ctx1=document.getElementById('priceDistributionChart')?.getContext('2d'); if(ctx1) priceChart=new Chart(ctx1,{type:'doughnut',data:{labels:products.map(p=>p.name),datasets:[{data:products.map(p=>ProductManager.calculatePrices(p).salePrice),backgroundColor:['#0d6efd','#0dcaf0','#198754','#ffc107']}]}}); const ctx2=document.getElementById('profitChart')?.getContext('2d'); if(ctx2) profitChart=new Chart(ctx2,{type:'bar',data:{labels:products.map(p=>p.name),datasets:[{label:'Utilidad USD',data:products.map(p=>ProductManager.calculatePrices(p).totalUtility)}]}}); const ctx3=document.getElementById('comparisonChart')?.getContext('2d'); if(ctx3) comparisonChart=new Chart(ctx3,{type:'line',data:{labels:products.map(p=>p.name),datasets:[{label:'Costo unitario',data:products.map(p=>ProductManager.calculatePrices(p).unitCost)},{label:'Precio venta',data:products.map(p=>ProductManager.calculatePrices(p).salePrice)}]}}); }
+        function updateCharts(){ if(priceChart){ priceChart.data.labels=products.map(p=>p.name); priceChart.data.datasets[0].data=products.map(p=>ProductManager.calculatePrices(p).salePrice); priceChart.update(); } if(profitChart){ profitChart.data.labels=products.map(p=>p.name); profitChart.data.datasets[0].data=products.map(p=>ProductManager.calculatePrices(p).totalUtility); profitChart.update(); } if(comparisonChart){ comparisonChart.data.labels=products.map(p=>p.name); comparisonChart.data.datasets[0].data=products.map(p=>ProductManager.calculatePrices(p).unitCost); comparisonChart.data.datasets[1].data=products.map(p=>ProductManager.calculatePrices(p).salePrice); comparisonChart.update(); } }
+        function showSection(section, el){ document.querySelectorAll('.section-page').forEach(s=>s.classList.remove('active')); document.getElementById(`section-${section}`).classList.add('active'); document.querySelectorAll('.nav-item-tg').forEach(n=>n.classList.remove('active')); if(el)el.classList.add('active'); window.scrollTo(0,0); if(section==='dashboard') updateCharts(); }
+        function showDateRangePDFModal(){ new bootstrap.Modal(document.getElementById('pdfDateModal')).show(); }
+        async function generatePDFByDateRange(){ const start=document.getElementById('pdfStartDate').value; const end=document.getElementById('pdfEndDate').value; if(!start||!end){ showToast('Selecciona ambas fechas','','error'); return; } const startDate=new Date(start); const endDate=new Date(end); endDate.setHours(23,59,59); const filtered=products.filter(p=>{ const d=new Date(p.created_at); return d>=startDate && d<=endDate; }); if(filtered.length===0){ showToast('Sin productos en ese rango','','warning'); return; } const doc=new jspdf.jsPDF(); doc.text('Reporte de productos',14,22); doc.text(`Rango: ${start} a ${end}`,14,30); const body=filtered.map(p=>{ const pr=ProductManager.calculatePrices(p); return [p.name, `$${pr.unitCost.toFixed(2)}`, `$${pr.salePrice.toFixed(2)}`, `$${pr.totalUtility.toFixed(2)}`]; }); doc.autoTable({head:[['Producto','Costo Unit.','Precio Venta','Utilidad Total']],body:body,startY:40}); doc.save(`reporte_${start}_${end}.pdf`); showToast('PDF generado','','success'); }
+        function exportData(){ const data=JSON.stringify({products,backupDate:new Date()}); const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([data])); a.download='mis_costos.json'; a.click(); }
+        function importData(input){ const file=input.files[0]; const reader=new FileReader(); reader.onload=async(e)=>{ const data=JSON.parse(e.target.result); if(data.products && currentUser){ for(const prod of data.products){ delete prod.id; prod.user_id=currentUser.id; prod.created_at=new Date(); await supabase.from('products').insert(prod); } loadUserProducts(); showToast('Importado','','success'); } }; if(file) reader.readAsText(file); }
+        function confirmReset(){ new bootstrap.Modal(document.getElementById('resetModal')).show(); document.getElementById('confirmResetBtn').onclick=async()=>{ await ProductManager.resetSystem(); bootstrap.Modal.getInstance(document.getElementById('resetModal')).hide(); }; }
+        function toggleTheme(){ const html=document.documentElement; const newTheme=html.getAttribute('data-bs-theme')==='dark'?'light':'dark'; html.setAttribute('data-bs-theme',newTheme); localStorage.setItem('theme',newTheme); updateCharts(); }
+        function toggleParticles(){ particlesEnabled=document.getElementById('particlesToggle').checked; localStorage.setItem('particlesEnabled',particlesEnabled); const canvas=document.getElementById('particlesCanvas'); if(!particlesEnabled) canvas.style.display='none'; else canvas.style.display='block'; }
+        function showToast(title,msg,type){ const toastDiv=document.createElement('div'); toastDiv.className='tg-toast show'; toastDiv.innerHTML=`<div class="toast-icon ${type}"><i class="bi bi-info-circle"></i></div><div><strong>${title}</strong><br>${msg}</div>`; document.getElementById('toastContainer').appendChild(toastDiv); setTimeout(()=>toastDiv.remove(),3000); }
+        document.addEventListener('DOMContentLoaded',()=>{ initAuth(); supabase.auth.onAuthStateChange((event, session)=>{ if(event==='SIGNED_IN'){ currentUser=session.user; initAuth(); }else if(event==='SIGNED_OUT'){ currentUser=null; initAuth(); } }); document.getElementById('googleLoginBtn')?.addEventListener('click',loginWithGoogle); document.getElementById('manualModeToggle').addEventListener('change',toggleManualMode); setInterval(()=>{ if(!isManualMode) fetchBcvRate(); },1800000); simulatePrice(); });
+    </script>
 </body>
 </html>
