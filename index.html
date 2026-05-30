@@ -24,7 +24,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
 
     <style>
-        /* ===== ESTILOS EXISTENTES (se mantienen) ===== */
+        /* ===== ESTILOS ===== */
         :root {
             --primary: #0d6efd;
             --secondary: #6c757d;
@@ -53,120 +53,51 @@
             --glass-border: rgba(13, 110, 253, 0.1);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background: var(--telegram-bg);
-            color: var(--telegram-text);
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--telegram-bg); color: var(--telegram-text); min-height: 100vh; overflow-x: hidden; }
 
         /* Splash Screen */
         #splashScreen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--telegram-bg);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 10000;
-            transition: opacity 0.5s ease;
-            flex-direction: column;
-            gap: 20px;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--telegram-bg); display: flex; justify-content: center; align-items: center;
+            z-index: 10000; transition: opacity 0.5s ease; flex-direction: column; gap: 20px;
         }
         .splash-logo {
-            width: 120px;
-            height: 120px;
-            background: linear-gradient(135deg, var(--primary), var(--info));
-            border-radius: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 3.5rem;
-            color: white;
-            box-shadow: 0 20px 30px rgba(0,0,0,0.2);
+            width: 120px; height: 120px; background: linear-gradient(135deg, var(--primary), var(--info));
+            border-radius: 30px; display: flex; align-items: center; justify-content: center;
+            font-size: 3.5rem; color: white; box-shadow: 0 20px 30px rgba(0,0,0,0.2);
             animation: pulse 1.5s ease-in-out infinite;
         }
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-        .splash-version {
-            font-size: 0.9rem;
-            color: var(--telegram-muted);
-            letter-spacing: 1px;
-        }
+        @keyframes pulse { 0%,100%{transform:scale(1);} 50%{transform:scale(1.05);} }
+        .splash-version { font-size: 0.9rem; color: var(--telegram-muted); letter-spacing: 1px; }
 
         /* Login Container */
         #loginContainer {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--telegram-bg);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            padding: 20px;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--telegram-bg); display: flex; justify-content: center; align-items: center;
+            z-index: 9999; padding: 20px;
         }
         .login-card {
-            max-width: 400px;
-            width: 100%;
-            background: var(--telegram-card);
-            border-radius: 32px;
-            padding: 40px 24px;
-            text-align: center;
-            border: 1px solid var(--glass-border);
+            max-width: 400px; width: 100%; background: var(--telegram-card); border-radius: 32px;
+            padding: 40px 24px; text-align: center; border: 1px solid var(--glass-border);
             box-shadow: 0 25px 50px rgba(0,0,0,0.2);
         }
         .login-logo {
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(135deg, var(--primary), var(--info));
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2.5rem;
-            color: white;
-            margin: 0 auto 20px;
+            width: 80px; height: 80px; background: linear-gradient(135deg, var(--primary), var(--info));
+            border-radius: 20px; display: flex; align-items: center; justify-content: center;
+            font-size: 2.5rem; color: white; margin: 0 auto 20px;
         }
         .google-btn {
-            background: #fff;
-            color: #333;
-            border: none;
-            border-radius: 40px;
-            padding: 12px 24px;
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 12px;
-            cursor: pointer;
-            transition: 0.3s;
-            margin-top: 20px;
+            background: #fff; color: #333; border: none; border-radius: 40px;
+            padding: 12px 24px; font-weight: 600; display: inline-flex; align-items: center;
+            gap: 12px; cursor: pointer; transition: 0.3s; margin-top: 20px;
         }
-        .google-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-        }
+        .google-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
 
-        /* Main App (inicialmente oculto) */
-        #appContainer {
-            display: none;
-        }
+        /* Main App */
+        #appContainer { display: none; }
 
-        /* Resto de estilos existentes (se mantienen igual) */
+        /* Resto de estilos (resumidos) */
         .bg-mesh { position: fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:0; overflow:hidden; }
         .bg-mesh .orb { position: absolute; border-radius:50%; filter:blur(80px); opacity:0.15; animation: orbFloat 20s ease-in-out infinite; }
         .bg-mesh .orb:nth-child(1) { width:400px; height:400px; background:var(--primary); top:-100px; left:-100px; }
@@ -175,10 +106,10 @@
         @keyframes orbFloat { 0%,100%{transform:translate(0,0) scale(1);} 33%{transform:translate(30px,-30px) scale(1.1);} 66%{transform:translate(-20px,20px) scale(0.9);} }
         #particlesCanvas { position: fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:1; }
         .content-layer { position: relative; z-index:2; }
-        .telegram-nav { position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:var(--glass-bg); backdrop-filter:blur(20px); border:1px solid var(--glass-border); border-radius:24px; padding:8px 16px; display:flex; gap:4px; z-index:1000; box-shadow:0 8px 32px rgba(0,0,0,0.3); max-width:95vw; overflow-x:auto; }
-        .nav-item-tg { display:flex; flex-direction:column; align-items:center; gap:4px; padding:10px 16px; border-radius:18px; cursor:pointer; transition:all 0.3s; color:var(--telegram-muted); background:transparent; border:none; }
+        .telegram-nav { position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:var(--glass-bg); backdrop-filter:blur(20px); border:1px solid var(--glass-border); border-radius:24px; padding:8px 16px; display:flex; gap:4px; z-index:1000; max-width:95vw; overflow-x:auto; }
+        .nav-item-tg { display:flex; flex-direction:column; align-items:center; gap:4px; padding:10px 16px; border-radius:18px; cursor:pointer; transition:0.3s; color:var(--telegram-muted); background:transparent; border:none; }
         .nav-item-tg.active { color:var(--telegram-highlight); background:rgba(94,181,247,0.15); }
-        .tg-card { background:var(--telegram-card); border:1px solid var(--glass-border); border-radius:20px; padding:24px; transition:all 0.4s; overflow:hidden; }
+        .tg-card { background:var(--telegram-card); border:1px solid var(--glass-border); border-radius:20px; padding:24px; transition:0.4s; overflow:hidden; }
         .tg-card-header { display:flex; align-items:center; gap:12px; margin-bottom:20px; }
         .tg-card-icon { width:48px; height:48px; border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:1.4rem; background:linear-gradient(135deg, var(--primary), var(--info)); color:white; }
         .tg-input { background:var(--telegram-bg); border:2px solid var(--glass-border); border-radius:14px; padding:14px 18px; color:var(--telegram-text); width:100%; }
@@ -198,7 +129,6 @@
         .pulse-dot { width:8px; height:8px; background:var(--success); border-radius:50%; display:inline-block; position:relative; }
         .pulse-dot::after { content:''; position:absolute; top:-4px; left:-4px; right:-4px; bottom:-4px; border-radius:50%; background:var(--success); opacity:0; animation:pulseRing 2s ease-out infinite; }
         @keyframes pulseRing { 0%{transform:scale(0.8); opacity:0.5;} 100%{transform:scale(2); opacity:0;} }
-        .date-range-group { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 15px; }
         .tg-table { width:100%; border-collapse:collapse; }
         .tg-table thead th { background:var(--telegram-accent); padding:16px; font-size:0.8rem; text-transform:uppercase; }
         .tg-table tbody td { padding:16px; border-bottom:1px solid var(--glass-border); }
@@ -213,122 +143,117 @@
         .user-info { display: flex; align-items: center; gap: 12px; background:var(--telegram-accent); padding: 6px 12px; border-radius: 40px; }
         .user-avatar { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
         .logout-btn { background: none; border: none; color: var(--telegram-muted); cursor: pointer; font-size: 1.2rem; }
+        .toast-container-custom { position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
+        .tg-toast { background: var(--telegram-card); border-radius: 16px; padding: 16px; display: flex; align-items: center; gap: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); animation: slideIn 0.3s ease; }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
     </style>
 </head>
 <body>
 
 <!-- SPLASH SCREEN -->
 <div id="splashScreen">
-    <div class="splash-logo">
-        <i class="bi bi-calculator-fill"></i>
-    </div>
+    <div class="splash-logo"><i class="bi bi-calculator-fill"></i></div>
     <div class="splash-version">Versión 2.0.0</div>
 </div>
 
-<!-- LOGIN CONTAINER (se muestra después del splash) -->
+<!-- LOGIN CONTAINER (inicialmente oculto) -->
 <div id="loginContainer" style="display: none;">
     <div class="login-card">
-        <div class="login-logo">
-            <i class="bi bi-calculator-fill"></i>
-        </div>
+        <div class="login-logo"><i class="bi bi-calculator-fill"></i></div>
         <h3 class="mt-3">Calculadora de Costos Pro</h3>
         <p class="text-muted">Inicia sesión para gestionar tus productos</p>
-        <button id="googleLoginBtn" class="google-btn">
-            <i class="bi bi-google"></i> Continuar con Google
-        </button>
+        <button id="googleLoginBtn" class="google-btn"><i class="bi bi-google"></i> Continuar con Google</button>
     </div>
 </div>
 
-<!-- APLICACIÓN PRINCIPAL (inicialmente oculta) -->
+<!-- APLICACIÓN PRINCIPAL -->
 <div id="appContainer">
-    <!-- Background Mesh -->
     <div class="bg-mesh"><div class="orb"></div><div class="orb"></div><div class="orb"></div></div>
     <canvas id="particlesCanvas"></canvas>
     <div class="content-layer">
-        <!-- Header con info de usuario -->
-        <header class="app-header" style="position: sticky; top:0; z-index:100; background:var(--glass-bg); backdrop-filter:blur(20px); padding: 12px 0;">
+        <header class="app-header" style="position:sticky;top:0;z-index:100;background:var(--glass-bg);backdrop-filter:blur(20px);padding:12px 0;">
             <div class="container">
                 <div class="d-flex justify-content-between align-items-center">
                     <div class="d-flex align-items-center gap-3">
                         <div class="tg-card-icon" style="width:40px;height:40px;font-size:1.1rem;"><i class="bi bi-calculator-fill"></i></div>
-                        <h1 class="header-title" style="font-size:1.3rem; margin:0;">Costos Pro</h1>
+                        <h1 class="header-title" style="font-size:1.3rem;margin:0;">Costos Pro</h1>
                     </div>
                     <div class="d-flex align-items-center gap-3">
                         <div class="user-info" id="userInfo">
                             <img id="userAvatar" class="user-avatar" src="" alt="avatar">
                             <span id="userName" class="small d-none d-sm-inline"></span>
-                            <button id="logoutBtn" class="logout-btn" title="Cerrar sesión"><i class="bi bi-box-arrow-right"></i></button>
+                            <button id="logoutBtn" class="logout-btn"><i class="bi bi-box-arrow-right"></i></button>
                         </div>
-                        <button class="tg-btn tg-btn-sm tg-btn-primary" onclick="toggleTheme()" title="Cambiar tema"><i class="bi bi-moon-stars" id="themeIcon"></i></button>
+                        <button class="tg-btn tg-btn-sm tg-btn-primary" onclick="toggleTheme()"><i class="bi bi-moon-stars" id="themeIcon"></i></button>
                     </div>
                 </div>
             </div>
         </header>
 
-        <!-- Secciones (Dashboard, Productos, Calculadora, Ajustes) -->
+        <!-- Sección Dashboard -->
         <section id="section-dashboard" class="section-page active">
             <div class="container py-4">
-                <!-- BCV Section - Solo manual -->
                 <div class="row mb-4">
                     <div class="col-12">
-                        <div class="bcv-section" id="bcvCard">
+                        <div class="bcv-section">
                             <div class="row align-items-center">
                                 <div class="col-md-6">
                                     <div class="d-flex align-items-center gap-2 mb-2"><span class="pulse-dot"></span><span class="bcv-label">TASA BCV MANUAL</span></div>
                                     <div class="bcv-value" id="bcvDisplay">--</div>
                                     <div class="bcv-label mt-2">Bs / USD</div>
-                                    <div class="mt-3">
-                                        <small id="bcvLastUpdate">Última actualización manual</small>
-                                    </div>
+                                    <div class="mt-3"><small id="bcvLastUpdate">Actualizar tasa</small></div>
                                 </div>
                                 <div class="col-md-6 mt-3 mt-md-0">
-                                    <div class="bcv-input-group">
-                                        <input type="number" id="tasaBcv" class="tg-input" step="0.01" placeholder="Ingresa tasa BCV" value="36">
-                                        <button class="tg-btn" onclick="saveManualBcv()">
-                                            <i class="bi bi-check-lg"></i> Guardar
-                                        </button>
+                                    <div class="bcv-input-group d-flex gap-2">
+                                        <input type="number" id="tasaBcv" class="tg-input" step="0.01" placeholder="Tasa BCV" value="36">
+                                        <button class="tg-btn" onclick="saveManualBcv()"><i class="bi bi-check-lg"></i> Guardar</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <!-- Stats Cards -->
-                <div class="row g-3 mb-4" id="statsContainer">
+                <div class="row g-3 mb-4">
                     <div class="col-6 col-lg-3"><div class="stat-card"><i class="bi bi-box-seam stat-icon"></i><div class="stat-value" id="statTotalProducts">0</div><div class="stat-label">Productos</div></div></div>
                     <div class="col-6 col-lg-3"><div class="stat-card"><i class="bi bi-currency-dollar stat-icon"></i><div class="stat-value" id="statAvgMargin">0%</div><div class="stat-label">Margen Promedio</div></div></div>
                     <div class="col-6 col-lg-3"><div class="stat-card"><i class="bi bi-cash-stack stat-icon"></i><div class="stat-value" id="statTotalValue">$0</div><div class="stat-label">Inventario Total</div></div></div>
                     <div class="col-6 col-lg-3"><div class="stat-card"><i class="bi bi-trophy stat-icon"></i><div class="stat-value" id="statTopProduct">--</div><div class="stat-label">Mejor Producto</div></div></div>
                 </div>
-                <!-- Gráficos -->
                 <div class="row g-4 mb-4">
                     <div class="col-lg-6"><div class="tg-card"><div class="tg-card-header"><div class="tg-card-icon"><i class="bi bi-pie-chart-fill"></i></div><div><h5 class="tg-card-title">Distribución de Precios</h5></div></div><div class="chart-container"><canvas id="priceDistributionChart"></canvas></div></div></div>
-                    <div class="col-lg-6"><div class="tg-card"><div class="tg-card-header"><div class="tg-card-icon" style="background:linear-gradient(135deg, #fd7e14, #ffc107);"><i class="bi bi-graph-up-arrow"></i></div><div><h5 class="tg-card-title">Utilidad por Producto</h5></div></div><div class="chart-container"><canvas id="profitChart"></canvas></div></div></div>
-                    <div class="col-12"><div class="tg-card"><div class="tg-card-header"><div class="tg-card-icon" style="background:linear-gradient(135deg, #6f42c1, #d63384);"><i class="bi bi-bar-chart-line-fill"></i></div><div><h5 class="tg-card-title">Análisis Comparativo</h5></div></div><div class="chart-container chart-container-lg"><canvas id="comparisonChart"></canvas></div></div></div>
+                    <div class="col-lg-6"><div class="tg-card"><div class="tg-card-header"><div class="tg-card-icon" style="background:linear-gradient(135deg,#fd7e14,#ffc107);"><i class="bi bi-graph-up-arrow"></i></div><div><h5 class="tg-card-title">Utilidad por Producto</h5></div></div><div class="chart-container"><canvas id="profitChart"></canvas></div></div></div>
+                    <div class="col-12"><div class="tg-card"><div class="tg-card-header"><div class="tg-card-icon" style="background:linear-gradient(135deg,#6f42c1,#d63384);"><i class="bi bi-bar-chart-line-fill"></i></div><div><h5 class="tg-card-title">Análisis Comparativo</h5></div></div><div class="chart-container chart-container-lg"><canvas id="comparisonChart"></canvas></div></div></div>
                 </div>
-                <!-- Actividad Reciente -->
                 <div class="row"><div class="col-12"><div class="tg-card"><div class="tg-card-header"><div class="tg-card-icon"><i class="bi bi-clock-history"></i></div><div><h5 class="tg-card-title">Actividad Reciente</h5></div></div><div class="table-responsive"><table class="tg-table"><thead><tr><th>Producto</th><th>Precio Venta</th><th>Utilidad</th><th>Margen</th></tr></thead><tbody id="recentActivityTable"></tbody></table></div></div></div></div>
             </div>
         </section>
 
+        <!-- Sección Productos -->
         <section id="section-products" class="section-page">
             <div class="container py-4">
-                <div class="row mb-4"><div class="col-12"><div class="tg-card"><div class="tg-card-header"><div class="tg-card-icon"><i class="bi bi-plus-circle-fill"></i></div><div><h5 class="tg-card-title" id="formTitle">Nuevo Producto</h5></div></div><form id="productForm" onsubmit="event.preventDefault(); ProductManager.saveProduct()"><div class="row g-3"><div class="col-12"><label class="form-label">Nombre</label><input type="text" class="tg-input" id="productName" required></div><div class="col-md-6"><label>Costo Total (USD)</label><input type="number" class="tg-input" id="totalCost" step="0.01" required></div><div class="col-md-6"><label>Unidades por Empaque</label><input type="number" class="tg-input" id="units" required></div><div class="col-md-6"><label>Cantidad de Empaques</label><input type="number" class="tg-input" id="empaques" required></div><div class="col-md-6"><label>% de Ganancia</label><input type="number" class="tg-input" id="profit" step="0.01" required></div></div><div class="d-flex gap-2 mt-4"><button type="submit" class="tg-btn tg-btn-success flex-fill" id="saveBtn">Guardar Producto</button><button type="button" class="tg-btn tg-btn-warning" onclick="ProductManager.clearForm()">Limpiar</button></div></form></div></div></div>
+                <div class="row mb-4"><div class="col-12"><div class="tg-card"><div class="tg-card-header"><div class="tg-card-icon"><i class="bi bi-plus-circle-fill"></i></div><div><h5 class="tg-card-title" id="formTitle">Nuevo Producto</h5></div></div><form id="productForm" onsubmit="event.preventDefault(); ProductManager.saveProduct()"><div class="row g-3"><div class="col-12"><label>Nombre</label><input type="text" class="tg-input" id="productName" required></div><div class="col-md-6"><label>Costo Total (USD)</label><input type="number" class="tg-input" id="totalCost" step="0.01" required></div><div class="col-md-6"><label>Unidades por Empaque</label><input type="number" class="tg-input" id="units" required></div><div class="col-md-6"><label>Cantidad de Empaques</label><input type="number" class="tg-input" id="empaques" required></div><div class="col-md-6"><label>% de Ganancia</label><input type="number" class="tg-input" id="profit" step="0.01" required></div></div><div class="d-flex gap-2 mt-4"><button type="submit" class="tg-btn tg-btn-success flex-fill" id="saveBtn">Guardar Producto</button><button type="button" class="tg-btn tg-btn-warning" onclick="ProductManager.clearForm()">Limpiar</button></div></form></div></div></div>
                 <div class="row"><div class="col-12"><div class="tg-card"><div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2"><div class="tg-card-header mb-0"><div class="tg-card-icon"><i class="bi bi-list-check"></i></div><div><h5 class="tg-card-title mb-0">Lista de Precios</h5><p class="tg-card-subtitle mb-0"><span id="productCount">0</span> productos</p></div></div><div class="d-flex gap-2"><button class="tg-btn tg-btn-sm tg-btn-danger" onclick="confirmReset()">Reiniciar</button><button class="tg-btn tg-btn-sm tg-btn-primary" onclick="showPDFDateModal()">PDF por fechas</button></div></div><div id="priceList" class="table-responsive"></div></div></div></div>
             </div>
         </section>
 
+        <!-- Sección Calculadora -->
         <section id="section-calculator" class="section-page">
             <div class="container py-4"><div class="row justify-content-center"><div class="col-md-8 col-lg-6"><div class="tg-card"><div class="tg-card-header"><div class="tg-card-icon"><i class="bi bi-calculator-fill"></i></div><div><h5 class="tg-card-title">Calculadora Rápida</h5></div></div><div class="mb-4"><label>Monto en USD</label><div class="input-group"><span class="input-group-text tg-input">$</span><input type="number" class="tg-input" id="calcUSD" step="0.01" oninput="convertToBs()"></div></div><div class="text-center my-3"><i class="bi bi-arrow-down-up"></i></div><div class="mb-4"><label>Monto en Bs</label><div class="input-group"><span class="input-group-text tg-input">Bs</span><input type="number" class="tg-input" id="calcBs" step="0.01" oninput="convertToUsd()"></div></div><div class="alert" style="background:var(--telegram-accent);"><small>Tasa usada: <strong id="calcBcvRate">--</strong> Bs/USD</small></div></div></div></div></div>
         </section>
 
+        <!-- Sección Ajustes -->
         <section id="section-settings" class="section-page">
-            <div class="container py-4"><div class="row justify-content-center"><div class="col-md-8 col-lg-6"><div class="tg-card mb-4"><div class="tg-card-header"><div class="tg-card-icon"><i class="bi bi-bank"></i></div><div><h5 class="tg-card-title">Configuración BCV</h5></div></div><div class="mb-4"><label>Tasa BCV Actual</label><input type="number" class="tg-input" id="settingsBcv" step="0.01" placeholder="Ingresa tasa" value="36"><button class="tg-btn tg-btn-primary mt-2 w-100" onclick="saveBcvSettings()">Guardar Tasa</button></div></div></div></div></div>
+            <div class="container py-4"><div class="row justify-content-center"><div class="col-md-8 col-lg-6"><div class="tg-card mb-4"><div class="tg-card-header"><div class="tg-card-icon"><i class="bi bi-bank"></i></div><div><h5 class="tg-card-title">Configuración BCV</h5></div></div><div class="mb-4"><label>Tasa BCV Actual</label><input type="number" class="tg-input" id="settingsBcv" step="0.01" placeholder="Tasa manual" value="36"><button class="tg-btn tg-btn-primary mt-2 w-100" onclick="saveBcvSettings()">Guardar Tasa</button></div></div></div></div></div>
         </section>
 
         <footer class="app-footer text-center py-4"><p><i class="bi bi-calculator me-2"></i>Calculadora de Costos Pro v2.0</p><p class="small">RogerWed &copy; 2025</p></footer>
     </div>
-    <nav class="telegram-nav"><button class="nav-item-tg active" onclick="showSection('dashboard', this)"><i class="bi bi-house-door-fill"></i><span>Inicio</span></button><button class="nav-item-tg" onclick="showSection('products', this)"><i class="bi bi-box-seam"></i><span>Productos</span></button><button class="nav-item-tg" onclick="showSection('calculator', this)"><i class="bi bi-calculator"></i><span>Calculadora</span></button><button class="nav-item-tg" onclick="showSection('settings', this)"><i class="bi bi-gear"></i><span>Ajustes</span></button></nav>
+    <nav class="telegram-nav">
+        <button class="nav-item-tg active" onclick="showSection('dashboard', this)"><i class="bi bi-house-door-fill"></i><span>Inicio</span></button>
+        <button class="nav-item-tg" onclick="showSection('products', this)"><i class="bi bi-box-seam"></i><span>Productos</span></button>
+        <button class="nav-item-tg" onclick="showSection('calculator', this)"><i class="bi bi-calculator"></i><span>Calculadora</span></button>
+        <button class="nav-item-tg" onclick="showSection('settings', this)"><i class="bi bi-gear"></i><span>Ajustes</span></button>
+    </nav>
 </div>
 
 <!-- Modal para rango de fechas PDF -->
@@ -349,31 +274,28 @@
 </div>
 
 <script>
-    // -------------------- SUPABASE CONFIGURACIÓN --------------------
-    // REEMPLAZA CON TUS DATOS DE SUPABASE
-    const SUPABASE_URL = "https://fngbhhehzmnkumijunhh.supabase.co";  // <-- CAMBIAR
-    const SUPABASE_ANON_KEY = "sb_publishable_qEZm7RuDXO6fulH_FaQ--A_msdtmJhT";               // <-- CAMBIAR
+    // ==================== SUPABASE CONFIGURACIÓN ====================
+    const SUPABASE_URL = "https://fngbhhehzmnkumijunhh.supabase.co";
+    const SUPABASE_ANON_KEY = "sb_publishable_qEZm7RuDXO6fulH_FaQ--A_msdtmJhT";
     const supabase = supabaseJs.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     let currentUser = null;
-
-    // Elementos
     const splash = document.getElementById('splashScreen');
     const loginContainer = document.getElementById('loginContainer');
     const appContainer = document.getElementById('appContainer');
 
-    // Mostrar splash y luego decidir
+    // Ocultar splash después de 1.5 segundos y verificar sesión
     setTimeout(() => {
         splash.style.opacity = '0';
         setTimeout(() => {
             splash.style.display = 'none';
             checkSession();
         }, 500);
-    }, 2000); // 2 segundos de splash
+    }, 1500);
 
     async function checkSession() {
-        const { data: { session } } = await supabase.auth.getSession();
-        if (session) {
+        const { data: { session }, error } = await supabase.auth.getSession();
+        if (session && session.user) {
             currentUser = session.user;
             showApp();
         } else {
@@ -389,33 +311,41 @@
     function showApp() {
         loginContainer.style.display = 'none';
         appContainer.style.display = 'block';
-        // Cargar datos del usuario
+        // Actualizar UI de usuario
         document.getElementById('userName').innerText = currentUser.user_metadata?.full_name || currentUser.email;
-        document.getElementById('userAvatar').src = currentUser.user_metadata?.avatar_url || 'https://ui-avatars.com/api/?background=0D6EFD&color=fff&name='+encodeURIComponent(currentUser.email);
-        // Inicializar todo
+        document.getElementById('userAvatar').src = currentUser.user_metadata?.avatar_url || `https://ui-avatars.com/api/?background=0D6EFD&color=fff&name=${encodeURIComponent(currentUser.email)}`;
+        // Inicializar sistemas
         initBcvSystem();
         ProductManager.init();
         initCharts();
-        initAnimationsGlobal();
+        setTimeout(() => initAnimations(), 200);
+        // Mostrar bienvenida
+        showToast(`¡Bienvenido ${currentUser.user_metadata?.full_name || currentUser.email}!`, 'Tus productos están seguros', 'success');
     }
 
+    // Logout
     async function logout() {
         await supabase.auth.signOut();
         currentUser = null;
         showLogin();
-        // Limpiar datos locales
-        localStorage.removeItem('products_sync');
         ProductManager.products = [];
         ProductManager.renderPriceList();
     }
+    document.getElementById('logoutBtn')?.addEventListener('click', logout);
 
     // Login con Google
     document.getElementById('googleLoginBtn')?.addEventListener('click', async () => {
-        const { error } = await supabase.auth.signInWithOAuth({ provider: 'google' });
-        if (error) alert('Error al iniciar sesión: ' + error.message);
+        const { error } = await supabase.auth.signInWithOAuth({
+            provider: 'google',
+            options: { redirectTo: window.location.origin }
+        });
+        if (error) {
+            console.error(error);
+            alert('Error al iniciar sesión: ' + error.message);
+        }
     });
 
-    // Escuchar cambios en auth
+    // Escuchar cambios en la sesión (para cuando vuelve de OAuth)
     supabase.auth.onAuthStateChange((event, session) => {
         if (event === 'SIGNED_IN' && session) {
             currentUser = session.user;
@@ -426,11 +356,8 @@
         }
     });
 
-    document.getElementById('logoutBtn')?.addEventListener('click', logout);
-
-    // -------------------- BCV MANUAL --------------------
+    // ==================== BCV MANUAL ====================
     let currentBcvRate = 36;
-
     function updateBcvDisplay(rate) {
         currentBcvRate = rate;
         document.getElementById('bcvDisplay').textContent = rate.toFixed(2);
@@ -438,42 +365,26 @@
         document.getElementById('settingsBcv').value = rate.toFixed(2);
         document.getElementById('bcvLastUpdate').innerHTML = `<i class="bi bi-clock-history me-1"></i>Actualizado: ${new Date().toLocaleTimeString()}`;
         localStorage.setItem('bcvRate', rate);
-        // Actualizar precios en productos
         ProductManager.renderPriceList();
-        updateStatsGlobal();
+        updateStats();
     }
-
     function saveManualBcv() {
         const val = parseFloat(document.getElementById('tasaBcv').value);
-        if (!val || val <= 0) {
-            showToast('Error', 'Ingresa un valor válido', 'error');
-            return;
-        }
+        if (isNaN(val) || val <= 0) { showToast('Error', 'Tasa inválida', 'error'); return; }
         updateBcvDisplay(val);
         showToast('Tasa actualizada', `Nueva tasa: ${val.toFixed(2)} Bs/USD`, 'success');
     }
-
     function saveBcvSettings() {
         const val = parseFloat(document.getElementById('settingsBcv').value);
-        if (!val || val <= 0) {
-            showToast('Error', 'Tasa inválida', 'error');
-            return;
-        }
+        if (isNaN(val) || val <= 0) { showToast('Error', 'Tasa inválida', 'error'); return; }
         updateBcvDisplay(val);
         showToast('Configuración guardada', `Tasa BCV: ${val.toFixed(2)}`, 'success');
     }
-
     function initBcvSystem() {
-        const savedRate = parseFloat(localStorage.getItem('bcvRate'));
-        if (savedRate && !isNaN(savedRate)) {
-            updateBcvDisplay(savedRate);
-        } else {
-            updateBcvDisplay(36);
-        }
+        const saved = parseFloat(localStorage.getItem('bcvRate'));
+        updateBcvDisplay(saved && !isNaN(saved) ? saved : 36);
         document.getElementById('tasaBcv').value = currentBcvRate;
     }
-
-    // Conversiones
     function convertToBs() {
         const usd = parseFloat(document.getElementById('calcUSD').value) || 0;
         document.getElementById('calcBs').value = (usd * currentBcvRate).toFixed(2);
@@ -483,7 +394,7 @@
         document.getElementById('calcUSD').value = (bs / currentBcvRate).toFixed(2);
     }
 
-    // -------------------- PRODUCT MANAGER CON SUPABASE --------------------
+    // ==================== PRODUCT MANAGER ====================
     const ProductManager = {
         products: [],
         currentEditingId: null,
@@ -491,7 +402,7 @@
         async init() {
             await this.loadProducts();
             this.renderPriceList();
-            updateStatsGlobal();
+            updateStats();
         },
 
         async loadProducts() {
@@ -503,21 +414,20 @@
                 .order('created_at', { ascending: false });
             if (error) {
                 console.error(error);
-                showToast('Error', 'No se pudieron cargar los productos', 'error');
+                showToast('Error', 'No se pudieron cargar productos', 'error');
                 return;
             }
             this.products = data || [];
-            // Convertir datos numéricos
             this.products.forEach(p => {
                 p.totalCost = parseFloat(p.totalCost);
                 p.units = parseInt(p.units);
                 p.empaques = parseInt(p.empaques);
                 p.profit = parseFloat(p.profit);
             });
-            localStorage.setItem('products_sync', JSON.stringify(this.products));
         },
 
         async saveProduct() {
+            if (!currentUser) return;
             const product = {
                 user_id: currentUser.id,
                 name: document.getElementById('productName').value,
@@ -528,11 +438,7 @@
                 created_at: new Date().toISOString()
             };
             if (this.currentEditingId) {
-                const { error } = await supabase
-                    .from('products')
-                    .update(product)
-                    .eq('id', this.currentEditingId)
-                    .eq('user_id', currentUser.id);
+                const { error } = await supabase.from('products').update(product).eq('id', this.currentEditingId).eq('user_id', currentUser.id);
                 if (error) { showToast('Error', error.message, 'error'); return; }
                 showToast('Actualizado', 'Producto actualizado', 'success');
             } else {
@@ -543,7 +449,7 @@
             await this.loadProducts();
             this.clearForm();
             this.renderPriceList();
-            updateStatsGlobal();
+            updateStats();
         },
 
         async deleteProduct(id) {
@@ -551,11 +457,11 @@
             if (error) { showToast('Error', error.message, 'error'); return; }
             await this.loadProducts();
             this.renderPriceList();
-            updateStatsGlobal();
+            updateStats();
             showToast('Eliminado', 'Producto eliminado', 'warning');
         },
 
-        async editProduct(id) {
+        editProduct(id) {
             const product = this.products.find(p => p.id === id);
             this.currentEditingId = id;
             document.getElementById('productName').value = product.name;
@@ -575,11 +481,11 @@
             document.getElementById('saveBtn').innerHTML = '<i class="bi bi-check-lg"></i> Guardar Producto';
         },
 
-        calculatePrices(product) {
-            const unitCost = product.totalCost / product.units;
-            const salePrice = unitCost * (1 + (product.profit / 100));
-            const wholesalePrice = salePrice * product.units;
-            const totalUnits = product.units * product.empaques;
+        calculatePrices(p) {
+            const unitCost = p.totalCost / p.units;
+            const salePrice = unitCost * (1 + p.profit / 100);
+            const wholesalePrice = salePrice * p.units;
+            const totalUnits = p.units * p.empaques;
             const totalSalePrice = salePrice * totalUnits;
             const utilityPerUnit = salePrice - unitCost;
             const totalUtility = utilityPerUnit * totalUnits;
@@ -596,37 +502,31 @@
             for (const p of this.products) {
                 const pr = this.calculatePrices(p);
                 html += `<tr>
-                            <td><strong>${p.name}</strong></td>
-                            <td><div class="price-display"><span class="price-usd">$${pr.unitCost.toFixed(2)}</span><span class="price-bs">Bs ${(pr.unitCost * currentBcvRate).toFixed(2)}</span></div></td>
-                            <td><div><span class="price-usd">$${pr.salePrice.toFixed(2)}</span><span class="price-bs">Bs ${(pr.salePrice * currentBcvRate).toFixed(2)}</span></div></td>
-                            <td><div><span class="price-usd">$${pr.wholesalePrice.toFixed(2)}</span><span class="price-bs">Bs ${(pr.wholesalePrice * currentBcvRate).toFixed(2)}</span></div></td>
-                            <td><div><span class="price-usd">$${pr.totalSalePrice.toFixed(2)}</span><span class="price-bs">Bs ${(pr.totalSalePrice * currentBcvRate).toFixed(2)}</span></div></td>
-                            <td><div><span class="price-usd">$${pr.utilityPerUnit.toFixed(2)}/u</span><span class="text-success">$${pr.totalUtility.toFixed(2)}</span></div></td>
-                            <td><div class="d-flex gap-1"><button class="tg-btn tg-btn-sm tg-btn-warning" onclick="ProductManager.editProduct(${p.id})"><i class="bi bi-pencil-fill"></i></button><button class="tg-btn tg-btn-sm tg-btn-danger" onclick="ProductManager.deleteProduct(${p.id})"><i class="bi bi-trash3-fill"></i></button></div></td>
-                          </tr>`;
+                    <td><strong>${p.name}</strong></td>
+                    <td><div><span class="price-usd">$${pr.unitCost.toFixed(2)}</span><br><span class="price-bs">Bs ${(pr.unitCost * currentBcvRate).toFixed(2)}</span></div></td>
+                    <td><div><span class="price-usd">$${pr.salePrice.toFixed(2)}</span><br><span class="price-bs">Bs ${(pr.salePrice * currentBcvRate).toFixed(2)}</span></div></td>
+                    <td><div><span class="price-usd">$${pr.wholesalePrice.toFixed(2)}</span><br><span class="price-bs">Bs ${(pr.wholesalePrice * currentBcvRate).toFixed(2)}</span></div></td>
+                    <td><div><span class="price-usd">$${pr.totalSalePrice.toFixed(2)}</span><br><span class="price-bs">Bs ${(pr.totalSalePrice * currentBcvRate).toFixed(2)}</span></div></td>
+                    <td><div><span class="price-usd">$${pr.utilityPerUnit.toFixed(2)}/u</span><br><span class="text-success">$${pr.totalUtility.toFixed(2)}</span></div></td>
+                    <td><div class="d-flex gap-1"><button class="tg-btn tg-btn-sm tg-btn-warning" onclick="ProductManager.editProduct(${p.id})"><i class="bi bi-pencil-fill"></i></button><button class="tg-btn tg-btn-sm tg-btn-danger" onclick="ProductManager.deleteProduct(${p.id})"><i class="bi bi-trash3-fill"></i></button></div></td>
+                </tr>`;
             }
             html += '</tbody></table>';
             container.innerHTML = html;
         },
 
         generatePDFByDate() {
-            const startDate = document.getElementById('pdfStartDate').value;
-            const endDate = document.getElementById('pdfEndDate').value;
-            if (!startDate || !endDate) {
-                showToast('Error', 'Selecciona ambas fechas', 'error');
-                return;
-            }
-            const start = new Date(startDate);
-            const end = new Date(endDate);
-            end.setHours(23,59,59);
+            const start = document.getElementById('pdfStartDate').value;
+            const end = document.getElementById('pdfEndDate').value;
+            if (!start || !end) { showToast('Error', 'Selecciona ambas fechas', 'error'); return; }
+            const from = new Date(start);
+            const to = new Date(end);
+            to.setHours(23,59,59);
             const filtered = this.products.filter(p => {
-                const createdAt = new Date(p.created_at);
-                return createdAt >= start && createdAt <= end;
+                const created = new Date(p.created_at);
+                return created >= from && created <= to;
             });
-            if (filtered.length === 0) {
-                showToast('Sin datos', 'No hay productos en ese rango', 'warning');
-                return;
-            }
+            if (filtered.length === 0) { showToast('Sin datos', 'No hay productos en ese rango', 'warning'); return; }
             this.generatePDFWithData(filtered);
             bootstrap.Modal.getInstance(document.getElementById('pdfDateModal')).hide();
         },
@@ -656,44 +556,35 @@
             if (error) { showToast('Error', error.message, 'error'); return; }
             await this.loadProducts();
             this.renderPriceList();
-            updateStatsGlobal();
+            updateStats();
             showToast('Sistema reiniciado', 'Todos los productos eliminados', 'warning');
         }
     };
 
-    // -------------------- FUNCIONES GLOBALES --------------------
-    function updateStatsGlobal() {
+    // ==================== FUNCIONES GLOBALES ====================
+    function updateStats() {
         const products = ProductManager.products;
         const count = products.length;
-        document.getElementById('statTotalProducts').textContent = count;
-        document.getElementById('productCount').textContent = count;
+        document.getElementById('statTotalProducts').innerText = count;
+        document.getElementById('productCount').innerText = count;
         if (count > 0) {
-            const avgProfit = products.reduce((sum, p) => sum + p.profit, 0) / count;
-            document.getElementById('statAvgMargin').textContent = avgProfit.toFixed(1) + '%';
+            const avgMargin = products.reduce((sum, p) => sum + p.profit, 0) / count;
+            document.getElementById('statAvgMargin').innerText = avgMargin.toFixed(1) + '%';
             const totalValue = products.reduce((sum, p) => sum + ProductManager.calculatePrices(p).totalSalePrice, 0);
-            document.getElementById('statTotalValue').textContent = '$' + totalValue.toFixed(0);
-            const topProduct = products.reduce((best, p) => {
-                const pPrices = ProductManager.calculatePrices(p);
-                const bPrices = ProductManager.calculatePrices(best);
-                return pPrices.totalUtility > bPrices.totalUtility ? p : best;
-            }, products[0]);
-            document.getElementById('statTopProduct').textContent = topProduct.name.substring(0, 12);
+            document.getElementById('statTotalValue').innerText = '$' + totalValue.toFixed(0);
+            const best = products.reduce((a,b) => ProductManager.calculatePrices(a).totalUtility > ProductManager.calculatePrices(b).totalUtility ? a : b);
+            document.getElementById('statTopProduct').innerText = best.name.substring(0,12);
+            // Actividad reciente
+            const tbody = document.getElementById('recentActivityTable');
+            tbody.innerHTML = products.slice(-5).reverse().map(p => {
+                const pr = ProductManager.calculatePrices(p);
+                return `<tr><td><strong>${p.name}</strong></td><td class="price-usd">$${pr.salePrice.toFixed(2)}</td><td class="text-success">$${pr.utilityPerUnit.toFixed(2)}</td><td><span class="badge bg-success">${p.profit}%</span></td></tr>`;
+            }).join('');
         } else {
-            document.getElementById('statAvgMargin').textContent = '0%';
-            document.getElementById('statTotalValue').textContent = '$0';
-            document.getElementById('statTopProduct').textContent = '--';
-        }
-        // Tabla actividad reciente
-        const tbody = document.getElementById('recentActivityTable');
-        if (tbody) {
-            if (count === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" class="text-center text-muted py-4">No hay productos registrados</td></tr>`;
-            } else {
-                tbody.innerHTML = products.slice(-5).reverse().map(p => {
-                    const prices = ProductManager.calculatePrices(p);
-                    return `<tr><td><strong>${p.name}</strong></td><td class="price-usd">$${prices.salePrice.toFixed(2)}</td><td class="text-success">$${prices.utilityPerUnit.toFixed(2)}</td><td><span class="badge bg-success">${p.profit}%</span></td></tr>`;
-                }).join('');
-            }
+            document.getElementById('statAvgMargin').innerText = '0%';
+            document.getElementById('statTotalValue').innerText = '$0';
+            document.getElementById('statTopProduct').innerText = '--';
+            document.getElementById('recentActivityTable').innerHTML = '<tr><td colspan="4" class="text-center">No hay productos</td></tr>';
         }
         updateCharts();
     }
@@ -705,77 +596,48 @@
         const gridColor = isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)';
         Chart.defaults.color = textColor;
         Chart.defaults.borderColor = gridColor;
-        const products = ProductManager.products.slice(0, 8);
-        const labels = products.map(p => p.name.substring(0, 15));
+        const products = ProductManager.products.slice(0,8);
+        const labels = products.map(p => p.name.substring(0,15));
         const priceCtx = document.getElementById('priceDistributionChart');
-        if (priceCtx) {
-            priceChart = new Chart(priceCtx, {
-                type: 'doughnut',
-                data: { labels: labels.length ? labels : ['Sin datos'], datasets: [{ data: labels.length ? products.map(p => ProductManager.calculatePrices(p).salePrice) : [1], backgroundColor: ['#0d6efd','#0dcaf0','#198754','#20c997','#6f42c1','#d63384','#fd7e14','#ffc107'], borderWidth: 0 }] },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } }, cutout: '65%' }
-            });
-        }
+        if (priceCtx) priceChart = new Chart(priceCtx, { type:'doughnut', data:{ labels:labels.length?labels:['Sin datos'], datasets:[{ data:labels.length?products.map(p=>ProductManager.calculatePrices(p).salePrice):[1], backgroundColor:['#0d6efd','#0dcaf0','#198754','#20c997','#6f42c1','#d63384','#fd7e14','#ffc107'], borderWidth:0 }] }, options:{ responsive:true, maintainAspectRatio:false, cutout:'65%' } });
         const profitCtx = document.getElementById('profitChart');
-        if (profitCtx) {
-            profitChart = new Chart(profitCtx, {
-                type: 'bar',
-                data: { labels: labels.length ? labels : ['Sin datos'], datasets: [{ label: 'Utilidad (USD)', data: labels.length ? products.map(p => ProductManager.calculatePrices(p).totalUtility) : [0], backgroundColor: 'rgba(25, 135, 84, 0.7)', borderRadius: 8 }] },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
-            });
-        }
+        if (profitCtx) profitChart = new Chart(profitCtx, { type:'bar', data:{ labels:labels.length?labels:['Sin datos'], datasets:[{ label:'Utilidad (USD)', data:labels.length?products.map(p=>ProductManager.calculatePrices(p).totalUtility):[0], backgroundColor:'rgba(25,135,84,0.7)', borderRadius:8 }] }, options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{ display:false } }, scales:{ y:{ beginAtZero:true } } } });
         const compCtx = document.getElementById('comparisonChart');
-        if (compCtx) {
-            comparisonChart = new Chart(compCtx, {
-                type: 'line',
-                data: { labels: labels.length ? labels : ['Sin datos'], datasets: [{ label: 'Costo Unitario', data: labels.length ? products.map(p => ProductManager.calculatePrices(p).unitCost) : [0], borderColor: '#dc3545', tension: 0.4 }, { label: 'Precio Venta', data: labels.length ? products.map(p => ProductManager.calculatePrices(p).salePrice) : [0], borderColor: '#198754', tension: 0.4 }, { label: 'Utilidad', data: labels.length ? products.map(p => ProductManager.calculatePrices(p).utilityPerUnit) : [0], borderColor: '#0dcaf0', tension: 0.4 }] },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } }, scales: { y: { beginAtZero: true } } }
-            });
-        }
+        if (compCtx) comparisonChart = new Chart(compCtx, { type:'line', data:{ labels:labels.length?labels:['Sin datos'], datasets:[{ label:'Costo Unitario', data:labels.length?products.map(p=>ProductManager.calculatePrices(p).unitCost):[0], borderColor:'#dc3545', tension:0.4 },{ label:'Precio Venta', data:labels.length?products.map(p=>ProductManager.calculatePrices(p).salePrice):[0], borderColor:'#198754', tension:0.4 },{ label:'Utilidad', data:labels.length?products.map(p=>ProductManager.calculatePrices(p).utilityPerUnit):[0], borderColor:'#0dcaf0', tension:0.4 }] }, options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{ position:'bottom' } }, scales:{ y:{ beginAtZero:true } } } });
     }
-    function updateCharts() {
-        if (!priceChart && !profitChart && !comparisonChart) { initCharts(); return; }
-        const products = ProductManager.products.slice(0, 8);
-        const labels = products.map(p => p.name.substring(0, 15));
-        if (labels.length) {
-            if (priceChart) { priceChart.data.labels = labels; priceChart.data.datasets[0].data = products.map(p => ProductManager.calculatePrices(p).salePrice); priceChart.update(); }
-            if (profitChart) { profitChart.data.labels = labels; profitChart.data.datasets[0].data = products.map(p => ProductManager.calculatePrices(p).totalUtility); profitChart.update(); }
-            if (comparisonChart) { comparisonChart.data.labels = labels; comparisonChart.data.datasets[0].data = products.map(p => ProductManager.calculatePrices(p).unitCost); comparisonChart.data.datasets[1].data = products.map(p => ProductManager.calculatePrices(p).salePrice); comparisonChart.data.datasets[2].data = products.map(p => ProductManager.calculatePrices(p).utilityPerUnit); comparisonChart.update(); }
-        }
-    }
+    function updateCharts() { if(priceChart) priceChart.update(); if(profitChart) profitChart.update(); if(comparisonChart) comparisonChart.update(); }
 
-    function showToast(title, message, type = 'info') {
-        const container = document.getElementById('toastContainer') || (() => { const div = document.createElement('div'); div.id = 'toastContainer'; div.className = 'toast-container-custom'; document.body.appendChild(div); return div; })();
+    function showToast(title, message, type='info') {
+        const container = document.getElementById('toastContainer') || (()=>{ let d=document.createElement('div'); d.id='toastContainer'; d.className='toast-container-custom'; document.body.appendChild(d); return d; })();
         const toast = document.createElement('div');
-        toast.className = 'tg-toast show';
-        const icons = { success: 'bi-check-circle-fill', error: 'bi-x-circle-fill', warning: 'bi-exclamation-triangle-fill', info: 'bi-info-circle-fill' };
+        toast.className = 'tg-toast';
+        const icons = { success:'bi-check-circle-fill', error:'bi-x-circle-fill', warning:'bi-exclamation-triangle-fill', info:'bi-info-circle-fill' };
         toast.innerHTML = `<div class="toast-icon ${type}"><i class="bi ${icons[type]}"></i></div><div class="toast-content"><div class="toast-title">${title}</div><div class="toast-message">${message}</div></div><button class="btn-close btn-close-white" style="opacity:0.3;" onclick="this.parentElement.remove()"></button>`;
         container.appendChild(toast);
-        setTimeout(() => { toast.classList.add('hide'); setTimeout(() => toast.remove(), 500); }, 4000);
+        setTimeout(() => { toast.remove(); }, 4000);
     }
 
-    function showSection(sectionName, navElement) {
+    function showSection(sectionName, btn) {
         document.querySelectorAll('.section-page').forEach(s => s.classList.remove('active'));
         document.getElementById(`section-${sectionName}`).classList.add('active');
         document.querySelectorAll('.nav-item-tg').forEach(n => n.classList.remove('active'));
-        if (navElement) navElement.classList.add('active');
-        else document.querySelector(`[data-section="${sectionName}"]`)?.classList.add('active');
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-        if (sectionName === 'dashboard') updateCharts();
+        if(btn) btn.classList.add('active');
+        window.scrollTo({ top:0, behavior:'smooth' });
+        if(sectionName === 'dashboard') updateCharts();
     }
 
     function toggleTheme() {
         const html = document.documentElement;
         const isDark = html.getAttribute('data-bs-theme') === 'dark';
-        const newTheme = isDark ? 'light' : 'dark';
-        html.setAttribute('data-bs-theme', newTheme);
-        localStorage.setItem('theme', newTheme);
+        html.setAttribute('data-bs-theme', isDark ? 'light' : 'dark');
+        localStorage.setItem('theme', isDark ? 'light' : 'dark');
         document.getElementById('themeIcon').className = isDark ? 'bi bi-sun-fill' : 'bi bi-moon-stars';
         updateCharts();
     }
 
     function confirmReset() { if(confirm('¿Eliminar todos tus productos?')) ProductManager.resetSystem(); }
     function showPDFDateModal() { new bootstrap.Modal(document.getElementById('pdfDateModal')).show(); }
-    function initAnimationsGlobal() { gsap.utils.toArray('.fade-up').forEach(el => { gsap.fromTo(el, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.6, scrollTrigger: { trigger: el, start: 'top 90%' } }); }); }
+    function initAnimations() { gsap.utils.toArray('.fade-up').forEach(el => gsap.fromTo(el,{opacity:0,y:30},{opacity:1,y:0,duration:0.6,scrollTrigger:{trigger:el,start:'top 90%'}})); }
 
     window.ProductManager = ProductManager;
     window.showSection = showSection;
@@ -787,16 +649,15 @@
     window.convertToBs = convertToBs;
     window.convertToUsd = convertToUsd;
 
-    // Partículas (opcional)
+    // Iniciar partículas (simple)
     const canvasP = document.getElementById('particlesCanvas');
     if (canvasP) {
-        // código básico de partículas (omitido por brevedad, funciona igual)
         canvasP.width = window.innerWidth;
         canvasP.height = window.innerHeight;
+        // Se puede implementar partículas, pero no es crítico
     }
 </script>
 
-<!-- Manifest para PWA -->
 <link rel="manifest" href="/manifest.json">
 </body>
 </html>
