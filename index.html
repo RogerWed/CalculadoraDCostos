@@ -2,7 +2,53 @@
 <html lang="es" data-bs-theme="dark">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <!-- Viewport optimizado para móviles -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#0d6efd">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Costos Pro•">
+    <meta name="description" content="Sistema de Gestión">
+    
+    <!-- MANIFEST JSON - Esencial para PWA -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Favicon estándar -->
+    <link rel="icon" type="image/jpg" sizes="32x32" href="icon.jpg">
+    <link rel="icon" type="image/jpg" sizes="16x16" href="icon.jpg">
+    
+    <!-- Iconos Apple/iOS -->
+    <link rel="apple-touch-icon" sizes="57x57" href="icon.jpg">
+    <link rel="apple-touch-icon" sizes="60x60" href="icon.jpg">
+    <link rel="apple-touch-icon" sizes="72x72" href="icon.jpg">
+    <link rel="apple-touch-icon" sizes="76x76" href="icon.jpg">
+    <link rel="apple-touch-icon" sizes="114x114" href="icon.jpg">
+    <link rel="apple-touch-icon" sizes="120x120" href="icon.jpg">
+    <link rel="apple-touch-icon" sizes="144x144" href="icon.jpg">
+    <link rel="apple-touch-icon" sizes="152x152" href="icon.jpg">
+    <link rel="apple-touch-icon" sizes="180x180" href="icon.jpg">
+    <link rel="apple-touch-icon" sizes="192x192" href="icon.jpg">
+    
+    <!-- Iconos Android/Chrome -->
+    <link rel="icon" type="image/jpg" sizes="192x192" href="icon.jpg">
+    <link rel="icon" type="image/jpg" sizes="512x512" href="icon.jpg">
+    
+    <!-- Icono Legacy -->
+    <link rel="shortcut icon" href="icon.png">
+    
+    <!-- Microsoft Tiles -->
+    <meta name="msapplication-TileColor" content="#0d6efd">
+    <meta name="msapplication-TileImage" content="icon.jpg">
+    <meta name="msapplication-config" content="browserconfig.xml">
+
+
+
+
+
+
+
+
+    
     <title>Calculadora de Costos Pro</title>
     <link href="icon.jpg" rel="icon">
     <!-- Bootstrap 5.3 -->
@@ -989,6 +1035,16 @@
             font-size: 0.85rem;
         }
 
+        .apps-footer {
+            text-align: center;
+            padding: 20px 16px;
+            color: #6b7280;
+            font-size: 0.85rem;
+            margin-top: 30px;
+            border-top: 1px solid #e5e7eb;
+            margin-bottom: calc(20px + var(--safe-area-bottom));
+        }
+
         /* ===== SCROLLBAR ===== */
         ::-webkit-scrollbar {
             width: 6px;
@@ -1288,6 +1344,11 @@
             </button>
             <p class="login-footer">Al iniciar sesi&oacute;n, aceptas nuestros t&eacute;rminos de uso</p>
         </div>
+                    <!-- Footer -->
+            <div class="app-footer">
+                <p class="mb-1">©2026 Todos los derechos reservados</p>
+                <p class="mb-0 fw-bold text-primary">&lt;Dev RogerWeb&gt;</p>
+            </div>
     </div>
 
     <!-- Background Mesh -->
