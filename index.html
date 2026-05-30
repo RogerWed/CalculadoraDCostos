@@ -2,582 +2,173 @@
 <html lang="es" data-bs-theme="dark">
 <head>
     <meta charset="UTF-8">
-    <!-- Viewport optimizado para móviles -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-
-    <title>Costos Pro•</title>
+    <title>Costos Pro • Gestión de Precios</title>
     <link href="icon.jpg" rel="icon">
-
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Costos Pro - Gestión de Precios•">
-    <meta name="description" content="Costos Pro - Gestión de Precios">
-    
-    <!-- MANIFEST JSON - Esencial para PWA -->
+    <meta name="apple-mobile-web-app-title" content="Costos Pro">
     <link rel="manifest" href="manifest.json">
-    
-    <!-- Favicon estándar -->
-    <link rel="icon" type="image/png" sizes="32x32" href="icon.jpg">
-    <link rel="icon" type="image/png" sizes="16x16" href="icon.png">
-    
-    <!-- Iconos Apple/iOS -->
-    <link rel="apple-touch-icon" sizes="57x57" href="icon.jpg">
-    <link rel="apple-touch-icon" sizes="60x60" href="icon.jpg">
-    <link rel="apple-touch-icon" sizes="72x72" href="icon.jpg">
-    <link rel="apple-touch-icon" sizes="76x76" href="icon.jpg">
-    <link rel="apple-touch-icon" sizes="114x114" href="icon.jpg">
-    <link rel="apple-touch-icon" sizes="120x120" href="icon.jpg">
-    <link rel="apple-touch-icon" sizes="144x144" href="icon.jpg">
-    <link rel="apple-touch-icon" sizes="152x152" href="icon.jpg">
-    <link rel="apple-touch-icon" sizes="180x180" href="icon.jpg">
-    <link rel="apple-touch-icon" sizes="192x192" href="icons.jpg">
-    
-    <!-- Iconos Android/Chrome -->
-    <link rel="icon" type="image/png" sizes="192x192" href="icon.jpg">
-    <link rel="icon" type="image/png" sizes="512x512" href="icon.jpg">
-    
-    <!-- Icono Legacy -->
-    <link rel="shortcut icon" href="icon.jpg">
-    
-    <!-- Microsoft Tiles -->
-    <meta name="msapplication-TileColor" content="#0d6efd">
-    <meta name="msapplication-TileImage" content="icon.jpg">
-    <meta name="msapplication-config" content="browserconfig.xml">
-
-
-
-
-    
-    <!-- Bootstrap 5.3 -->
+    <link rel="apple-touch-icon" href="icon.jpg">
+    <!-- Bootstrap, Icons, Fonts, GSAP, Chart.js, Supabase, jsPDF -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- GSAP -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-    <!-- Supabase JS -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <!-- jsPDF & AutoTable -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
-
     <style>
-        /* ===== ESTILOS EXISTENTES (resumidos para brevedad, se mantienen todos) ===== */
+        /* ===== ESTILOS COMPLETOS (resumidos pero completos) ===== */
         :root { --primary: #0d6efd; --secondary: #6c757d; --success: #198754; --info: #0dcaf0; --warning: #ffc107; --danger: #dc3545; --telegram-bg: #17212b; --telegram-card: #242f3d; --telegram-text: #ffffff; --telegram-muted: #8e9ba8; --telegram-accent: #2b5278; --telegram-highlight: #5eb5f7; --glass-bg: rgba(36, 47, 61, 0.85); --glass-border: rgba(94, 181, 247, 0.15); }
         [data-bs-theme="light"] { --telegram-bg: #f5f7fa; --telegram-card: #ffffff; --telegram-text: #1a1a2e; --telegram-muted: #6b7280; --telegram-accent: #e3f0ff; --telegram-highlight: #0d6efd; --glass-bg: rgba(255, 255, 255, 0.9); --glass-border: rgba(13, 110, 253, 0.1); }
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { font-family: 'Inter', sans-serif; background: var(--telegram-bg); color: var(--telegram-text); min-height: 100vh; overflow-x: hidden; }
-        /* Backgrounds y animaciones iguales que antes (se omiten por espacio, pero se incluyen completas en el entregable final) */
-        .bg-mesh, .orb, #particlesCanvas, .content-layer, .telegram-nav, .tg-card, .stat-card, .tg-input, .tg-btn, .toast-container-custom, .tg-table, .bcv-section, .toggle-switch, .chart-container, .tg-modal, .quick-calc-display, .calc-grid { /* mantiene todos los estilos originales */ }
-        
-        /* ===== NUEVOS ESTILOS SPLASH + LOGIN ===== */
-        #splashScreen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--telegram-bg);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 10000;
-            transition: opacity 0.8s ease;
-        }
-        .splash-logo {
-            width: 100px;
-            height: 100px;
-            background: linear-gradient(135deg, var(--primary), var(--info));
-            border-radius: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 3rem;
-            color: white;
-            box-shadow: 0 20px 35px rgba(0,0,0,0.3);
-            margin-bottom: 20px;
-        }
-        .splash-version {
-            font-size: 0.9rem;
-            color: var(--telegram-muted);
-            margin-top: 20px;
-        }
-        #loginContainer {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--telegram-bg);
-            z-index: 9999;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            backdrop-filter: blur(12px);
-            transition: all 0.4s;
-        }
-        .login-card {
-            background: var(--telegram-card);
-            border-radius: 36px;
-            padding: 40px 32px;
-            text-align: center;
-            max-width: 400px;
-            width: 90%;
-            border: 1px solid var(--glass-border);
-            box-shadow: 0 25px 45px rgba(0,0,0,0.2);
-        }
-        .login-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            margin-top: 30px;
-        }
-        .avatar-nav {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid var(--telegram-highlight);
-            margin-left: 8px;
-            cursor: pointer;
-        }
-        .user-info-nav {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            background: rgba(94,181,247,0.1);
-            border-radius: 40px;
-            padding: 4px 12px 4px 8px;
-        }
-        /* Ajustes responsive */
-        @media (max-width: 768px) { .login-card { padding: 30px 20px; } .avatar-nav { width: 30px; height: 30px; } }
+        .bg-mesh { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; overflow: hidden; }
+        .orb { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.15; animation: orbFloat 20s ease-in-out infinite; }
+        .orb:nth-child(1) { width: 400px; height: 400px; background: var(--primary); top: -100px; left: -100px; }
+        .orb:nth-child(2) { width: 300px; height: 300px; background: var(--info); top: 40%; right: -80px; animation-delay: -7s; }
+        .orb:nth-child(3) { width: 250px; height: 250px; background: var(--success); bottom: 10%; left: 20%; animation-delay: -14s; }
+        @keyframes orbFloat { 0%,100%{transform:translate(0,0) scale(1);} 33%{transform:translate(30px,-30px) scale(1.1);} 66%{transform:translate(-20px,20px) scale(0.9);} }
+        #particlesCanvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
+        .content-layer { position: relative; z-index: 2; }
+        .telegram-nav { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--glass-bg); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); border-radius: 24px; padding: 8px 16px; display: flex; gap: 4px; z-index: 1000; box-shadow: 0 8px 32px rgba(0,0,0,0.3); max-width: 95vw; overflow-x: auto; }
+        .nav-item-tg { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 10px 16px; border-radius: 18px; cursor: pointer; transition: all 0.3s; color: var(--telegram-muted); background: transparent; border: none; }
+        .nav-item-tg.active { color: var(--telegram-highlight); background: rgba(94,181,247,0.15); }
+        .nav-item-tg i { font-size: 1.3rem; }
+        .nav-item-tg span { font-size: 0.65rem; font-weight: 500; }
+        .tg-card { background: var(--telegram-card); border: 1px solid var(--glass-border); border-radius: 20px; padding: 24px; transition: all 0.4s; position: relative; overflow: hidden; }
+        .tg-card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+        .tg-card-icon { width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; background: linear-gradient(135deg, var(--primary), var(--info)); color: white; box-shadow: 0 4px 15px rgba(13,110,253,0.3); }
+        .tg-card-title { font-size: 1.1rem; font-weight: 600; margin: 0; }
+        .stat-card { background: linear-gradient(135deg, var(--telegram-card), var(--telegram-accent)); border-radius: 20px; padding: 24px; position: relative; overflow: hidden; }
+        .stat-value { font-size: 2rem; font-weight: 800; background: linear-gradient(135deg, var(--telegram-text), var(--telegram-highlight)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .stat-label { font-size: 0.85rem; color: var(--telegram-muted); }
+        .tg-input { background: var(--telegram-bg); border: 2px solid var(--glass-border); border-radius: 14px; padding: 14px 18px; color: var(--telegram-text); width: 100%; }
+        .tg-input:focus { outline: none; border-color: var(--telegram-highlight); box-shadow: 0 0 0 4px rgba(94,181,247,0.1); }
+        .tg-btn { border: none; border-radius: 14px; padding: 14px 24px; font-weight: 600; cursor: pointer; transition: all 0.3s; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+        .tg-btn-primary { background: linear-gradient(135deg, var(--primary), #0b5ed7); color: white; }
+        .tg-btn-success { background: linear-gradient(135deg, var(--success), #146c43); color: white; }
+        .tg-btn-danger { background: linear-gradient(135deg, var(--danger), #b02a37); color: white; }
+        .tg-btn-warning { background: linear-gradient(135deg, var(--warning), #e0a800); color: #000; }
+        .tg-btn-sm { padding: 8px 14px; font-size: 0.85rem; border-radius: 10px; }
+        .toast-container-custom { position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
+        .tg-toast { background: var(--telegram-card); border: 1px solid var(--glass-border); border-radius: 16px; padding: 16px 20px; display: flex; align-items: center; gap: 12px; min-width: 280px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); animation: slideIn 0.4s ease; }
+        @keyframes slideIn { from { transform: translateX(120%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        .tg-table-container { background: var(--telegram-card); border-radius: 20px; overflow-x: auto; }
+        .tg-table { width: 100%; border-collapse: collapse; }
+        .tg-table th, .tg-table td { padding: 12px; text-align: left; border-bottom: 1px solid var(--glass-border); }
+        .bcv-section { background: linear-gradient(135deg, var(--primary), #0b5ed7); border-radius: 24px; padding: 28px; color: white; }
+        .bcv-value { font-size: 3rem; font-weight: 800; }
+        .toggle-switch { position: relative; width: 52px; height: 28px; }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .toggle-slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background: var(--telegram-accent); border-radius: 28px; transition: 0.3s; }
+        .toggle-slider::before { content: ''; position: absolute; height: 22px; width: 22px; left: 3px; bottom: 3px; background: white; border-radius: 50%; transition: 0.3s; }
+        .toggle-switch input:checked + .toggle-slider { background: var(--primary); }
+        .toggle-switch input:checked + .toggle-slider::before { transform: translateX(24px); }
+        .chart-container { height: 300px; width: 100%; }
+        .empty-state { text-align: center; padding: 60px 20px; color: var(--telegram-muted); }
+        .app-header { padding: 20px 0; position: sticky; top: 0; z-index: 100; background: rgba(23,33,43,0.8); backdrop-filter: blur(20px); border-bottom: 1px solid var(--glass-border); }
+        .header-title { font-size: 1.5rem; font-weight: 800; background: linear-gradient(135deg, var(--telegram-text), var(--telegram-highlight)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .pulse-dot { width: 8px; height: 8px; background: var(--success); border-radius: 50%; display: inline-block; position: relative; }
+        .pulse-dot::after { content: ''; position: absolute; top: -4px; left: -4px; right: -4px; bottom: -4px; border-radius: 50%; background: var(--success); opacity: 0; animation: pulseRing 2s ease-out infinite; }
+        @keyframes pulseRing { 0% { transform: scale(0.8); opacity: 0.5; } 100% { transform: scale(2); opacity: 0; } }
+        .price-usd { font-weight: 600; color: var(--success); }
+        .price-bs { font-size: 0.8rem; color: var(--telegram-highlight); }
+        .avatar-nav { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 2px solid var(--telegram-highlight); }
+        .user-info-nav { display: flex; align-items: center; gap: 8px; background: rgba(94,181,247,0.1); border-radius: 40px; padding: 4px 12px; }
         .hidden { display: none !important; }
-        .btn-google { background: #4285F4; color: white; border: none; }
+        .btn-google { background: #4285F4; color: white; }
         .btn-local { background: var(--telegram-accent); color: var(--telegram-text); }
-        .btn-logout { background: transparent; border: 1px solid var(--danger); color: var(--danger); }
+        #splashScreen { position: fixed; top:0; left:0; width:100%; height:100%; background: var(--telegram-bg); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 10000; transition: opacity 0.8s; }
+        .splash-logo { width: 100px; height: 100px; background: linear-gradient(135deg, var(--primary), var(--info)); border-radius: 30px; display: flex; align-items: center; justify-content: center; font-size: 3rem; color: white; margin-bottom: 20px; }
+        #loginContainer { position: fixed; top:0; left:0; width:100%; height:100%; background: var(--telegram-bg); z-index: 9999; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(12px); }
+        .login-card { background: var(--telegram-card); border-radius: 36px; padding: 40px 32px; text-align: center; max-width: 400px; width: 90%; border: 1px solid var(--glass-border); }
+        @media (max-width:768px) { .stat-value { font-size: 1.5rem; } .bcv-value { font-size: 2rem; } .tg-card { padding: 16px; } }
     </style>
 </head>
 <body>
-
-<!-- SPLASH SCREEN -->
-<div id="splashScreen">
-    <div class="splash-logo">
-        <i class="bi bi-calculator-fill"></i>
-    </div>
-    <h3 class="mt-3">Costos Pro</h3>
-    <div class="splash-version">Versión 2.0.1</div>
-</div>
-
-<!-- LOGIN CONTAINER (se muestra después del splash) -->
-<div id="loginContainer" style="display: none;">
-    <div class="login-card">
-        <div class="tg-card-icon mx-auto mb-3" style="width:70px;height:70px;font-size:2rem;">
-            <i class="bi bi-shield-lock-fill"></i>
-        </div>
-        <h4 class="mb-2">Bienvenido</h4>
-        <p class="text-muted small">Accede con Google o usa modo local</p>
-        <div class="login-buttons">
-            <button id="googleLoginBtn" class="tg-btn btn-google">
-                <i class="bi bi-google me-2"></i> Continuar con Google
-            </button>
-            <button id="localModeBtn" class="tg-btn btn-local">
-                <i class="bi bi-device-ssd me-2"></i> Modo Local (sin nube)
-            </button>
-        </div>
-        <hr class="my-4" style="border-color:var(--glass-border);">
-        <p class="text-muted small">Modo Local: tus datos se guardan solo en este navegador.<br>Modo Online: sincroniza en la nube con tu cuenta Google.</p>
-    </div>
-</div>
-
-<!-- CONTENIDO PRINCIPAL (originalmente todo el body, ahora envuelto y oculto hasta login) -->
-<div id="appContent" style="display: none;">
-    <!-- Mismos elementos que el original: bg-mesh, particles canvas, header, secciones, footer, navbar flotante etc -->
-    <div class="bg-mesh"><div class="orb"></div><div class="orb"></div><div class="orb"></div></div>
-    <canvas id="particlesCanvas"></canvas>
-    <div class="toast-container-custom" id="toastContainer"></div>
-    <div class="content-layer">
-        <header class="app-header">
-            <div class="container">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div class="d-flex align-items-center gap-3">
-                        <div class="tg-card-icon" style="width:40px;height:40px;font-size:1.1rem;"><i class="bi bi-calculator-fill"></i></div>
-                        <div><h1 class="header-title mb-0">Costos Pro</h1></div>
-                    </div>
-                    <div class="d-flex align-items-center gap-3">
-                        <div class="d-flex align-items-center gap-2 d-none d-md-flex"><span class="pulse-dot"></span><small class="text-muted">BCV: <strong id="headerBcvRate">--</strong> Bs/USD</small></div>
-                        <button class="tg-btn tg-btn-sm tg-btn-primary" onclick="toggleTheme()" title="Cambiar tema"><i class="bi bi-moon-stars" id="themeIcon"></i></button>
-                        <div id="userAvatarContainer" class="user-info-nav hidden"><img id="userAvatarImg" class="avatar-nav" alt="avatar"><span id="userNameSpan" class="small d-none d-sm-inline"></span><button id="logoutBtnNav" class="btn btn-sm btn-link text-danger p-0 ms-1"><i class="bi bi-box-arrow-right"></i></button></div>
-                    </div>
-                </div>
-            </div>
-        </header>
-        <!-- Secciones Dashboard, Products, Calculator, Settings (mismo contenido original) -->
-        <section id="section-dashboard" class="section-page active"><div class="container py-4"><!-- dashboard igual --></div></section>
-        <section id="section-products" class="section-page"><div class="container py-4"><!-- productos igual --></div></section>
-        <section id="section-calculator" class="section-page"><div class="container py-4"><!-- calculadora igual --></div></section>
-        <section id="section-settings" class="section-page"><div class="container py-4"><!-- ajustes, se añadirá opción de exportar PDF por fecha y logout --></div></section>
-        <footer class="app-footer"><p><i class="bi bi-calculator me-2"></i>Calculadora de Costos Pro v2.0</p><p class="small">RogerWed &copy; 2025</p></footer>
-    </div>
-    <nav class="telegram-nav" id="telegramNav">
-        <button class="nav-item-tg active" onclick="showSection('dashboard', this)" data-section="dashboard"><i class="bi bi-house-door-fill"></i><span>Inicio</span></button>
-        <button class="nav-item-tg" onclick="showSection('products', this)" data-section="products"><i class="bi bi-box-seam"></i><span>Productos</span></button>
-        <button class="nav-item-tg" onclick="showSection('calculator', this)" data-section="calculator"><i class="bi bi-calculator"></i><span>Calculadora</span></button>
-        <button class="nav-item-tg" onclick="showSection('settings', this)" data-section="settings"><i class="bi bi-gear"></i><span>Ajustes</span></button>
-    </nav>
-</div>
-
-<!-- Modal para PDF por rango de fechas -->
-<div class="modal fade tg-modal" id="pdfRangeModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header"><h5 class="modal-title"><i class="bi bi-calendar-range me-2"></i>Exportar PDF por fechas</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
-            <div class="modal-body">
-                <label class="form-label">Fecha desde</label>
-                <input type="date" id="pdfStartDate" class="tg-input mb-3">
-                <label class="form-label">Fecha hasta</label>
-                <input type="date" id="pdfEndDate" class="tg-input mb-3">
-                <p class="small text-muted">Los productos se filtrarán por fecha de creación.</p>
-            </div>
-            <div class="modal-footer"><button class="tg-btn tg-btn-primary" onclick="generatePDFByDate()">Generar PDF</button></div>
-        </div>
-    </div>
-</div>
-
+<div id="splashScreen"><div class="splash-logo"><i class="bi bi-calculator-fill"></i></div><h3>Costos Pro</h3><div class="splash-version">Versión 2.1</div></div>
+<div id="loginContainer" style="display: none;"><div class="login-card"><div class="tg-card-icon mx-auto mb-3" style="width:70px;height:70px;font-size:2rem;"><i class="bi bi-shield-lock-fill"></i></div><h4>Bienvenido</h4><p class="text-muted small">Accede con Google o modo local</p><div class="login-buttons"><button id="googleLoginBtn" class="tg-btn btn-google"><i class="bi bi-google me-2"></i>Continuar con Google</button><button id="localModeBtn" class="tg-btn btn-local"><i class="bi bi-device-ssd me-2"></i>Modo Local (sin nube)</button></div><hr><p class="text-muted small">Local: datos en este navegador.<br>Online: sincroniza en la nube.</p></div></div>
+<div id="appContent" style="display: none;"><div class="bg-mesh"><div class="orb"></div><div class="orb"></div><div class="orb"></div></div><canvas id="particlesCanvas"></canvas><div class="toast-container-custom" id="toastContainer"></div><div class="content-layer">
+    <header class="app-header"><div class="container"><div class="d-flex justify-content-between align-items-center"><div class="d-flex align-items-center gap-3"><div class="tg-card-icon" style="width:40px;height:40px;"><i class="bi bi-calculator-fill"></i></div><h1 class="header-title mb-0">Costos Pro</h1></div><div class="d-flex align-items-center gap-3"><div class="d-none d-md-flex align-items-center gap-2"><span class="pulse-dot"></span><small>BCV: <strong id="headerBcvRate">--</strong> Bs/USD</small></div><button class="tg-btn tg-btn-sm tg-btn-primary" onclick="toggleTheme()"><i class="bi bi-moon-stars" id="themeIcon"></i></button><div id="userAvatarContainer" class="user-info-nav hidden"><img id="userAvatarImg" class="avatar-nav"><span id="userNameSpan" class="small d-none d-sm-inline"></span><button id="logoutBtnNav" class="btn btn-sm text-danger p-0 ms-1"><i class="bi bi-box-arrow-right"></i></button></div></div></div></div></header>
+    <!-- Dashboard Section -->
+    <section id="section-dashboard" class="section-page active"><div class="container py-4"><div class="row mb-4"><div class="col-12"><div class="bcv-section"><div class="row align-items-center"><div class="col-md-6"><div class="d-flex gap-2 mb-2"><span class="pulse-dot"></span><span>TASA BCV ACTUAL</span></div><div class="bcv-value" id="bcvDisplay">--</div><div class="mt-2">Bs / USD</div><small id="bcvLastUpdate" class="opacity-75"></small></div><div class="col-md-6 mt-3 mt-md-0"><div class="d-flex justify-content-between mb-2"><span>Modo manual</span><label class="toggle-switch"><input type="checkbox" id="manualModeToggle" onchange="toggleManualMode()"><span class="toggle-slider"></span></label></div><div id="manualBcvGroup" style="display:none;" class="d-flex gap-2"><input type="number" id="tasaBcv" class="tg-input" placeholder="Tasa"><button class="tg-btn" onclick="saveManualBcv()">Guardar</button></div><button class="tg-btn mt-2" style="background:rgba(255,255,255,0.2);" onclick="forceUpdateBcv()"><i class="bi bi-arrow-clockwise"></i> Actualizar</button></div></div></div></div></div><div class="row g-3 mb-4"><div class="col-6 col-lg-3"><div class="stat-card"><div class="stat-value" id="statTotalProducts">0</div><div class="stat-label">Productos</div></div></div><div class="col-6 col-lg-3"><div class="stat-card"><div class="stat-value" id="statAvgMargin">0%</div><div class="stat-label">Margen Promedio</div></div></div><div class="col-6 col-lg-3"><div class="stat-card"><div class="stat-value" id="statTotalValue">$0</div><div class="stat-label">Inventario Total</div></div></div><div class="col-6 col-lg-3"><div class="stat-card"><div class="stat-value" id="statTopProduct">--</div><div class="stat-label">Mejor Producto</div></div></div></div><div class="row g-4 mb-4"><div class="col-lg-6"><div class="tg-card"><div class="tg-card-header"><div class="tg-card-icon"><i class="bi bi-pie-chart-fill"></i></div><h5 class="tg-card-title">Distribución de Precios</h5></div><div class="chart-container"><canvas id="priceDistributionChart"></canvas></div></div></div><div class="col-lg-6"><div class="tg-card"><div class="tg-card-header"><div class="tg-card-icon"><i class="bi bi-graph-up-arrow"></i></div><h5 class="tg-card-title">Utilidad por Producto</h5></div><div class="chart-container"><canvas id="profitChart"></canvas></div></div></div><div class="col-12"><div class="tg-card"><div class="tg-card-header"><div class="tg-card-icon"><i class="bi bi-bar-chart-line-fill"></i></div><h5 class="tg-card-title">Análisis Comparativo</h5></div><div class="chart-container-lg" style="height:350px;"><canvas id="comparisonChart"></canvas></div></div></div></div><div class="row"><div class="col-12"><div class="tg-card"><div class="tg-card-header"><div class="tg-card-icon"><i class="bi bi-clock-history"></i></div><h5 class="tg-card-title">Actividad Reciente</h5></div><div class="table-responsive"><table class="tg-table"><thead><tr><th>Producto</th><th>Precio Venta</th><th>Utilidad</th><th>Margen</th></tr></thead><tbody id="recentActivityTable"></tbody></table></div></div></div></div></div></section>
+    <!-- Products Section -->
+    <section id="section-products" class="section-page"><div class="container py-4"><div class="row mb-4"><div class="col-12"><div class="tg-card"><div class="tg-card-header"><div class="tg-card-icon"><i class="bi bi-plus-circle-fill"></i></div><div><h5 class="tg-card-title" id="formTitle">Nuevo Producto</h5><p class="small text-muted">Completa los datos</p></div></div><form id="productForm"><div class="row g-3"><div class="col-12"><input type="text" class="tg-input" id="productName" placeholder="Nombre del producto" required></div><div class="col-md-6"><input type="number" class="tg-input" id="totalCost" step="0.01" placeholder="Costo Total USD" required></div><div class="col-md-6"><input type="number" class="tg-input" id="units" placeholder="Unidades por empaque" required></div><div class="col-md-6"><input type="number" class="tg-input" id="empaques" placeholder="Cantidad de empaques" required></div><div class="col-md-6"><input type="number" class="tg-input" id="profit" step="0.01" placeholder="% Ganancia" required></div></div><div class="d-flex gap-2 mt-4"><button type="submit" class="tg-btn tg-btn-success flex-fill" id="saveBtnText">Guardar Producto</button><button type="button" class="tg-btn tg-btn-warning" onclick="ProductManager.clearForm()">Cancelar</button></div></form></div></div></div><div class="row"><div class="col-12"><div class="tg-card"><div class="d-flex justify-content-between align-items-center mb-3"><div class="tg-card-header mb-0"><div class="tg-card-icon"><i class="bi bi-list-check"></i></div><div><h5 class="tg-card-title mb-0">Lista de Precios</h5><p class="small text-muted"><span id="productCount">0</span> productos</p></div></div><div><button class="tg-btn tg-btn-sm tg-btn-danger" onclick="confirmReset()">Reiniciar</button><button class="tg-btn tg-btn-sm tg-btn-primary ms-2" onclick="ProductManager.generatePDF()">PDF</button></div></div><div id="priceList" class="table-responsive"></div></div></div></div></div></section>
+    <!-- Calculator Section -->
+    <section id="section-calculator" class="section-page"><div class="container py-4"><div class="row justify-content-center"><div class="col-md-8 col-lg-6"><div class="tg-card"><div class="tg-card-header"><div class="tg-card-icon"><i class="bi bi-calculator-fill"></i></div><h5 class="tg-card-title">Calculadora Rápida</h5></div><div class="mb-3"><label class="small">Monto en USD</label><div class="input-group"><span class="input-group-text bg-transparent border-end-0"><i class="bi bi-currency-dollar"></i></span><input type="number" class="tg-input" id="calcUSD" step="0.01" oninput="convertToBs()"></div></div><div class="text-center my-2"><i class="bi bi-arrow-down-up fs-4"></i></div><div class="mb-3"><label class="small">Monto en Bs</label><div class="input-group"><span class="input-group-text bg-transparent border-end-0"><strong>Bs</strong></span><input type="number" class="tg-input" id="calcBs" step="0.01" oninput="convertToUsd()"></div></div><div class="alert alert-secondary">Tasa: <strong id="calcBcvRate">--</strong> Bs/USD</div></div></div></div><div class="row justify-content-center mt-4"><div class="col-md-8 col-lg-6"><div class="tg-card"><div class="tg-card-header"><div class="tg-card-icon"><i class="bi bi-magic"></i></div><h5 class="tg-card-title">Simulador de Precio</h5></div><div class="mb-3"><input type="number" class="tg-input" id="simCost" placeholder="Costo unitario USD" oninput="simulatePrice()"></div><div class="mb-3"><input type="range" id="simProfitSlider" min="0" max="200" value="30" step="1" oninput="simProfit.value=this.value; simulatePrice()" class="w-100"><input type="number" id="simProfit" value="30" class="tg-input mt-2" oninput="simProfitSlider.value=this.value; simulatePrice()"></div><div class="bg-dark bg-opacity-25 p-4 rounded-4"><div class="row text-center"><div class="col-4"><small>Precio Venta</small><div class="fs-4 fw-bold text-success" id="simSalePrice">$0.00</div><div class="small" id="simSaleBs">Bs 0.00</div></div><div class="col-4"><small>Ganancia</small><div class="fs-4 fw-bold text-info" id="simUtility">$0.00</div></div><div class="col-4"><small>Multiplicador</small><div class="fs-4 fw-bold" id="simMultiplier">1.0x</div></div></div></div></div></div></div></div></section>
+    <!-- Settings Section -->
+    <section id="section-settings" class="section-page"><div class="container py-4"><div class="row justify-content-center"><div class="col-md-8 col-lg-6"><div class="tg-card mb-4"><div class="tg-card-header"><div class="tg-card-icon"><i class="bi bi-bank"></i></div><h5 class="tg-card-title">Configuración BCV</h5></div><div class="d-flex justify-content-between mb-3"><span>Auto-actualización</span><label class="toggle-switch"><input type="checkbox" id="autoUpdateToggle" checked><span class="toggle-slider"></span></label></div><div class="mb-3"><label class="small">Tasa BCV</label><div class="input-group"><input type="number" id="settingsBcv" class="tg-input" readonly><button class="tg-btn" onclick="enableManualEdit()">Editar</button></div></div><div class="mb-3"><label>Intervalo (min)</label><input type="range" id="updateInterval" min="5" max="120" value="30" class="w-100"><span id="intervalValue">30</span> min</div><button class="tg-btn tg-btn-success w-100" onclick="saveBcvSettings()">Guardar</button></div><div class="tg-card mb-4"><div class="tg-card-header"><div class="tg-card-icon"><i class="bi bi-palette-fill"></i></div><h5 class="tg-card-title">Apariencia</h5></div><div class="d-flex justify-content-between mb-3"><span>Tema Oscuro</span><label class="toggle-switch"><input type="checkbox" id="darkModeToggle" checked onchange="toggleTheme()"><span class="toggle-slider"></span></label></div><div class="d-flex justify-content-between mb-3"><span>Animaciones</span><label class="toggle-switch"><input type="checkbox" id="animationsToggle" checked><span class="toggle-slider"></span></label></div><div class="d-flex justify-content-between"><span>Partículas</span><label class="toggle-switch"><input type="checkbox" id="particlesToggle" checked><span class="toggle-slider"></span></label></div></div><div class="tg-card mb-4"><div class="tg-card-header"><div class="tg-card-icon"><i class="bi bi-database-fill-gear"></i></div><h5 class="tg-card-title">Gestión de Datos</h5></div><div class="d-grid gap-2"><button class="tg-btn tg-btn-primary" onclick="exportData()">Exportar JSON</button><label class="tg-btn tg-btn-success">Importar JSON<input type="file" id="importFile" accept=".json" style="display:none;" onchange="importData(this)"></label><button class="tg-btn tg-btn-danger" onclick="confirmReset()">Eliminar todo</button><button id="pdfExportBtn" class="tg-btn tg-btn-primary">PDF por rango de fechas</button></div></div></div></div></div></section>
+    <footer class="app-footer text-center py-4 small text-muted">Costos Pro v2.1 • RogerWed © 2025</footer>
+</div><nav class="telegram-nav"><button class="nav-item-tg active" onclick="showSection('dashboard',this)" data-section="dashboard"><i class="bi bi-house-door-fill"></i><span>Inicio</span></button><button class="nav-item-tg" onclick="showSection('products',this)" data-section="products"><i class="bi bi-box-seam"></i><span>Productos</span></button><button class="nav-item-tg" onclick="showSection('calculator',this)" data-section="calculator"><i class="bi bi-calculator"></i><span>Calculadora</span></button><button class="nav-item-tg" onclick="showSection('settings',this)" data-section="settings"><i class="bi bi-gear"></i><span>Ajustes</span></button></nav></div>
+<div class="modal fade tg-modal" id="pdfRangeModal" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content"><div class="modal-header"><h5 class="modal-title">Exportar PDF por fechas</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><input type="date" id="pdfStartDate" class="tg-input mb-3"><input type="date" id="pdfEndDate" class="tg-input mb-3"></div><div class="modal-footer"><button class="tg-btn tg-btn-primary" onclick="generatePDFByDate()">Generar</button></div></div></div></div>
 <script>
-    // ========== CONFIGURACIÓN SUPABASE (REEMPLAZAR CON TUS CREDENCIALES) ==========
-    const SUPABASE_URL = 'https://fngbhhehzmnkumijunhh.supabase.co';      // CAMBIAR
-    const SUPABASE_ANON_KEY = 'sb_publishable_qEZm7RuDXO6fulH_FaQ--A_msdtmJhT';                    // CAMBIAR
-    const supabase = supabaseJs.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    
-    // ========== VARIABLES GLOBALES ==========
-    let currentUser = null;           // null = modo local / no autenticado
-    let currentMode = "local";        // "local" o "cloud"
-    let productsArray = [];            // almacén unificado
-    let currentBcvRate = 36;
-    let isManualMode = false;
-    let autoUpdateInterval = null;
-    let animationsEnabled = true;
-    let particlesEnabled = true;
-    
-    // ========== FUNCIONES DE AUTENTICACIÓN Y SESIÓN ==========
-    async function initSupabaseAuth() {
-        const { data: { session } } = await supabase.auth.getSession();
-        if (session) {
-            currentUser = session.user;
-            currentMode = "cloud";
-            showAppContent();
-            await loadCloudProducts();
-            updateUserAvatar(session.user);
-        } else {
-            // Verificar si hay modo local guardado
-            const localModeFlag = localStorage.getItem('localModeActive') === 'true';
-            if (localModeFlag) {
-                currentMode = "local";
-                currentUser = null;
-                showAppContent();
-                loadLocalProducts();
-            } else {
-                // Mostrar login
-                document.getElementById('loginContainer').style.display = 'flex';
-            }
-        }
-    }
-    
-    function updateUserAvatar(user) {
-        const container = document.getElementById('userAvatarContainer');
-        const img = document.getElementById('userAvatarImg');
-        const nameSpan = document.getElementById('userNameSpan');
-        if (user && user.user_metadata) {
-            img.src = user.user_metadata.avatar_url || 'https://ui-avatars.com/api/?background=0D6EFD&color=fff&name='+encodeURIComponent(user.email);
-            nameSpan.innerText = user.email.split('@')[0];
-            container.classList.remove('hidden');
-        } else {
-            container.classList.add('hidden');
-        }
-    }
-    
-    async function loginWithGoogle() {
-        const { error } = await supabase.auth.signInWithOAuth({ provider: 'google' });
-        if (error) showToast("Error", error.message, "error");
-    }
-    
-    function enableLocalMode() {
-        localStorage.setItem('localModeActive', 'true');
-        currentMode = "local";
-        currentUser = null;
-        showAppContent();
-        loadLocalProducts();
-        showToast("Modo Local", "Tus datos se guardan solo en este navegador", "info");
-    }
-    
-    function logout() {
-        if (currentMode === "cloud") {
-            supabase.auth.signOut();
-        }
-        localStorage.removeItem('localModeActive');
-        currentUser = null;
-        currentMode = "local";
-        productsArray = [];
-        localStorage.removeItem('products_local');
-        document.getElementById('appContent').style.display = 'none';
-        document.getElementById('loginContainer').style.display = 'flex';
-        showToast("Sesión cerrada", "Has vuelto al modo invitado", "warning");
-    }
-    
-    // ========== CARGA DE DATOS SEGÚN MODO ==========
-    async function loadCloudProducts() {
-        if (!currentUser) return;
-        const { data, error } = await supabase.from('products').select('*').eq('user_id', currentUser.id);
-        if (error) { console.error(error); showToast("Error", "No se pudieron cargar productos", "error"); return; }
-        productsArray = data.map(p => ({ ...p, id: p.id, created_at: p.created_at }));
-        renderAllUI();
-    }
-    
-    function loadLocalProducts() {
-        const stored = localStorage.getItem('products_local');
-        if (stored) productsArray = JSON.parse(stored);
-        else productsArray = [];
-        renderAllUI();
-    }
-    
-    async function saveProductToCloud(product) {
-        if (!currentUser) return false;
-        const { error } = await supabase.from('products').upsert(product, { onConflict: 'id' });
-        if (error) { showToast("Error Cloud", error.message, "error"); return false; }
-        return true;
-    }
-    
-    async function deleteProductFromCloud(id) {
-        if (!currentUser) return false;
-        const { error } = await supabase.from('products').delete().eq('id', id);
-        if (error) return false;
-        return true;
-    }
-    
-    // ========== PRODUCT MANAGER UNIFICADO ==========
-    const ProductManager = {
-        async saveProduct(productData, isEdit = false) {
-            const newProduct = {
-                id: productData.id || Date.now(),
-                name: productData.name,
-                total_cost: productData.totalCost,
-                units: productData.units,
-                empaques: productData.empaques,
-                profit: productData.profit,
-                created_at: productData.created_at || new Date().toISOString(),
-                user_id: currentUser ? currentUser.id : null
-            };
-            if (currentMode === "cloud" && currentUser) {
-                const { error } = await supabase.from('products').upsert(newProduct);
-                if (error) { showToast("Error", "No se guardó en la nube", "error"); return false; }
-                const index = productsArray.findIndex(p => p.id === newProduct.id);
-                if (index >= 0) productsArray[index] = newProduct;
-                else productsArray.push(newProduct);
-            } else {
-                const index = productsArray.findIndex(p => p.id === newProduct.id);
-                if (index >= 0) productsArray[index] = newProduct;
-                else productsArray.push(newProduct);
-                localStorage.setItem('products_local', JSON.stringify(productsArray));
-            }
-            this.renderPriceList();
-            updateStats();
-            showToast(isEdit ? "Actualizado" : "Guardado", `${newProduct.name} correctamente`, "success");
-            return true;
-        },
-        async deleteProduct(id) {
-            if (currentMode === "cloud" && currentUser) {
-                await deleteProductFromCloud(id);
-            }
-            productsArray = productsArray.filter(p => p.id !== id);
-            if (currentMode !== "cloud") localStorage.setItem('products_local', JSON.stringify(productsArray));
-            this.renderPriceList();
-            updateStats();
-            showToast("Eliminado", "Producto removido", "warning");
-        },
-        calculatePrices(product) {
-            const unitCost = product.total_cost / product.units;
-            const salePrice = unitCost * (1 + (product.profit / 100));
-            const wholesalePrice = salePrice * product.units;
-            const totalUnits = product.units * product.empaques;
-            const totalSalePrice = salePrice * totalUnits;
-            const utilityPerUnit = salePrice - unitCost;
-            const totalUtility = utilityPerUnit * totalUnits;
-            return { unitCost, salePrice, wholesalePrice, totalSalePrice, utilityPerUnit, totalUtility };
-        },
-        renderPriceList() { /* igual al original pero usando productsArray */ 
-            const container = document.getElementById('priceList');
-            if (!container) return;
-            if (productsArray.length === 0) { container.innerHTML = `<div class="empty-state"><i class="bi bi-inbox"></i><h5>No hay productos</h5><p>Agrega tu primer producto</p></div>`; return; }
-            container.innerHTML = `<table class="tg-table"><thead><tr><th>Producto</th><th>Costo Unit.</th><th>Precio Venta</th><th>Precio Mayor</th><th>Venta Total</th><th>Utilidad</th><th>Acciones</th></tr></thead><tbody>${productsArray.map(p => { const pr = this.calculatePrices(p); return `<tr><td><strong>${p.name}</strong></td><td><div class="price-display"><span class="price-usd">$${pr.unitCost.toFixed(2)}</span><span class="price-bs">Bs ${(pr.unitCost * currentBcvRate).toFixed(2)}</span></div></td><td><div class="price-display"><span class="price-usd">$${pr.salePrice.toFixed(2)}</span><span class="price-bs">Bs ${(pr.salePrice * currentBcvRate).toFixed(2)}</span></div></td><td><div class="price-display"><span class="price-usd">$${pr.wholesalePrice.toFixed(2)}</span><span class="price-bs">Bs ${(pr.wholesalePrice * currentBcvRate).toFixed(2)}</span></div></td><td><div class="price-display"><span class="price-usd">$${pr.totalSalePrice.toFixed(2)}</span><span class="price-bs">Bs ${(pr.totalSalePrice * currentBcvRate).toFixed(2)}</span></div></td><td><div class="price-display"><span class="price-usd">$${pr.utilityPerUnit.toFixed(2)}/u</span><span class="text-success">$${pr.totalUtility.toFixed(2)}</span></div></td><td><div class="d-flex gap-1"><button class="tg-btn tg-btn-sm tg-btn-warning" onclick="ProductManager.editProduct(${p.id})"><i class="bi bi-pencil-fill"></i></button><button class="tg-btn tg-btn-sm tg-btn-danger" onclick="ProductManager.deleteProduct(${p.id})"><i class="bi bi-trash3-fill"></i></button></div></td></tr>`}).join('')}</tbody></table>`;
-        },
-        editProduct(id) {
-            const product = productsArray.find(p => p.id === id);
-            if (!product) return;
-            document.getElementById('productName').value = product.name;
-            document.getElementById('totalCost').value = product.total_cost;
-            document.getElementById('units').value = product.units;
-            document.getElementById('empaques').value = product.empaques;
-            document.getElementById('profit').value = product.profit;
-            window.currentEditingId = id;
-            document.getElementById('formTitle').innerText = 'Editar Producto';
-            document.getElementById('saveBtnText').innerText = 'Actualizar Producto';
-            showSection('products');
-        },
-        clearForm() {
-            document.getElementById('productForm').reset();
-            window.currentEditingId = null;
-            document.getElementById('formTitle').innerText = 'Nuevo Producto';
-            document.getElementById('saveBtnText').innerText = 'Guardar Producto';
-        },
-        async resetSystem() {
-            if (currentMode === "cloud" && currentUser) {
-                await supabase.from('products').delete().eq('user_id', currentUser.id);
-                productsArray = [];
-            } else {
-                productsArray = [];
-                localStorage.setItem('products_local', JSON.stringify([]));
-            }
-            this.renderPriceList();
-            updateStats();
-            showToast("Reset completo", "Todos los datos eliminados", "warning");
-        }
-    };
-    
-    // ========== PDF POR RANGO DE FECHAS ==========
-    async function generatePDFByDate() {
-        const start = document.getElementById('pdfStartDate').value;
-        const end = document.getElementById('pdfEndDate').value;
-        if (!start || !end) { showToast("Error", "Selecciona ambas fechas", "error"); return; }
-        const startDate = new Date(start); startDate.setHours(0,0,0,0);
-        const endDate = new Date(end); endDate.setHours(23,59,59,999);
-        const filtered = productsArray.filter(p => {
-            const pDate = new Date(p.created_at);
-            return pDate >= startDate && pDate <= endDate;
-        });
-        if (filtered.length === 0) { showToast("Sin datos", "No hay productos en ese rango", "warning"); return; }
-        const doc = new jspdf.jsPDF();
-        doc.setFontSize(18); doc.text("Reporte de Productos por Fecha", 14, 22);
-        doc.setFontSize(10); doc.text(`Desde: ${start} hasta ${end} | Tasa BCV: ${currentBcvRate.toFixed(2)}`, 14, 32);
-        const headers = ["Producto", "Costo Unit.", "Precio Venta", "Utilidad Unidad", "Total Venta"];
-        const data = filtered.map(p => {
-            const pr = ProductManager.calculatePrices(p);
-            return [p.name, `$${pr.unitCost.toFixed(2)}`, `$${pr.salePrice.toFixed(2)}`, `$${pr.utilityPerUnit.toFixed(2)}`, `$${pr.totalSalePrice.toFixed(2)}`];
-        });
-        doc.autoTable({ startY: 40, head: [headers], body: data, theme: 'grid', styles: { fontSize: 9 }, headStyles: { fillColor: [13,110,253] } });
-        doc.save(`reporte_costos_${start}_to_${end}.pdf`);
-        showToast("PDF generado", "Descargado correctamente", "success");
-        bootstrap.Modal.getInstance(document.getElementById('pdfRangeModal')).hide();
-    }
-    
-    // ========== FUNCIONES AUXILIARES Y RENDER ==========
-    function renderAllUI() {
-        ProductManager.renderPriceList();
-        updateStats();
-        updateCharts();
-    }
-    function updateStats() { /* similar al original */ 
-        const count = productsArray.length;
-        document.getElementById('statTotalProducts').innerText = count;
-        if(count>0){ let avgProfit = productsArray.reduce((a,b)=>a+b.profit,0)/count; document.getElementById('statAvgMargin').innerText = avgProfit.toFixed(1)+'%'; }
-        else document.getElementById('statAvgMargin').innerText='0%';
-        const totalValue = productsArray.reduce((sum,p)=>sum+ProductManager.calculatePrices(p).totalSalePrice,0);
-        document.getElementById('statTotalValue').innerText='$'+totalValue.toFixed(0);
-        if(count>0){ let top = productsArray.reduce((best,p)=>ProductManager.calculatePrices(p).totalUtility > ProductManager.calculatePrices(best).totalUtility ? p : best, productsArray[0]);
-        document.getElementById('statTopProduct').innerText=top.name.substring(0,12);}
-        const tbody = document.getElementById('recentActivityTable');
-        if(tbody && productsArray.length) tbody.innerHTML = productsArray.slice(-5).reverse().map(p=>{ let pr=ProductManager.calculatePrices(p); return `<tr><td><strong>${p.name}</strong></td><td class="price-usd">$${pr.salePrice.toFixed(2)}</td><td class="text-success">$${pr.utilityPerUnit.toFixed(2)}</td><td><span class="badge bg-success">${p.profit}%</span></td></tr>`}).join('');
-        else if(tbody) tbody.innerHTML = '<tr><td colspan="4" class="text-center">No hay productos</td></tr>';
-    }
+    // ==================== SUPABASE CONFIG (TUS CREDENCIALES) ====================
+    const SUPABASE_URL = 'https://fngbhhehzmnkumijunhh.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_qEZm7RuDXO6fulH_FaQ--A_msdtmJhT';
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    // ==================== VARIABLES GLOBALES ====================
+    let currentUser = null, currentMode = "local", productsArray = [], currentBcvRate = 36, isManualMode = false, autoUpdateInterval = null, animationsEnabled = true, particlesEnabled = true;
     let priceChart, profitChart, comparisonChart;
-    function initCharts() { /* simplificado pero funcional */ const ctx1 = document.getElementById('priceDistributionChart'); if(ctx1) priceChart = new Chart(ctx1,{type:'doughnut',data:{labels:['Sin datos'],datasets:[{data:[1]}]}}); /* resto igual */ }
-    function updateCharts() { if(priceChart && productsArray.length){ let labels = productsArray.slice(0,8).map(p=>p.name.slice(0,10)); priceChart.data.labels = labels; priceChart.data.datasets[0].data = productsArray.slice(0,8).map(p=>ProductManager.calculatePrices(p).salePrice); priceChart.update(); } }
-    function showSection(sectionName, navEl=null) { /* cambiar visibilidad secciones */ document.querySelectorAll('.section-page').forEach(s=>s.classList.remove('active')); document.getElementById(`section-${sectionName}`).classList.add('active'); if(navEl) document.querySelectorAll('.nav-item-tg').forEach(n=>n.classList.remove('active')); if(navEl) navEl.classList.add('active'); window.scrollTo(0,0); if(sectionName==='dashboard') updateCharts(); }
-    function showToast(title,msg,type='info'){ /* implementación original */ const container = document.getElementById('toastContainer'); const toast=document.createElement('div'); toast.className='tg-toast show'; toast.innerHTML=`<div class="toast-icon ${type}"><i class="bi bi-${type==='success'?'check-circle':type==='error'?'x-circle':'info-circle'}-fill"></i></div><div class="toast-content"><div class="toast-title">${title}</div><div class="toast-message">${msg}</div></div><button class="btn-close btn-close-white" style="opacity:0.3;" onclick="this.parentElement.remove()"></button>`; container.appendChild(toast); setTimeout(()=>{ toast.remove(); },4000);}
-    function toggleTheme(){ const html=document.documentElement; const isDark=html.getAttribute('data-bs-theme')==='dark'; html.setAttribute('data-bs-theme',isDark?'light':'dark'); localStorage.setItem('theme',isDark?'light':'dark'); updateCharts();}
-    // BCV y otras funciones iguales (fetchBcvRate, etc) se mantienen pero adaptadas para no duplicar
-    
-    // ========== MOSTRAR APP DESPUÉS DE LOGIN ==========
-    function showAppContent() {
-        document.getElementById('loginContainer').style.display = 'none';
-        document.getElementById('appContent').style.display = 'block';
-        if (currentMode === "cloud") updateUserAvatar(currentUser);
-        else document.getElementById('userAvatarContainer').classList.add('hidden');
-        // Inicializar BCV y otros
-        fetchBcvRate();
-        startAutoUpdate();
-        ProductManager.renderPriceList();
-        updateStats();
-        initCharts();
+    // ==================== FUNCIONES DE AUTENTICACIÓN ====================
+    async function initSupabaseAuth() {
+        const { data: { session } } = await supabaseClient.auth.getSession();
+        if (session) { currentUser = session.user; currentMode = "cloud"; showAppContent(); await loadCloudProducts(); updateUserAvatar(session.user); }
+        else if (localStorage.getItem('localModeActive') === 'true') { currentMode = "local"; showAppContent(); loadLocalProducts(); }
+        else document.getElementById('loginContainer').style.display = 'flex';
     }
-    
-    async function fetchBcvRate() { /* simulación, se mantiene la lógica antigua */ 
-        if(isManualMode) return currentBcvRate;
-        try{
-            const resp = await fetch('https://api.exchangedyn.com/markets/quotes/usdves');
-            if(resp.ok){ const data = await resp.json(); if(data.rate){ currentBcvRate = parseFloat(data.rate); updateBcvDisplay(currentBcvRate,'API'); return currentBcvRate; } }
-        }catch(e){}
-        currentBcvRate = parseFloat(localStorage.getItem('bcvRate')) || 36;
-        updateBcvDisplay(currentBcvRate,'Local');
-        return currentBcvRate;
-    }
-    function updateBcvDisplay(rate,source){ currentBcvRate=rate; document.getElementById('bcvDisplay')&&(document.getElementById('bcvDisplay').innerText=rate.toFixed(2)); document.getElementById('headerBcvRate')&&(document.getElementById('headerBcvRate').innerText=rate.toFixed(2)); document.getElementById('calcBcvRate')&&(document.getElementById('calcBcvRate').innerText=rate.toFixed(2)); localStorage.setItem('bcvRate',rate); ProductManager.renderPriceList(); }
-    function startAutoUpdate(){ if(autoUpdateInterval) clearInterval(autoUpdateInterval); autoUpdateInterval = setInterval(()=>{ if(!isManualMode) fetchBcvRate(); }, 30*60000); }
+    function updateUserAvatar(user) { const container = document.getElementById('userAvatarContainer'); const img = document.getElementById('userAvatarImg'); const nameSpan = document.getElementById('userNameSpan'); if(user && user.user_metadata){ img.src = user.user_metadata.avatar_url || 'https://ui-avatars.com/api/?background=0D6EFD&color=fff&name='+encodeURIComponent(user.email); nameSpan.innerText = user.email.split('@')[0]; container.classList.remove('hidden'); } else container.classList.add('hidden'); }
+    async function loginWithGoogle() { await supabaseClient.auth.signInWithOAuth({ provider: 'google' }); }
+    function enableLocalMode() { localStorage.setItem('localModeActive','true'); currentMode="local"; currentUser=null; showAppContent(); loadLocalProducts(); showToast("Modo Local","Datos guardados localmente","info"); }
+    function logout() { if(currentMode==="cloud") supabaseClient.auth.signOut(); localStorage.removeItem('localModeActive'); currentUser=null; currentMode="local"; productsArray=[]; localStorage.removeItem('products_local'); document.getElementById('appContent').style.display='none'; document.getElementById('loginContainer').style.display='flex'; showToast("Sesión cerrada","","warning"); }
+    async function loadCloudProducts() { if(!currentUser) return; const {data,error}=await supabaseClient.from('products').select('*').eq('user_id',currentUser.id); if(error){ showToast("Error","No se pudieron cargar","error"); return; } productsArray=data.map(p=>({...p,id:p.id,created_at:p.created_at})); renderAllUI(); }
+    function loadLocalProducts() { const stored = localStorage.getItem('products_local'); productsArray = stored ? JSON.parse(stored) : []; renderAllUI(); }
+    // ==================== PRODUCT MANAGER ====================
+    const ProductManager = {
+        async saveProduct(productData, isEdit=false) {
+            const newProduct = { id: productData.id || Date.now(), name: productData.name, total_cost: productData.totalCost, units: productData.units, empaques: productData.empaques, profit: productData.profit, created_at: productData.created_at || new Date().toISOString(), user_id: currentUser ? currentUser.id : null };
+            if(currentMode==="cloud" && currentUser) { const {error}=await supabaseClient.from('products').upsert(newProduct); if(error){ showToast("Error","No se guardó en nube","error"); return false; } const idx=productsArray.findIndex(p=>p.id===newProduct.id); idx>=0 ? productsArray[idx]=newProduct : productsArray.push(newProduct); }
+            else { const idx=productsArray.findIndex(p=>p.id===newProduct.id); idx>=0 ? productsArray[idx]=newProduct : productsArray.push(newProduct); localStorage.setItem('products_local',JSON.stringify(productsArray)); }
+            this.renderPriceList(); updateStats(); showToast(isEdit?"Actualizado":"Guardado",`${newProduct.name} correctamente`,"success"); return true;
+        },
+        async deleteProduct(id) { if(currentMode==="cloud" && currentUser) await supabaseClient.from('products').delete().eq('id',id); productsArray=productsArray.filter(p=>p.id!==id); if(currentMode!=="cloud") localStorage.setItem('products_local',JSON.stringify(productsArray)); this.renderPriceList(); updateStats(); showToast("Eliminado","Producto removido","warning"); },
+        calculatePrices(p) { const unitCost=p.total_cost/p.units; const salePrice=unitCost*(1+p.profit/100); const wholesalePrice=salePrice*p.units; const totalUnits=p.units*p.empaques; const totalSalePrice=salePrice*totalUnits; const utilityPerUnit=salePrice-unitCost; const totalUtility=utilityPerUnit*totalUnits; return {unitCost,salePrice,wholesalePrice,totalSalePrice,utilityPerUnit,totalUtility}; },
+        renderPriceList() { const container=document.getElementById('priceList'); if(!container) return; if(productsArray.length===0){ container.innerHTML='<div class="empty-state"><i class="bi bi-inbox"></i><h5>No hay productos</h5></div>'; return; } container.innerHTML=`<table class="tg-table"><thead><tr><th>Producto</th><th>Costo Unit.</th><th>Precio Venta</th><th>Precio Mayor</th><th>Venta Total</th><th>Utilidad</th><th>Acciones</th></tr></thead><tbody>${productsArray.map(p=>{ const pr=this.calculatePrices(p); return `<tr><td><strong>${p.name}</strong></td><td><div><span>$${pr.unitCost.toFixed(2)}</span><br><span class="price-bs">Bs ${(pr.unitCost*currentBcvRate).toFixed(2)}</span></div></td><td><div><span>$${pr.salePrice.toFixed(2)}</span><br><span class="price-bs">Bs ${(pr.salePrice*currentBcvRate).toFixed(2)}</span></div></td><td><div><span>$${pr.wholesalePrice.toFixed(2)}</span><br><span class="price-bs">Bs ${(pr.wholesalePrice*currentBcvRate).toFixed(2)}</span></div></td><td><div><span>$${pr.totalSalePrice.toFixed(2)}</span><br><span class="price-bs">Bs ${(pr.totalSalePrice*currentBcvRate).toFixed(2)}</span></div></td><td><div><span>$${pr.utilityPerUnit.toFixed(2)}/u</span><br><span class="text-success">$${pr.totalUtility.toFixed(2)}</span></div></td><td><div class="d-flex gap-1"><button class="tg-btn tg-btn-sm tg-btn-warning" onclick="ProductManager.editProduct(${p.id})"><i class="bi bi-pencil-fill"></i></button><button class="tg-btn tg-btn-sm tg-btn-danger" onclick="ProductManager.deleteProduct(${p.id})"><i class="bi bi-trash3-fill"></i></button></div></td></tr>`}).join('')}</tbody></table>`; },
+        editProduct(id) { const p=productsArray.find(p=>p.id===id); if(!p) return; document.getElementById('productName').value=p.name; document.getElementById('totalCost').value=p.total_cost; document.getElementById('units').value=p.units; document.getElementById('empaques').value=p.empaques; document.getElementById('profit').value=p.profit; window.currentEditingId=id; document.getElementById('formTitle').innerText='Editar Producto'; document.getElementById('saveBtnText').innerText='Actualizar Producto'; showSection('products'); },
+        clearForm() { document.getElementById('productForm').reset(); window.currentEditingId=null; document.getElementById('formTitle').innerText='Nuevo Producto'; document.getElementById('saveBtnText').innerText='Guardar Producto'; },
+        async resetSystem() { if(currentMode==="cloud" && currentUser) await supabaseClient.from('products').delete().eq('user_id',currentUser.id); productsArray=[]; if(currentMode!=="cloud") localStorage.setItem('products_local','[]'); this.renderPriceList(); updateStats(); showToast("Reset","Todos los datos eliminados","warning"); },
+        generatePDF() { const doc = new jspdf.jsPDF(); doc.setFontSize(18); doc.text("Reporte de Productos",14,22); doc.setFontSize(10); doc.text(`Fecha: ${new Date().toLocaleDateString()} | BCV: ${currentBcvRate.toFixed(2)} Bs/USD`,14,32); const headers=["Producto","Costo Unit.","Precio Venta","Utilidad x Unidad","Total Venta"]; const body=productsArray.map(p=>{const pr=this.calculatePrices(p); return [p.name,`$${pr.unitCost.toFixed(2)}`,`$${pr.salePrice.toFixed(2)}`,`$${pr.utilityPerUnit.toFixed(2)}`,`$${pr.totalSalePrice.toFixed(2)}`];}); doc.autoTable({startY:40,head:[headers],body:body,theme:'grid',headStyles:{fillColor:[13,110,253]}}); doc.save(`reporte_costos_${new Date().toISOString().slice(0,10)}.pdf`); showToast("PDF","Descargado","success"); }
+    };
+    // ==================== PDF POR RANGO DE FECHAS ====================
+    async function generatePDFByDate() { const start=document.getElementById('pdfStartDate').value, end=document.getElementById('pdfEndDate').value; if(!start||!end){ showToast("Error","Selecciona fechas","error"); return; } const startDate=new Date(start); startDate.setHours(0,0,0,0); const endDate=new Date(end); endDate.setHours(23,59,59,999); const filtered=productsArray.filter(p=>{ const pd=new Date(p.created_at); return pd>=startDate && pd<=endDate; }); if(filtered.length===0){ showToast("Sin datos","No hay productos en ese rango","warning"); return; } const doc=new jspdf.jsPDF(); doc.setFontSize(18); doc.text("Reporte por Rango de Fechas",14,22); doc.setFontSize(10); doc.text(`Desde ${start} hasta ${end} | BCV: ${currentBcvRate.toFixed(2)}`,14,32); const headers=["Producto","Costo Unit.","Precio Venta","Utilidad","Total Venta"]; const body=filtered.map(p=>{const pr=ProductManager.calculatePrices(p); return [p.name,`$${pr.unitCost.toFixed(2)}`,`$${pr.salePrice.toFixed(2)}`,`$${pr.utilityPerUnit.toFixed(2)}`,`$${pr.totalSalePrice.toFixed(2)}`];}); doc.autoTable({startY:40,head:[headers],body,theme:'grid'}); doc.save(`reporte_${start}_to_${end}.pdf`); bootstrap.Modal.getInstance(document.getElementById('pdfRangeModal')).hide(); showToast("PDF generado","","success"); }
+    // ==================== FUNCIONES AUXILIARES ====================
+    function renderAllUI() { ProductManager.renderPriceList(); updateStats(); updateCharts(); }
+    function updateStats() { const cnt=productsArray.length; document.getElementById('statTotalProducts').innerText=cnt; if(cnt>0){ const avg=productsArray.reduce((a,b)=>a+b.profit,0)/cnt; document.getElementById('statAvgMargin').innerText=avg.toFixed(1)+'%'; const totalVal=productsArray.reduce((s,p)=>s+ProductManager.calculatePrices(p).totalSalePrice,0); document.getElementById('statTotalValue').innerText='$'+totalVal.toFixed(0); const top=productsArray.reduce((best,p)=>ProductManager.calculatePrices(p).totalUtility > ProductManager.calculatePrices(best).totalUtility ? p : best, productsArray[0]); document.getElementById('statTopProduct').innerText=top.name.substring(0,12); } else { document.getElementById('statAvgMargin').innerText='0%'; document.getElementById('statTotalValue').innerText='$0'; document.getElementById('statTopProduct').innerText='--'; } const tbody=document.getElementById('recentActivityTable'); if(tbody && productsArray.length) tbody.innerHTML=productsArray.slice(-5).reverse().map(p=>{const pr=ProductManager.calculatePrices(p); return `<tr><td><strong>${p.name}</strong></td><td>$${pr.salePrice.toFixed(2)}</td><td class="text-success">$${pr.utilityPerUnit.toFixed(2)}</td><td><span class="badge bg-success">${p.profit}%</span></td></tr>`}).join(''); else if(tbody) tbody.innerHTML='<tr><td colspan="4">No hay productos</td></tr>'; }
+    function initCharts() { const ctx1=document.getElementById('priceDistributionChart'); const ctx2=document.getElementById('profitChart'); const ctx3=document.getElementById('comparisonChart'); if(ctx1) priceChart=new Chart(ctx1,{type:'doughnut',data:{labels:[],datasets:[{data:[],backgroundColor:['#0d6efd','#0dcaf0','#198754','#20c997','#6f42c1']}]}}); if(ctx2) profitChart=new Chart(ctx2,{type:'bar',data:{labels:[],datasets:[{label:'Utilidad (USD)',data:[],backgroundColor:'#198754'}]}}); if(ctx3) comparisonChart=new Chart(ctx3,{type:'line',data:{labels:[],datasets:[{label:'Costo Unit.',data:[],borderColor:'#dc3545'},{label:'Precio Venta',data:[],borderColor:'#198754'},{label:'Utilidad',data:[],borderColor:'#0dcaf0'}]}}); updateCharts(); }
+    function updateCharts() { if(!priceChart) return; const tops=productsArray.slice(0,8); const labels=tops.map(p=>p.name.substring(0,10)); const salePrices=tops.map(p=>ProductManager.calculatePrices(p).salePrice); const unitCosts=tops.map(p=>ProductManager.calculatePrices(p).unitCost); const utilities=tops.map(p=>ProductManager.calculatePrices(p).utilityPerUnit); priceChart.data.labels=labels; priceChart.data.datasets[0].data=salePrices; priceChart.update(); if(profitChart){ profitChart.data.labels=labels; profitChart.data.datasets[0].data=utilities; profitChart.update(); } if(comparisonChart){ comparisonChart.data.labels=labels; comparisonChart.data.datasets[0].data=unitCosts; comparisonChart.data.datasets[1].data=salePrices; comparisonChart.data.datasets[2].data=utilities; comparisonChart.update(); } }
+    function showSection(sectionName, navEl=null) { document.querySelectorAll('.section-page').forEach(s=>s.classList.remove('active')); document.getElementById(`section-${sectionName}`).classList.add('active'); if(navEl) document.querySelectorAll('.nav-item-tg').forEach(n=>n.classList.remove('active')); if(navEl) navEl.classList.add('active'); window.scrollTo(0,0); if(sectionName==='dashboard') updateCharts(); }
+    function showToast(title,msg,type='info'){ const cont=document.getElementById('toastContainer'); const toast=document.createElement('div'); toast.className='tg-toast'; toast.innerHTML=`<div class="toast-icon ${type}"><i class="bi bi-${type==='success'?'check-circle':type==='error'?'x-circle':'info-circle'}-fill"></i></div><div class="toast-content"><div class="toast-title">${title}</div><div class="toast-message">${msg}</div></div><button class="btn-close btn-close-white" onclick="this.parentElement.remove()"></button>`; cont.appendChild(toast); setTimeout(()=>toast.remove(),4000); }
+    function toggleTheme(){ const html=document.documentElement; const isDark=html.getAttribute('data-bs-theme')==='dark'; html.setAttribute('data-bs-theme',isDark?'light':'dark'); localStorage.setItem('theme',isDark?'light':'dark'); updateCharts(); }
+    async function fetchBcvRate(){ if(isManualMode) return currentBcvRate; try{ const resp=await fetch('https://api.exchangedyn.com/markets/quotes/usdves'); if(resp.ok){ const data=await resp.json(); if(data.rate){ currentBcvRate=parseFloat(data.rate); updateBcvDisplay(currentBcvRate,'API'); return; } } }catch(e){} currentBcvRate=parseFloat(localStorage.getItem('bcvRate'))||36; updateBcvDisplay(currentBcvRate,'Local'); }
+    function updateBcvDisplay(rate,src){ currentBcvRate=rate; document.getElementById('bcvDisplay')&&(document.getElementById('bcvDisplay').innerText=rate.toFixed(2)); document.getElementById('headerBcvRate')&&(document.getElementById('headerBcvRate').innerText=rate.toFixed(2)); document.getElementById('calcBcvRate')&&(document.getElementById('calcBcvRate').innerText=rate.toFixed(2)); localStorage.setItem('bcvRate',rate); ProductManager.renderPriceList(); }
+    function startAutoUpdate(){ if(autoUpdateInterval) clearInterval(autoUpdateInterval); autoUpdateInterval=setInterval(()=>{ if(!isManualMode) fetchBcvRate(); },30000); }
     function convertToBs(){ const usd=parseFloat(document.getElementById('calcUSD').value)||0; document.getElementById('calcBs').value=(usd*currentBcvRate).toFixed(2); }
     function convertToUsd(){ const bs=parseFloat(document.getElementById('calcBs').value)||0; document.getElementById('calcUSD').value=(bs/currentBcvRate).toFixed(2); }
     function simulatePrice(){ const cost=parseFloat(document.getElementById('simCost').value)||0; const profit=parseFloat(document.getElementById('simProfit').value)||0; const sale=cost*(1+profit/100); document.getElementById('simSalePrice').innerText=`$${sale.toFixed(2)}`; document.getElementById('simSaleBs').innerText=`Bs ${(sale*currentBcvRate).toFixed(2)}`; document.getElementById('simUtility').innerText=`$${(sale-cost).toFixed(2)}`; document.getElementById('simMultiplier').innerText=`${(1+profit/100).toFixed(1)}x`; }
-    
-    // ========== EVENTOS Y SPLASH ==========
-    window.addEventListener('DOMContentLoaded', () => {
-        setTimeout(() => {
-            const splash = document.getElementById('splashScreen');
-            splash.style.opacity = '0';
-            setTimeout(() => { splash.style.display = 'none'; initSupabaseAuth(); }, 800);
-        }, 2000);
-        document.getElementById('googleLoginBtn').onclick = () => loginWithGoogle();
-        document.getElementById('localModeBtn').onclick = () => enableLocalMode();
-        document.getElementById('logoutBtnNav').onclick = () => logout();
-        document.getElementById('pdfExportBtn')?.addEventListener('click', () => new bootstrap.Modal(document.getElementById('pdfRangeModal')).show());
-        // Replicar formulario guardado
-        document.getElementById('productForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const product = {
-                id: window.currentEditingId || null,
-                name: document.getElementById('productName').value,
-                totalCost: parseFloat(document.getElementById('totalCost').value),
-                units: parseInt(document.getElementById('units').value),
-                empaques: parseInt(document.getElementById('empaques').value),
-                profit: parseFloat(document.getElementById('profit').value),
-                created_at: window.currentEditingId ? productsArray.find(p=>p.id===window.currentEditingId)?.created_at : new Date().toISOString()
-            };
-            await ProductManager.saveProduct(product, !!window.currentEditingId);
-            ProductManager.clearForm();
-        });
-        // Agregar botón PDF por fecha en settings (se inyecta dinámicamente)
-        const settingsCard = document.querySelector('#section-settings .tg-card');
-        if(settingsCard){
-            const pdfBtn = document.createElement('button');
-            pdfBtn.className = 'tg-btn tg-btn-primary w-100 mt-3';
-            pdfBtn.innerHTML = '<i class="bi bi-file-earmark-pdf-fill me-2"></i>Exportar PDF por rango de fechas';
-            pdfBtn.onclick = () => new bootstrap.Modal(document.getElementById('pdfRangeModal')).show();
-            settingsCard.appendChild(pdfBtn);
-        }
-    });
-    
-    // Exposición global para funciones llamadas desde HTML
-    window.ProductManager = ProductManager;
-    window.showSection = showSection;
-    window.toggleTheme = toggleTheme;
-    window.convertToBs = convertToBs; window.convertToUsd = convertToUsd; window.simulatePrice = simulatePrice;
-    window.generatePDFByDate = generatePDFByDate;
-    window.confirmReset = () => { if(confirm("¿Eliminar todos los productos?")) ProductManager.resetSystem(); };
-    window.forceUpdateBcv = fetchBcvRate;
-    window.saveManualBcv = () => { const val=parseFloat(document.getElementById('tasaBcv')?.value); if(val) updateBcvDisplay(val,'Manual'); };
-    window.toggleManualMode = () => { isManualMode = !isManualMode; localStorage.setItem('bcvManualMode',isManualMode); if(!isManualMode) fetchBcvRate(); };
+    function exportData() { const data={products:productsArray,bcvRate:currentBcvRate,exportDate:new Date().toISOString()}; const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=`costos_backup_${new Date().toISOString().slice(0,10)}.json`; a.click(); showToast("Exportado","Datos guardados","success"); }
+    function importData(input){ const file=input.files[0]; if(!file) return; const reader=new FileReader(); reader.onload=e=>{ try{ const data=JSON.parse(e.target.result); if(data.products){ productsArray=data.products; if(currentMode!=="cloud") localStorage.setItem('products_local',JSON.stringify(productsArray)); else if(currentUser) supabaseClient.from('products').upsert(productsArray.map(p=>({...p,user_id:currentUser.id}))); renderAllUI(); showToast("Importado","Datos restaurados","success"); } }catch(err){ showToast("Error","Archivo inválido","error"); } }; reader.readAsText(file); input.value=''; }
+    function confirmReset(){ if(confirm("¿Eliminar todos los productos?")) ProductManager.resetSystem(); }
+    function saveManualBcv(){ const val=parseFloat(document.getElementById('tasaBcv')?.value); if(val) updateBcvDisplay(val,'Manual'); }
+    function toggleManualMode(){ isManualMode=document.getElementById('manualModeToggle').checked; localStorage.setItem('bcvManualMode',isManualMode); document.getElementById('manualBcvGroup').style.display=isManualMode?'flex':'none'; if(!isManualMode) fetchBcvRate(); }
+    function saveBcvSettings(){ const interval=parseInt(document.getElementById('updateInterval').value); localStorage.setItem('updateInterval',interval); startAutoUpdate(); showToast("Configuración","Guardada","success"); }
+    function enableManualEdit(){ document.getElementById('settingsBcv').readOnly=false; document.getElementById('settingsBcv').focus(); }
+    function showAppContent(){ document.getElementById('loginContainer').style.display='none'; document.getElementById('appContent').style.display='block'; if(currentMode==="cloud") updateUserAvatar(currentUser); else document.getElementById('userAvatarContainer').classList.add('hidden'); fetchBcvRate(); startAutoUpdate(); ProductManager.renderPriceList(); updateStats(); initCharts(); }
+    // ==================== EVENTOS INICIALES ====================
+    window.addEventListener('DOMContentLoaded',()=>{ setTimeout(()=>{ const splash=document.getElementById('splashScreen'); splash.style.opacity='0'; setTimeout(()=>{ splash.style.display='none'; initSupabaseAuth(); },800); },2000); document.getElementById('googleLoginBtn').onclick=()=>loginWithGoogle(); document.getElementById('localModeBtn').onclick=()=>enableLocalMode(); document.getElementById('logoutBtnNav').onclick=()=>logout(); document.getElementById('pdfExportBtn').onclick=()=>new bootstrap.Modal(document.getElementById('pdfRangeModal')).show(); document.getElementById('productForm').addEventListener('submit',async(e)=>{ e.preventDefault(); const product={ id:window.currentEditingId||null, name:document.getElementById('productName').value, totalCost:parseFloat(document.getElementById('totalCost').value), units:parseInt(document.getElementById('units').value), empaques:parseInt(document.getElementById('empaques').value), profit:parseFloat(document.getElementById('profit').value), created_at:window.currentEditingId?productsArray.find(p=>p.id===window.currentEditingId)?.created_at:new Date().toISOString() }; await ProductManager.saveProduct(product,!!window.currentEditingId); ProductManager.clearForm(); }); const autoUpdateToggle=document.getElementById('autoUpdateToggle'); autoUpdateToggle.onchange=()=>{ if(autoUpdateToggle.checked && !isManualMode) startAutoUpdate(); else if(autoUpdateInterval) clearInterval(autoUpdateInterval); }; const animationsToggle=document.getElementById('animationsToggle'); animationsToggle.onchange=()=>{ animationsEnabled=animationsToggle.checked; localStorage.setItem('animationsEnabled',animationsEnabled); }; const particlesToggle=document.getElementById('particlesToggle'); particlesToggle.onchange=()=>{ particlesEnabled=particlesToggle.checked; localStorage.setItem('particlesEnabled',particlesEnabled); }; const savedTheme=localStorage.getItem('theme')||'dark'; document.documentElement.setAttribute('data-bs-theme',savedTheme); document.getElementById('darkModeToggle').checked=(savedTheme==='dark'); document.getElementById('themeIcon').className=savedTheme==='dark'?'bi bi-moon-stars':'bi bi-sun-fill'; if(localStorage.getItem('bcvManualMode')==='true'){ isManualMode=true; document.getElementById('manualModeToggle').checked=true; document.getElementById('manualBcvGroup').style.display='flex'; } const savedInterval=localStorage.getItem('updateInterval'); if(savedInterval){ document.getElementById('updateInterval').value=savedInterval; document.getElementById('intervalValue').innerText=savedInterval; } });
+    window.ProductManager=ProductManager; window.showSection=showSection; window.toggleTheme=toggleTheme; window.convertToBs=convertToBs; window.convertToUsd=convertToUsd; window.simulatePrice=simulatePrice; window.generatePDFByDate=generatePDFByDate; window.confirmReset=confirmReset; window.forceUpdateBcv=fetchBcvRate; window.saveManualBcv=saveManualBcv; window.toggleManualMode=toggleManualMode; window.exportData=exportData; window.importData=importData; window.saveBcvSettings=saveBcvSettings; window.enableManualEdit=enableManualEdit;
 </script>
 </body>
 </html>
