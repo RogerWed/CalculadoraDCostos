@@ -2,29 +2,68 @@
 <html lang="es" data-bs-theme="dark">
 <head>
     <meta charset="UTF-8">
+    <!-- Viewport optimizado para móviles -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="theme-color" content="#0d6efd">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Costos Pro•">
     <meta name="description" content="Sistema de Gestión">
+    
+    <!-- MANIFEST JSON - Esencial para PWA -->
     <link rel="manifest" href="manifest.json">
+    
+    <!-- Favicon estándar -->
     <link rel="icon" type="image/jpg" sizes="32x32" href="icon.jpg">
     <link rel="icon" type="image/jpg" sizes="16x16" href="icon.jpg">
+    
+    <!-- Iconos Apple/iOS -->
+    <link rel="apple-touch-icon" sizes="57x57" href="icon.jpg">
+    <link rel="apple-touch-icon" sizes="60x60" href="icon.jpg">
+    <link rel="apple-touch-icon" sizes="72x72" href="icon.jpg">
+    <link rel="apple-touch-icon" sizes="76x76" href="icon.jpg">
+    <link rel="apple-touch-icon" sizes="114x114" href="icon.jpg">
+    <link rel="apple-touch-icon" sizes="120x120" href="icon.jpg">
+    <link rel="apple-touch-icon" sizes="144x144" href="icon.jpg">
+    <link rel="apple-touch-icon" sizes="152x152" href="icon.jpg">
     <link rel="apple-touch-icon" sizes="180x180" href="icon.jpg">
+    <link rel="apple-touch-icon" sizes="192x192" href="icon.jpg">
+    
+    <!-- Iconos Android/Chrome -->
+    <link rel="icon" type="image/jpg" sizes="192x192" href="icon.jpg">
+    <link rel="icon" type="image/jpg" sizes="512x512" href="icon.jpg">
+    
+    <!-- Icono Legacy -->
     <link rel="shortcut icon" href="icon.png">
+    
+    <!-- Microsoft Tiles -->
     <meta name="msapplication-TileColor" content="#0d6efd">
     <meta name="msapplication-TileImage" content="icon.jpg">
+    <meta name="msapplication-config" content="browserconfig.xml">
+
+
+
+
+
+
+
+
+    
     <title>Calculadora de Costos Pro</title>
+    <link href="icon.jpg" rel="icon">
+    <!-- Bootstrap 5.3 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- GSAP -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <!-- Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.0/dist/umd/supabase.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
 
     <style>
         :root {
@@ -55,10 +94,23 @@
             --glass-border: rgba(13, 110, 253, 0.1);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background: var(--telegram-bg); color: var(--telegram-text); min-height: 100vh; padding-bottom: 100px; overflow-x: hidden; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
 
-        /* SPLASH con icono redondo + halo de carga */
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--telegram-bg);
+            color: var(--telegram-text);
+            min-height: 100vh;
+            padding-bottom: 100px;
+            overflow-x: hidden;
+        }
+
+        /* ===== SPLASH SCREEN ===== */
         #splashScreen {
             position: fixed;
             top: 0;
@@ -73,124 +125,1215 @@
             justify-content: center;
             transition: opacity 0.8s ease, visibility 0.8s ease;
         }
-        #splashScreen.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+
+        #splashScreen.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
         .splash-logo {
-            position: relative;
             width: 120px;
             height: 120px;
-            border-radius: 50%;
-            overflow: hidden;
+            background: linear-gradient(135deg, var(--primary), var(--info));
+            border-radius: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3.5rem;
+            color: white;
             box-shadow: 0 10px 40px rgba(13, 110, 253, 0.4);
-            background: #fff;
+            animation: splashPulse 2s ease-in-out infinite;
         }
-        .splash-logo img {
+
+        .splash-title {
+            margin-top: 24px;
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--telegram-text), var(--telegram-highlight));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .splash-version {
+            margin-top: 8px;
+            font-size: 0.9rem;
+            color: var(--telegram-muted);
+        }
+
+        .splash-loader {
+            margin-top: 30px;
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--telegram-accent);
+            border-top-color: var(--telegram-highlight);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes splashPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* ===== LOGIN SCREEN ===== */
+        #loginScreen {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
-            object-fit: cover;
-            display: block;
+            background: var(--telegram-bg);
+            z-index: 99998;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
         }
-        /* Halo de carga circular (anillo) */
-        .splash-logo::before {
+
+        #loginScreen.active {
+            display: flex;
+        }
+
+        .login-card {
+            background: var(--telegram-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 40px;
+            width: 100%;
+            max-width: 420px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .login-logo {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--primary), var(--info));
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: white;
+            margin: 0 auto 24px;
+            box-shadow: 0 8px 30px rgba(13, 110, 253, 0.3);
+        }
+
+        .login-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .login-subtitle {
+            color: var(--telegram-muted);
+            font-size: 0.9rem;
+            margin-bottom: 32px;
+        }
+
+        .google-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            width: 100%;
+            padding: 14px 24px;
+            border: 1px solid var(--glass-border);
+            border-radius: 14px;
+            background: var(--telegram-bg);
+            color: var(--telegram-text);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .google-btn:hover {
+            background: var(--telegram-accent);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .google-btn img {
+            width: 20px;
+            height: 20px;
+        }
+
+        .login-footer {
+            margin-top: 24px;
+            color: var(--telegram-muted);
+            font-size: 0.8rem;
+        }
+
+        /* ===== USER AVATAR IN NAV ===== */
+        .nav-user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--telegram-highlight);
+            box-shadow: 0 0 10px rgba(94, 181, 247, 0.3);
+        }
+
+        .nav-item-tg .user-avatar-wrapper {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--primary), var(--info));
+        }
+
+        .nav-item-tg .user-avatar-wrapper i {
+            font-size: 1rem;
+            color: white;
+        }
+
+        /* ===== ANIMATED BACKGROUND ===== */
+        .bg-mesh {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .bg-mesh .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.15;
+            animation: orbFloat 20s ease-in-out infinite;
+        }
+
+        .bg-mesh .orb:nth-child(1) {
+            width: 400px;
+            height: 400px;
+            background: var(--primary);
+            top: -100px;
+            left: -100px;
+            animation-delay: 0s;
+        }
+
+        .bg-mesh .orb:nth-child(2) {
+            width: 300px;
+            height: 300px;
+            background: var(--info);
+            top: 40%;
+            right: -80px;
+            animation-delay: -7s;
+        }
+
+        .bg-mesh .orb:nth-child(3) {
+            width: 250px;
+            height: 250px;
+            background: var(--success);
+            bottom: 10%;
+            left: 20%;
+            animation-delay: -14s;
+        }
+
+        @keyframes orbFloat {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -30px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+        }
+
+        /* ===== PARTICLES CANVAS ===== */
+        #particlesCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* ===== CONTENT LAYER ===== */
+        .content-layer {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* ===== TELEGRAM FLOATING NAVBAR ===== */
+        .telegram-nav {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 8px 16px;
+            display: flex;
+            gap: 4px;
+            z-index: 1000;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(94, 181, 247, 0.1);
+            max-width: 95vw;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+
+        .telegram-nav::-webkit-scrollbar { display: none; }
+
+        .nav-item-tg {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: 10px 16px;
+            border-radius: 18px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            color: var(--telegram-muted);
+            text-decoration: none;
+            position: relative;
+            min-width: 64px;
+            border: none;
+            background: transparent;
+        }
+
+        .nav-item-tg:hover {
+            color: var(--telegram-highlight);
+            background: rgba(94, 181, 247, 0.08);
+        }
+
+        .nav-item-tg.active {
+            color: var(--telegram-highlight);
+            background: rgba(94, 181, 247, 0.15);
+        }
+
+        .nav-item-tg.active::after {
             content: '';
             position: absolute;
-            top: -6px;
-            left: -6px;
-            right: -6px;
-            bottom: -6px;
-            border-radius: 50%;
-            border: 3px solid transparent;
-            border-top-color: var(--telegram-highlight);
-            border-right-color: var(--primary);
-            animation: spinRing 1.2s linear infinite;
-            box-shadow: 0 0 12px rgba(94, 181, 247, 0.5);
+            bottom: 4px;
+            width: 20px;
+            height: 3px;
+            background: var(--telegram-highlight);
+            border-radius: 2px;
         }
-        @keyframes spinRing {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        .splash-title { margin-top: 24px; font-size: 1.8rem; font-weight: 800; background: linear-gradient(135deg, var(--telegram-text), var(--telegram-highlight)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-        .splash-version { margin-top: 8px; font-size: 0.9rem; color: var(--telegram-muted); }
-        .splash-loader { margin-top: 30px; width: 40px; height: 40px; border: 3px solid var(--telegram-accent); border-top-color: var(--telegram-highlight); border-radius: 50%; animation: spin 1s linear infinite; }
-        @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* LOGIN con ícono SVG Google */
-        #loginScreen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--telegram-bg); z-index: 99998; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
-        #loginScreen.active { display: flex; }
-        .login-card { background: var(--telegram-card); border: 1px solid var(--glass-border); border-radius: 24px; padding: 40px; width: 100%; max-width: 420px; text-align: center; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3); }
-        .login-logo { width: 80px; height: 80px; background: transparent; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; box-shadow: 0 8px 30px rgba(0,0,0,0.1); }
-        .google-btn svg { width: 20px; height: 20px; margin-right: 12px; }
-        
-        /* Iconos SVG generales */
-        .icon-svg { width: 1.3rem; height: 1.3rem; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transition: all 0.2s; }
-        .nav-item-tg .icon-svg { width: 1.3rem; height: 1.3rem; }
-        .tg-card-icon .icon-svg { width: 1.6rem; height: 1.6rem; stroke: white; stroke-width: 1.8; }
-        .tg-btn .icon-svg { width: 1.1rem; height: 1.1rem; margin-right: 4px; stroke: currentColor; }
-        .stat-card .icon-svg { width: 3rem; height: 3rem; opacity: 0.2; position: absolute; bottom: 12px; right: 12px; stroke: currentColor; }
-        .user-avatar-wrapper .icon-svg { width: 1.2rem; height: 1.2rem; stroke: white; }
-        .toggle-switch + .icon-svg { display: none; }
-        
-        /* resto de estilos igual */
-        .bg-mesh { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; overflow: hidden; }
-        .bg-mesh .orb { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.15; animation: orbFloat 20s ease-in-out infinite; }
-        .bg-mesh .orb:nth-child(1) { width: 400px; height: 400px; background: var(--primary); top: -100px; left: -100px; }
-        .bg-mesh .orb:nth-child(2) { width: 300px; height: 300px; background: var(--info); top: 40%; right: -80px; }
-        .bg-mesh .orb:nth-child(3) { width: 250px; height: 250px; background: var(--success); bottom: 10%; left: 20%; }
-        @keyframes orbFloat { 0%,100%{transform:translate(0,0) scale(1);} 33%{transform:translate(30px,-30px) scale(1.1);} 66%{transform:translate(-20px,20px) scale(0.9);} }
-        #particlesCanvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
-        .content-layer { position: relative; z-index: 2; }
-        .telegram-nav { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--glass-bg); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); border-radius: 24px; padding: 8px 16px; display: flex; gap: 4px; z-index: 1000; box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
-        .nav-item-tg { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 10px 16px; border-radius: 18px; cursor: pointer; transition: all 0.3s; color: var(--telegram-muted); background: transparent; border: none; min-width: 64px; }
-        .nav-item-tg.active { color: var(--telegram-highlight); background: rgba(94,181,247,0.15); position: relative; }
-        .nav-item-tg.active::after { content:''; position: absolute; bottom: 4px; width: 20px; height: 3px; background: var(--telegram-highlight); border-radius: 2px; }
-        .section-page { display: none; opacity: 0; }
-        .section-page.active { display: block; }
-        .tg-card { background: var(--telegram-card); border: 1px solid var(--glass-border); border-radius: 20px; padding: 24px; transition: all 0.4s; overflow: hidden; }
-        .tg-card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
-        .tg-card-icon { width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--primary), var(--info)); box-shadow: 0 4px 15px rgba(13,110,253,0.3); }
-        .stat-card { background: linear-gradient(135deg, var(--telegram-card), var(--telegram-accent)); border: 1px solid var(--glass-border); border-radius: 20px; padding: 24px; position: relative; overflow: hidden; transition: all 0.4s; }
-        .stat-value { font-size: 2rem; font-weight: 800; background: linear-gradient(135deg, var(--telegram-text), var(--telegram-highlight)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-        .tg-input { background: var(--telegram-bg); border: 2px solid var(--glass-border); border-radius: 14px; padding: 14px 18px; color: var(--telegram-text); width: 100%; transition: all 0.3s; }
-        .tg-btn { border: none; border-radius: 14px; padding: 14px 24px; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; transition: all 0.3s; }
-        .tg-btn-primary { background: linear-gradient(135deg, var(--primary), #0b5ed7); color: white; }
-        .tg-btn-success { background: linear-gradient(135deg, var(--success), #146c43); color: white; }
-        .tg-btn-danger { background: linear-gradient(135deg, var(--danger), #b02a37); color: white; }
-        .tg-btn-warning { background: linear-gradient(135deg, var(--warning), #e0a800); color: #000; }
-        .bcv-section { background: linear-gradient(135deg, var(--primary), #0b5ed7); border-radius: 24px; padding: 28px; color: white; }
-        .bcv-value { font-size: 3rem; font-weight: 800; }
-        .toast-container-custom { position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
-        .tg-toast { background: var(--telegram-card); border-radius: 16px; padding: 16px; display: flex; gap: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); }
-        .user-profile-dropdown { position: relative; }
-        .user-profile-btn { display: flex; align-items: center; gap: 8px; background: var(--telegram-card); border: 1px solid var(--glass-border); border-radius: 50px; padding: 6px 14px 6px 6px; cursor: pointer; }
-        .user-profile-menu { position: absolute; top: 100%; right: 0; background: var(--telegram-card); border-radius: 16px; padding: 8px; min-width: 200px; display: none; z-index: 1001; }
-        .user-profile-menu.show { display: block; }
-        @media (max-width: 768px) { .nav-item-tg { padding: 8px 12px; min-width: 56px; } .stat-value { font-size: 1.6rem; } }
+        .nav-item-tg i {
+            font-size: 1.3rem;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-item-tg:hover i {
+            transform: translateY(-2px);
+        }
+
+        .nav-item-tg span {
+            font-size: 0.65rem;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        /* ===== SECTIONS ===== */
+        .section-page {
+            display: none;
+            opacity: 0;
+        }
+
+        .section-page.active {
+            display: block;
+        }
+
+        /* ===== CARDS ===== */
+        .tg-card {
+            background: var(--telegram-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 24px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tg-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--info));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .tg-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .tg-card:hover::before {
+            opacity: 1;
+        }
+
+        .tg-card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .tg-card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            background: linear-gradient(135deg, var(--primary), var(--info));
+            color: white;
+            box-shadow: 0 4px 15px rgba(13, 110, 253, 0.3);
+        }
+
+        .tg-card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 0;
+            color: var(--telegram-text);
+        }
+
+        .tg-card-subtitle {
+            font-size: 0.8rem;
+            color: var(--telegram-muted);
+            margin: 0;
+        }
+
+        /* ===== STAT CARDS ===== */
+        .stat-card {
+            background: linear-gradient(135deg, var(--telegram-card), var(--telegram-accent));
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 24px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .stat-card .stat-icon {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            font-size: 5rem;
+            opacity: 0.05;
+            transform: rotate(-15deg);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--telegram-text), var(--telegram-highlight));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--telegram-muted);
+            margin-top: 4px;
+        }
+
+        .stat-change {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+
+        .stat-change.up {
+            background: rgba(25, 135, 84, 0.15);
+            color: var(--success);
+        }
+
+        .stat-change.down {
+            background: rgba(220, 53, 69, 0.15);
+            color: var(--danger);
+        }
+
+        /* ===== FORM STYLES ===== */
+        .tg-input {
+            background: var(--telegram-bg);
+            border: 2px solid var(--glass-border);
+            border-radius: 14px;
+            padding: 14px 18px;
+            color: var(--telegram-text);
+            font-size: 0.95rem;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .tg-input:focus {
+            outline: none;
+            border-color: var(--telegram-highlight);
+            box-shadow: 0 0 0 4px rgba(94, 181, 247, 0.1);
+        }
+
+        .tg-input::placeholder {
+            color: var(--telegram-muted);
+        }
+
+        .tg-btn {
+            border: none;
+            border-radius: 14px;
+            padding: 14px 24px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tg-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .tg-btn:active::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .tg-btn-primary {
+            background: linear-gradient(135deg, var(--primary), #0b5ed7);
+            color: white;
+            box-shadow: 0 4px 15px rgba(13, 110, 253, 0.3);
+        }
+
+        .tg-btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(13, 110, 253, 0.4);
+        }
+
+        .tg-btn-success {
+            background: linear-gradient(135deg, var(--success), #146c43);
+            color: white;
+            box-shadow: 0 4px 15px rgba(25, 135, 84, 0.3);
+        }
+
+        .tg-btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(25, 135, 84, 0.4);
+        }
+
+        .tg-btn-danger {
+            background: linear-gradient(135deg, var(--danger), #b02a37);
+            color: white;
+            box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
+        }
+
+        .tg-btn-warning {
+            background: linear-gradient(135deg, var(--warning), #e0a800);
+            color: #000;
+            box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3);
+        }
+
+        .tg-btn-sm {
+            padding: 8px 14px;
+            font-size: 0.85rem;
+            border-radius: 10px;
+        }
+
+        /* ===== TOAST NOTIFICATIONS ===== */
+        .toast-container-custom {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .tg-toast {
+            background: var(--telegram-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 300px;
+            max-width: 400px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(20px);
+            transform: translateX(120%);
+            opacity: 0;
+        }
+
+        .tg-toast.show {
+            animation: toastSlideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        .tg-toast.hide {
+            animation: toastSlideOut 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        @keyframes toastSlideIn {
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes toastSlideOut {
+            to { transform: translateX(120%); opacity: 0; }
+        }
+
+        .toast-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .toast-icon.success { background: rgba(25, 135, 84, 0.15); color: var(--success); }
+        .toast-icon.error { background: rgba(220, 53, 69, 0.15); color: var(--danger); }
+        .toast-icon.warning { background: rgba(255, 193, 7, 0.15); color: var(--warning); }
+        .toast-icon.info { background: rgba(13, 110, 253, 0.15); color: var(--primary); }
+
+        .toast-content { flex: 1; }
+        .toast-title { font-weight: 600; font-size: 0.95rem; margin: 0; }
+        .toast-message { font-size: 0.85rem; color: var(--telegram-muted); margin: 2px 0 0; }
+
+        /* ===== PRODUCT TABLE ===== */
+        .tg-table-container {
+            background: var(--telegram-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .tg-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .tg-table thead th {
+            background: var(--telegram-accent);
+            padding: 16px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--telegram-muted);
+            border: none;
+            white-space: nowrap;
+        }
+
+        .tg-table tbody tr {
+            border-bottom: 1px solid var(--glass-border);
+            transition: all 0.2s ease;
+        }
+
+        .tg-table tbody tr:hover {
+            background: rgba(94, 181, 247, 0.05);
+        }
+
+        .tg-table tbody td {
+            padding: 16px;
+            font-size: 0.9rem;
+            vertical-align: middle;
+        }
+
+        .price-display {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .price-usd {
+            font-weight: 600;
+            color: var(--success);
+        }
+
+        .price-bs {
+            font-size: 0.85rem;
+            color: var(--telegram-highlight);
+        }
+
+        /* ===== BCV RATE SECTION ===== */
+        .bcv-section {
+            background: linear-gradient(135deg, var(--primary), #0b5ed7);
+            border-radius: 24px;
+            padding: 28px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .bcv-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 300px;
+            height: 300px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+        }
+
+        .bcv-section::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -10%;
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 50%;
+        }
+
+        .bcv-value {
+            font-size: 3rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+
+        .bcv-label {
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+
+        .bcv-input-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 16px;
+        }
+
+        .bcv-input-group .tg-input {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .bcv-input-group .tg-input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .bcv-input-group .tg-input:focus {
+            border-color: rgba(255, 255, 255, 0.5);
+            box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.1);
+        }
+
+        .bcv-input-group .tg-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            white-space: nowrap;
+        }
+
+        .bcv-input-group .tg-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* ===== TOGGLE SWITCHES ===== */
+        .toggle-switch {
+            position: relative;
+            width: 52px;
+            height: 28px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--telegram-accent);
+            transition: 0.3s;
+            border-radius: 28px;
+        }
+
+        .toggle-slider::before {
+            content: '';
+            position: absolute;
+            height: 22px;
+            width: 22px;
+            left: 3px;
+            bottom: 3px;
+            background: white;
+            transition: 0.3s;
+            border-radius: 50%;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .toggle-switch input:checked + .toggle-slider {
+            background: var(--primary);
+        }
+
+        .toggle-switch input:checked + .toggle-slider::before {
+            transform: translateX(24px);
+        }
+
+        /* ===== CHARTS ===== */
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+        }
+
+        .chart-container-lg {
+            height: 350px;
+        }
+
+        /* ===== HEADER ===== */
+        .app-header {
+            padding: 20px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(23, 33, 43, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        [data-bs-theme="light"] .app-header {
+            background: rgba(245, 247, 250, 0.8);
+        }
+
+        .header-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--telegram-text), var(--telegram-highlight));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* ===== MODAL ===== */
+        .tg-modal .modal-content {
+            background: var(--telegram-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+        }
+
+        .tg-modal .modal-header {
+            border-bottom: 1px solid var(--glass-border);
+            padding: 24px;
+        }
+
+        .tg-modal .modal-body {
+            padding: 24px;
+        }
+
+        .tg-modal .modal-footer {
+            border-top: 1px solid var(--glass-border);
+            padding: 20px 24px;
+        }
+
+        .tg-modal .btn-close {
+            filter: invert(1);
+            opacity: 0.5;
+        }
+
+        [data-bs-theme="light"] .tg-modal .btn-close {
+            filter: none;
+        }
+
+        /* ===== SPINNER ===== */
+        .spinner-ring {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+        }
+
+        .spinner-ring::after {
+            content: '';
+            display: block;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            border-top-color: currentColor;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* ===== EMPTY STATE ===== */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--telegram-muted);
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 16px;
+            opacity: 0.3;
+        }
+
+        /* ===== ANIMATIONS ===== */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .fade-in {
+            opacity: 0;
+        }
+
+        .scale-in {
+            opacity: 0;
+            transform: scale(0.9);
+        }
+
+        /* ===== FOOTER ===== */
+        .app-footer {
+            text-align: center;
+            padding: 40px 20px 120px;
+            color: var(--telegram-muted);
+            font-size: 0.85rem;
+        }
+
+        .apps-footer {
+            text-align: center;
+            padding: 20px 16px;
+            color: #6b7280;
+            font-size: 0.85rem;
+            margin-top: 30px;
+            border-top: 1px solid #e5e7eb;
+            margin-bottom: calc(20px + var(--safe-area-bottom));
+        }
+
+        /* ===== SCROLLBAR ===== */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--telegram-accent);
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--telegram-highlight);
+        }
+
+        /* ===== MOBILE OPTIMIZATIONS ===== */
+        @media (max-width: 768px) {
+            .bcv-value { font-size: 2.2rem; }
+            .stat-value { font-size: 1.6rem; }
+            .tg-card { padding: 18px; }
+            .chart-container { height: 250px; }
+            .chart-container-lg { height: 280px; }
+            .header-title { font-size: 1.2rem; }
+            .nav-item-tg { padding: 8px 12px; min-width: 56px; }
+            .nav-item-tg span { font-size: 0.6rem; }
+            .nav-item-tg i { font-size: 1.1rem; }
+            .telegram-nav { bottom: 12px; border-radius: 20px; padding: 6px 10px; }
+            body { padding-bottom: 90px; }
+            .login-card { padding: 30px 20px; }
+            .splash-logo { width: 90px; height: 90px; font-size: 2.5rem; }
+            .splash-title { font-size: 1.4rem; }
+        }
+
+        @media (max-width: 576px) {
+            .bcv-input-group { flex-direction: column; }
+            .bcv-input-group .tg-btn { width: 100%; }
+            .tg-table-container { border-radius: 14px; }
+            .tg-table tbody td { padding: 12px; font-size: 0.8rem; }
+        }
+
+        /* Pulse animation for live indicator */
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--success);
+            border-radius: 50%;
+            position: relative;
+            display: inline-block;
+        }
+
+        .pulse-dot::after {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: -4px;
+            right: -4px;
+            bottom: -4px;
+            border-radius: 50%;
+            background: var(--success);
+            opacity: 0;
+            animation: pulseRing 2s ease-out infinite;
+        }
+
+        @keyframes pulseRing {
+            0% { transform: scale(0.8); opacity: 0.5; }
+            100% { transform: scale(2); opacity: 0; }
+        }
+
+        /* Shimmer loading effect */
+        .shimmer {
+            background: linear-gradient(
+                90deg,
+                var(--telegram-card) 25%,
+                rgba(94, 181, 247, 0.1) 50%,
+                var(--telegram-card) 75%
+            );
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* Ripple effect */
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(94, 181, 247, 0.3);
+            transform: scale(0);
+            animation: rippleEffect 0.6s ease-out;
+            pointer-events: none;
+        }
+
+        @keyframes rippleEffect {
+            to { transform: scale(4); opacity: 0; }
+        }
+
+        /* Quick calc section */
+        .quick-calc-display {
+            background: var(--telegram-bg);
+            border-radius: 16px;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-align: right;
+            color: var(--telegram-text);
+            min-height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            border: 2px solid var(--glass-border);
+            transition: all 0.3s ease;
+        }
+
+        .quick-calc-display:focus-within {
+            border-color: var(--telegram-highlight);
+        }
+
+        .calc-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .calc-btn {
+            aspect-ratio: 1;
+            border: none;
+            border-radius: 16px;
+            background: var(--telegram-card);
+            color: var(--telegram-text);
+            font-size: 1.3rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .calc-btn:hover {
+            background: var(--telegram-accent);
+            transform: scale(1.05);
+        }
+
+        .calc-btn:active {
+            transform: scale(0.95);
+        }
+
+        .calc-btn.op {
+            background: var(--telegram-accent);
+            color: var(--telegram-highlight);
+        }
+
+        .calc-btn.equals {
+            background: linear-gradient(135deg, var(--primary), var(--info));
+            color: white;
+            grid-column: span 2;
+            aspect-ratio: auto;
+        }
+
+        .calc-btn.zero {
+            grid-column: span 2;
+            aspect-ratio: auto;
+        }
+
+        /* User profile dropdown */
+        .user-profile-dropdown {
+            position: relative;
+        }
+
+        .user-profile-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--telegram-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 50px;
+            padding: 6px 14px 6px 6px;
+            color: var(--telegram-text);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .user-profile-btn:hover {
+            background: var(--telegram-accent);
+        }
+
+        .user-profile-btn img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .user-profile-menu {
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            background: var(--telegram-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 8px;
+            min-width: 200px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            display: none;
+            z-index: 1001;
+        }
+
+        .user-profile-menu.show {
+            display: block;
+            animation: menuSlideIn 0.3s ease;
+        }
+
+        @keyframes menuSlideIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .user-profile-menu .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            border-radius: 10px;
+            color: var(--telegram-text);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            width: 100%;
+            text-align: left;
+        }
+
+        .user-profile-menu .menu-item:hover {
+            background: var(--telegram-accent);
+        }
+
+        .user-profile-menu .menu-divider {
+            height: 1px;
+            background: var(--glass-border);
+            margin: 8px 0;
+        }
+
+        .user-profile-menu .menu-user-info {
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--glass-border);
+            margin-bottom: 8px;
+        }
+
+        .user-profile-menu .menu-user-name {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .user-profile-menu .menu-user-email {
+            font-size: 0.8rem;
+            color: var(--telegram-muted);
+        }
     </style>
+<base target="_blank">
 </head>
 <body>
-    <!-- SPLASH con icono redondo y halo de carga -->
+    <!-- Splash Screen -->
     <div id="splashScreen">
         <div class="splash-logo">
-            <img src="icon.jpg" alt="Costos Pro">
+            <i class="bi bi-calculator-fill"></i>
         </div>
         <div class="splash-title">Costos Pro</div>
-        <div class="splash-version">Versión 2.6.0</div>
+        <div class="splash-version">Versi&oacute;n 2.6.0</div>
         <div class="splash-loader"></div>
     </div>
 
-    <!-- LOGIN con ícono Google SVG -->
+    <!-- Login Screen -->
     <div id="loginScreen">
         <div class="login-card">
             <div class="login-logo">
-                <svg width="64" height="64" viewBox="0 0 24 24">
-                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/>
-                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-                </svg>
+                <i class="bi bi-calculator-fill"></i>
             </div>
             <h2 class="login-title">Bienvenido 🤗</h2>
-            <p class="login-subtitle">Inicia sesión para gestionar tus productos y costos</p>
-            <button class="google-btn" onclick="signInWithGoogle()" style="display:flex; align-items:center; justify-content:center; gap:12px; width:100%; padding:14px; border-radius:14px; background:var(--telegram-bg); border:1px solid var(--glass-border);">
+            <p class="login-subtitle">Inicia sesi&oacute;n para gestionar tus productos y costos</p>
+            <button class="google-btn" onclick="signInWithGoogle()">
                 <svg width="20" height="20" viewBox="0 0 24 24">
                     <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/>
                     <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
@@ -199,91 +1342,1794 @@
                 </svg>
                 Continuar con Google
             </button>
-            <div class="apps-footer mt-4"><p>©2026 Todos los derechos reservados</p><p class="fw-bold text-primary">&lt;Dev RogerWeb&gt;</p></div>
+            <p class="login-footer">Al iniciar sesi&oacute;n, aceptas nuestros t&eacute;rminos de uso.</p>
+                    <!-- Footer -->
+            <div class="apps-footer">
+                <p class="mb-1">©2026 Todos los derechos reservados</p>
+                <p class="mb-0 fw-bold text-primary">&lt;Dev RogerWeb&gt;</p>
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- Background Mesh -->
+    <div class="bg-mesh">
+        <div class="orb"></div>
+        <div class="orb"></div>
+        <div class="orb"></div>
+    </div>
+
+    <!-- Particles Canvas -->
+    <canvas id="particlesCanvas"></canvas>
+
+    <!-- Toast Container -->
+    <div class="toast-container-custom" id="toastContainer"></div>
+
+    <!-- Content Layer -->
+    <div class="content-layer" id="mainContent" style="display:none;">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="container">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="tg-card-icon" style="width:40px;height:40px;font-size:1.1rem;">
+                            <i class="bi bi-calculator-fill"></i>
+                        </div>
+                        <div>
+                            <h1 class="header-title mb-0">Costos Pro</h1>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="d-flex align-items-center gap-2 d-none d-md-flex">
+                            <span class="pulse-dot"></span>
+                            <small class="text-muted">BCV: <strong id="headerBcvRate">--</strong> Bs/USD</small>
+                        </div>
+                        <button class="tg-btn tg-btn-sm tg-btn-primary" onclick="toggleTheme()" title="Cambiar tema">
+                            <i class="bi bi-moon-stars" id="themeIcon"></i>
+                        </button>
+                        <!-- User Profile Dropdown -->
+                        <div class="user-profile-dropdown" id="userProfileDropdown">
+                            <button class="user-profile-btn" onclick="toggleUserMenu()">
+                                <img id="headerUserAvatar" src="" alt="User" style="display:none;">
+                                <div class="user-avatar-wrapper" id="headerUserAvatarFallback">
+                                    <i class="bi bi-person-fill"></i>
+                                </div>
+                                <span id="headerUserName" class="d-none d-sm-inline" style="font-size:0.85rem;font-weight:500;">Usuario</span>
+                                <i class="bi bi-chevron-down" style="font-size:0.7rem;"></i>
+                            </button>
+                            <div class="user-profile-menu" id="userProfileMenu">
+                                <div class="menu-user-info">
+                                    <div class="menu-user-name" id="menuUserName">Usuario</div>
+                                    <div class="menu-user-email" id="menuUserEmail">email@example.com</div>
+                                </div>
+                                <button class="menu-item" onclick="showSection('settings', document.querySelector('[data-section=\'settings\']')); toggleUserMenu();">
+                                    <i class="bi bi-gear"></i> Configuraci&oacute;n
+                                </button>
+                                <div class="menu-divider"></div>
+                                <button class="menu-item" onclick="signOut()" style="color:var(--danger);">
+                                    <i class="bi bi-box-arrow-right"></i> Cerrar Sesi&oacute;n
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- ===== SECTION: DASHBOARD ===== -->
+        <section id="section-dashboard" class="section-page active">
+            <div class="container py-4">
+                <!-- BCV Section -->
+                <div class="row mb-4 fade-up">
+                    <div class="col-12">
+                        <div class="bcv-section" id="bcvCard">
+                            <div class="row align-items-center">
+                                <div class="col-md-6">
+                                    <div class="d-flex align-items-center gap-2 mb-2">
+                                        <span class="pulse-dot"></span>
+                                        <span class="bcv-label">TASA BCV MANUAL</span>
+                                    </div>
+                                    <div class="bcv-value" id="bcvDisplay">--</div>
+                                    <div class="bcv-label mt-2">Bs / USD</div>
+                                    <div class="d-flex gap-3 mt-3">
+                                        <small id="bcvLastUpdate" class="opacity-75"><i class="bi bi-clock-history me-1"></i>Actualizado manualmente</small>
+                                        <small id="bcvSource" class="opacity-75"><i class="bi bi-pencil-fill me-1"></i>Manual</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mt-3 mt-md-0">
+                                    <div class="bcv-input-group">
+                                        <input type="number" id="tasaBcv" class="tg-input" step="0.01" placeholder="Ingresa tasa BCV">
+                                        <button class="tg-btn" onclick="saveManualBcv()">
+                                            <i class="bi bi-check-lg"></i> Guardar
+                                        </button>
+                                    </div>
+                                    <p class="opacity-75 mt-2" style="font-size:0.8rem;">
+                                        <i class="bi bi-info-circle me-1"></i>
+                                        Ingresa manualmente la tasa del BCV. Se guardar&aacute; en tu cuenta.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stats Cards -->
+                <div class="row g-3 mb-4" id="statsContainer">
+                    <div class="col-6 col-lg-3 fade-up">
+                        <div class="stat-card">
+                            <i class="bi bi-box-seam stat-icon"></i>
+                            <div class="stat-value" id="statTotalProducts">0</div>
+                            <div class="stat-label">Productos</div>
+                            <div class="stat-change up">
+                                <i class="bi bi-arrow-up-short"></i> <span id="statProductsTrend">Registrados</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-lg-3 fade-up">
+                        <div class="stat-card">
+                            <i class="bi bi-currency-dollar stat-icon"></i>
+                            <div class="stat-value" id="statAvgMargin">0%</div>
+                            <div class="stat-label">Margen Promedio</div>
+                            <div class="stat-change up">
+                                <i class="bi bi-graph-up"></i> Ganancia
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-lg-3 fade-up">
+                        <div class="stat-card">
+                            <i class="bi bi-cash-stack stat-icon"></i>
+                            <div class="stat-value" id="statTotalValue">$0</div>
+                            <div class="stat-label">Inventario Total</div>
+                            <div class="stat-change up">
+                                <i class="bi bi-currency-exchange"></i> Valorizado
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-lg-3 fade-up">
+                        <div class="stat-card">
+                            <i class="bi bi-trophy stat-icon"></i>
+                            <div class="stat-value" id="statTopProduct">--</div>
+                            <div class="stat-label">Mejor Producto</div>
+                            <div class="stat-change up">
+                                <i class="bi bi-star-fill"></i> Mayor utilidad
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="row g-4 mb-4" id="chartsContainer">
+                    <div class="col-lg-6 fade-up">
+                        <div class="tg-card">
+                            <div class="tg-card-header">
+                                <div class="tg-card-icon">
+                                    <i class="bi bi-pie-chart-fill"></i>
+                                </div>
+                                <div>
+                                    <h5 class="tg-card-title">Distribuci&oacute;n de Precios</h5>
+                                    <p class="tg-card-subtitle">Costo vs Venta por producto</p>
+                                </div>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="priceDistributionChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 fade-up">
+                        <div class="tg-card">
+                            <div class="tg-card-header">
+                                <div class="tg-card-icon" style="background:linear-gradient(135deg, #fd7e14, #ffc107);">
+                                    <i class="bi bi-graph-up-arrow"></i>
+                                </div>
+                                <div>
+                                    <h5 class="tg-card-title">Utilidad por Producto</h5>
+                                    <p class="tg-card-subtitle">Ganancia en USD</p>
+                                </div>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="profitChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 fade-up">
+                        <div class="tg-card">
+                            <div class="tg-card-header">
+                                <div class="tg-card-icon" style="background:linear-gradient(135deg, #6f42c1, #d63384);">
+                                    <i class="bi bi-bar-chart-line-fill"></i>
+                                </div>
+                                <div>
+                                    <h5 class="tg-card-title">An&aacute;lisis Comparativo</h5>
+                                    <p class="tg-card-subtitle">Costo unitario, precio venta y utilidad</p>
+                                </div>
+                            </div>
+                            <div class="chart-container chart-container-lg">
+                                <canvas id="comparisonChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="row fade-up">
+                    <div class="col-12">
+                        <div class="tg-card">
+                            <div class="tg-card-header">
+                                <div class="tg-card-icon" style="background:linear-gradient(135deg, #20c997, #0dcaf0);">
+                                    <i class="bi bi-clock-history"></i>
+                                </div>
+                                <div>
+                                    <h5 class="tg-card-title">Actividad Reciente</h5>
+                                    <p class="tg-card-subtitle">&Uacute;ltimos productos agregados</p>
+                                </div>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="tg-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Producto</th>
+                                            <th>Precio Venta</th>
+                                            <th>Utilidad</th>
+                                            <th>Margen</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="recentActivityTable"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== SECTION: PRODUCTS ===== -->
+        <section id="section-products" class="section-page">
+            <div class="container py-4">
+                <!-- Product Form -->
+                <div class="row mb-4">
+                    <div class="col-12 fade-up">
+                        <div class="tg-card">
+                            <div class="tg-card-header">
+                                <div class="tg-card-icon" style="background:linear-gradient(135deg, #198754, #20c997);">
+                                    <i class="bi bi-plus-circle-fill"></i>
+                                </div>
+                                <div>
+                                    <h5 class="tg-card-title" id="formTitle">Nuevo Producto</h5>
+                                    <p class="tg-card-subtitle">Completa los datos del producto</p>
+                                </div>
+                            </div>
+                            <form id="productForm" onsubmit="event.preventDefault(); ProductManager.saveProduct()">
+                                <div class="row g-3">
+                                    <div class="col-12">
+                                        <label class="form-label text-muted small">Nombre del Producto</label>
+                                        <input type="text" class="tg-input" id="productName" placeholder="Ej: Arroz Premium 1kg" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label text-muted small">Costo Total (USD)</label>
+                                        <input type="number" class="tg-input" id="totalCost" step="0.01" placeholder="0.00" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label text-muted small">Unidades por Empaque</label>
+                                        <input type="number" class="tg-input" id="units" placeholder="Ej: 12" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label text-muted small">Cantidad de Empaques</label>
+                                        <input type="number" class="tg-input" id="empaques" placeholder="Ej: 10" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label text-muted small">% de Ganancia</label>
+                                        <input type="number" class="tg-input" id="profit" step="0.01" placeholder="Ej: 30" required>
+                                    </div>
+                                </div>
+                                <div class="d-flex gap-2 mt-4">
+                                    <button type="submit" class="tg-btn tg-btn-success flex-fill" id="saveBtn">
+                                        <i class="bi bi-check-lg"></i> <span id="saveBtnText">Guardar Producto</span>
+                                    </button>
+                                    <button type="button" class="tg-btn tg-btn-warning" onclick="ProductManager.clearForm()">
+                                        <i class="bi bi-x-lg"></i>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product List -->
+                <div class="row fade-up">
+                    <div class="col-12">
+                        <div class="tg-card">
+                            <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
+                                <div class="tg-card-header mb-0">
+                                    <div class="tg-card-icon" style="background:linear-gradient(135deg, #0dcaf0, #0d6efd);">
+                                        <i class="bi bi-list-check"></i>
+                                    </div>
+                                    <div>
+                                        <h5 class="tg-card-title mb-0">Lista de Precios</h5>
+                                        <p class="tg-card-subtitle mb-0"><span id="productCount">0</span> productos</p>
+                                    </div>
+                                </div>
+                                <div class="d-flex gap-2">
+                                    <button class="tg-btn tg-btn-sm tg-btn-danger" onclick="confirmReset()">
+                                        <i class="bi bi-trash3"></i> <span class="d-none d-sm-inline">Reiniciar</span>
+                                    </button>
+                                    <button class="tg-btn tg-btn-sm tg-btn-primary" onclick="openPdfModal()">
+                                        <i class="bi bi-file-earmark-pdf"></i> <span class="d-none d-sm-inline">PDF</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div id="priceList" class="table-responsive">
+                                <div class="empty-state">
+                                    <i class="bi bi-inbox"></i>
+                                    <h5>No hay productos</h5>
+                                    <p>Agrega tu primer producto usando el formulario</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== SECTION: CALCULATOR ===== -->
+        <section id="section-calculator" class="section-page">
+            <div class="container py-4">
+                <div class="row justify-content-center">
+                    <div class="col-md-8 col-lg-6 fade-up">
+                        <div class="tg-card">
+                            <div class="tg-card-header">
+                                <div class="tg-card-icon" style="background:linear-gradient(135deg, #fd7e14, #ffc107);">
+                                    <i class="bi bi-calculator-fill"></i>
+                                </div>
+                                <div>
+                                    <h5 class="tg-card-title">Calculadora R&aacute;pida</h5>
+                                    <p class="tg-card-subtitle">Conversi&oacute;n USD &harr; Bs</p>
+                                </div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label text-muted small">Monto en USD</label>
+                                <div class="input-group">
+                                    <span class="input-group-text tg-input" style="border-radius:14px 0 0 14px; border-right:none; width:50px; justify-content:center;"><i class="bi bi-currency-dollar"></i></span>
+                                    <input type="number" class="tg-input" id="calcUSD" step="0.01" placeholder="0.00" oninput="convertToBs()" style="border-radius:0 14px 14px 0;">
+                                </div>
+                            </div>
+
+                            <div class="text-center my-3">
+                                <i class="bi bi-arrow-down-up" style="font-size:1.5rem; color:var(--telegram-highlight);"></i>
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label text-muted small">Monto en Bs</label>
+                                <div class="input-group">
+                                    <span class="input-group-text tg-input" style="border-radius:14px 0 0 14px; border-right:none; width:50px; justify-content:center;"><strong>Bs</strong></span>
+                                    <input type="number" class="tg-input" id="calcBs" step="0.01" placeholder="0.00" oninput="convertToUsd()" style="border-radius:0 14px 14px 0;">
+                                </div>
+                            </div>
+
+                            <div class="alert" style="background:var(--telegram-accent); border:none; border-radius:14px;">
+                                <small class="text-muted"><i class="bi bi-info-circle me-2"></i>Tasa usada: <strong id="calcBcvRate">--</strong> Bs/USD</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Price Simulator -->
+                <div class="row justify-content-center mt-4">
+                    <div class="col-md-8 col-lg-6 fade-up">
+                        <div class="tg-card">
+                            <div class="tg-card-header">
+                                <div class="tg-card-icon" style="background:linear-gradient(135deg, #6f42c1, #d63384);">
+                                    <i class="bi bi-magic"></i>
+                                </div>
+                                <div>
+                                    <h5 class="tg-card-title">Simulador de Precio</h5>
+                                    <p class="tg-card-subtitle">Calcula el precio de venta ideal</p>
+                                </div>
+                            </div>
+
+                            <div class="row g-3">
+                                <div class="col-12">
+                                    <label class="form-label text-muted small">Costo Unitario (USD)</label>
+                                    <input type="number" class="tg-input" id="simCost" step="0.01" placeholder="0.00" oninput="simulatePrice()">
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label text-muted small">% de Ganancia Deseado</label>
+                                    <input type="range" class="form-range" id="simProfitSlider" min="0" max="200" value="30" oninput="document.getElementById('simProfit').value=this.value; simulatePrice()">
+                                    <div class="d-flex justify-content-between">
+                                        <input type="number" class="tg-input" id="simProfit" value="30" style="max-width:100px; text-align:center;" oninput="document.getElementById('simProfitSlider').value=this.value; simulatePrice()">
+                                        <span class="align-self-center text-muted">%</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mt-4 p-4" style="background:var(--telegram-bg); border-radius:16px;">
+                                <div class="row text-center">
+                                    <div class="col-4">
+                                        <div class="text-muted small">Precio Venta</div>
+                                        <div class="fs-4 fw-bold text-success" id="simSalePrice">$0.00</div>
+                                        <div class="small" style="color:var(--telegram-highlight);" id="simSaleBs">Bs 0.00</div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="text-muted small">Ganancia</div>
+                                        <div class="fs-4 fw-bold text-info" id="simUtility">$0.00</div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="text-muted small">Multiplicador</div>
+                                        <div class="fs-4 fw-bold" style="color:var(--warning);" id="simMultiplier">1.0x</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== SECTION: SETTINGS ===== -->
+        <section id="section-settings" class="section-page">
+            <div class="container py-4">
+                <div class="row justify-content-center">
+                    <div class="col-md-8 col-lg-6">
+                        <!-- BCV Settings -->
+                        <div class="tg-card mb-4 fade-up">
+                            <div class="tg-card-header">
+                                <div class="tg-card-icon">
+                                    <i class="bi bi-bank"></i>
+                                </div>
+                                <div>
+                                    <h5 class="tg-card-title">Configuraci&oacute;n BCV</h5>
+                                    <p class="tg-card-subtitle">Tasa de cambio manual</p>
+                                </div>
+                            </div>
+
+                            <div class="mb-4">
+                                <p class="text-muted small">
+                                    <i class="bi bi-info-circle me-1"></i>
+                                    La tasa BCV se gestiona manualmente. Ingresa el valor actual y se guardar&aacute; en tu cuenta de Supabase.
+                                </p>
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label text-muted small">Tasa BCV Actual</label>
+                                <div class="input-group">
+                                    <input type="number" class="tg-input" id="settingsBcv" step="0.01" readonly>
+                                    <button class="tg-btn tg-btn-primary" onclick="document.getElementById('settingsBcv').readOnly=false; document.getElementById('settingsBcv').focus();" title="Editar manualmente">
+                                        <i class="bi bi-pencil"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <button class="tg-btn tg-btn-success w-100" onclick="saveBcvSettings()">
+                                <i class="bi bi-check-lg"></i> Guardar Configuraci&oacute;n
+                            </button>
+                        </div>
+
+                        <!-- Appearance -->
+                        <div class="tg-card mb-4 fade-up">
+                            <div class="tg-card-header">
+                                <div class="tg-card-icon" style="background:linear-gradient(135deg, #6f42c1, #0dcaf0);">
+                                    <i class="bi bi-palette-fill"></i>
+                                </div>
+                                <div>
+                                    <h5 class="tg-card-title">Apariencia</h5>
+                                    <p class="tg-card-subtitle">Personaliza la interfaz</p>
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <div>
+                                    <div>Tema Oscuro</div>
+                                    <small class="text-muted">Activa el modo oscuro</small>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="darkModeToggle" checked onchange="toggleTheme()">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <div>
+                                    <div>Animaciones</div>
+                                    <small class="text-muted">Efectos visuales y transiciones</small>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="animationsToggle" checked onchange="toggleAnimations()">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <div>Part&iacute;culas</div>
+                                    <small class="text-muted">Efecto de part&iacute;culas en fondo</small>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="particlesToggle" checked onchange="toggleParticles()">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Data Management -->
+                        <div class="tg-card mb-4 fade-up">
+                            <div class="tg-card-header">
+                                <div class="tg-card-icon" style="background:linear-gradient(135deg, #dc3545, #fd7e14);">
+                                    <i class="bi bi-database-fill-gear"></i>
+                                </div>
+                                <div>
+                                    <h5 class="tg-card-title">Gesti&oacute;n de Datos</h5>
+                                    <p class="tg-card-subtitle">Exportar o restaurar datos</p>
+                                </div>
+                            </div>
+
+                            <div class="d-grid gap-2">
+                                <button class="tg-btn tg-btn-primary" onclick="exportData()">
+                                    <i class="bi bi-download"></i> Exportar Datos (JSON)
+                                </button>
+                                <label class="tg-btn tg-btn-success mb-0" style="cursor:pointer;">
+                                    <i class="bi bi-upload"></i> Importar Datos
+                                    <input type="file" id="importFile" accept=".json" style="display:none;" onchange="importData(this)">
+                                </label>
+                                <button class="tg-btn tg-btn-danger" onclick="confirmReset()">
+                                    <i class="bi bi-trash3"></i> Eliminar Todos los Datos
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- About -->
+                        <div class="tg-card fade-up">
+                            <div class="text-center py-4">
+                                <div class="tg-card-icon mx-auto mb-3" style="width:64px;height:64px;font-size:1.8rem;">
+                                    <i class="bi bi-calculator-fill"></i>
+                                </div>
+                                <h5 class="tg-card-title">Calculadora de Costos Pro</h5>
+                                <p class="text-muted">Versi&oacute;n 2.0</p>
+                                <p class="text-muted small">Dise&ntilde;ado para emprendedores y comerciantes. Calcula precios de venta, gestiona productos y monitorea la tasa BCV.</p>
+                                <hr style="border-color:var(--glass-border); margin:24px 0;">
+                                <p class="text-muted" style="font-size:0.85rem;">
+                                    <i class="bi bi-code-slash me-1"></i> Desarrollado con <i class="bi bi-heart-fill text-danger mx-1"></i> por RogerWed<br>
+                                    &copy; 2025 Todos los derechos reservados
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="app-footer">
+            <p><i class="bi bi-calculator me-2"></i>Calculadora de Costos Pro v2.0</p>
+            <p class="small">RogerWed &copy; 2025</p>
+        </footer>
+    </div>
+
+    <!-- Telegram Floating Navigation -->
+    <nav class="telegram-nav" id="telegramNav">
+        <button class="nav-item-tg active" onclick="showSection('dashboard', this)" data-section="dashboard">
+            <i class="bi bi-house-door-fill"></i>
+            <span>Inicio</span>
+        </button>
+        <button class="nav-item-tg" onclick="showSection('products', this)" data-section="products">
+            <i class="bi bi-box-seam"></i>
+            <span>Productos</span>
+        </button>
+        <button class="nav-item-tg" onclick="showSection('calculator', this)" data-section="calculator">
+            <i class="bi bi-calculator"></i>
+            <span>Calculadora</span>
+        </button>
+        <button class="nav-item-tg" onclick="showSection('settings', this)" data-section="settings">
+            <i class="bi bi-gear"></i>
+            <span>Ajustes</span>
+        </button>
+        <!-- User avatar in nav -->
+        <button class="nav-item-tg" id="navUserAvatarBtn" onclick="toggleUserMenu()" title="Perfil">
+            <div class="user-avatar-wrapper" id="navUserAvatarWrapper">
+                <i class="bi bi-person-fill"></i>
+            </div>
+            <span id="navUserName">Perfil</span>
+        </button>
+    </nav>
+
+    <!-- Reset Confirmation Modal -->
+    <div class="modal fade tg-modal" id="resetModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="bi bi-exclamation-triangle-fill text-warning me-2"></i>&iquest;Eliminar todos los datos?</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Esta acci&oacute;n eliminar&aacute; todos los productos y configuraciones guardadas. Esta acci&oacute;n no se puede deshacer.</p>
+                    <p class="text-muted small">Productos guardados: <strong id="resetProductCount">0</strong></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="tg-btn tg-btn-sm" style="background:var(--telegram-accent);color:var(--telegram-text);" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="tg-btn tg-btn-sm tg-btn-danger" onclick="ProductManager.resetSystem()" data-bs-dismiss="modal">
+                        <i class="bi bi-trash3"></i> S&iacute;, eliminar todo
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div class="bg-mesh"><div class="orb"></div><div class="orb"></div><div class="orb"></div></div>
-    <canvas id="particlesCanvas"></canvas>
-    <div class="toast-container-custom" id="toastContainer"></div>
-
-    <div class="content-layer" id="mainContent" style="display:none;">
-        <header class="app-header"><div class="container"><div class="d-flex justify-content-between align-items-center"><div class="d-flex align-items-center gap-3"><div class="tg-card-icon" style="width:40px;height:40px;"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="white"><path d="M4 4h16v16H4zM8 4v16M16 4v16M4 8h16M4 16h16"/><circle cx="12" cy="12" r="2"/></svg></div><h1 class="header-title">Costos Pro</h1></div><div class="d-flex gap-2"><button class="tg-btn tg-btn-sm tg-btn-primary" onclick="toggleTheme()"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 3a9 9 0 1 0 9 9 9 9 0 0 0-9-9zM12 7v4M12 17v.01"/></svg></button><div class="user-profile-dropdown"><button class="user-profile-btn" onclick="toggleUserMenu()"><div id="headerUserAvatarFallback"><svg class="icon-svg" viewBox="0 0 24 24" fill="none"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><span id="headerUserName">Usuario</span></button><div class="user-profile-menu" id="userProfileMenu"><div class="menu-user-info"><div class="menu-user-name" id="menuUserName">Usuario</div><div class="menu-user-email" id="menuUserEmail"></div></div><button class="menu-item" onclick="showSection('settings', document.querySelector('[data-section=\'settings\']')); toggleUserMenu();"><svg class="icon-svg" viewBox="0 0 24 24"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/><path d="M19.4 15a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H5.78a1.65 1.65 0 0 0-1.51 1 1.65 1.65 0 0 0 .33 1.82l.03.03A10 10 0 0 0 12 17.66a10 10 0 0 0 6.37-2.63z"/></svg> Configuración</button><div class="menu-divider"></div><button class="menu-item" onclick="signOut()" style="color:var(--danger);"><svg class="icon-svg" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg> Cerrar Sesión</button></div></div></div></div></div></header>
-
-        <!-- Dashboard -->
-        <section id="section-dashboard" class="section-page active"><div class="container py-4">
-            <div class="row mb-4"><div class="col-12"><div class="bcv-section"><div class="row align-items-center"><div class="col-md-6"><div class="bcv-value" id="bcvDisplay">--</div><div class="bcv-label">Bs / USD</div></div><div class="col-md-6 mt-3 mt-md-0"><div class="bcv-input-group d-flex gap-2"><input type="number" id="tasaBcv" class="tg-input" placeholder="Tasa BCV"><button class="tg-btn" onclick="saveManualBcv()"><svg class="icon-svg" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Guardar</button></div></div></div></div></div></div>
-            <div class="row g-3 mb-4" id="statsContainer">
-                <div class="col-6 col-lg-3"><div class="stat-card"><svg class="icon-svg" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg><div class="stat-value" id="statTotalProducts">0</div><div class="stat-label">Productos</div></div></div>
-                <div class="col-6 col-lg-3"><div class="stat-card"><svg class="icon-svg" viewBox="0 0 24 24"><path d="M12 2v20M17 7l-5-5-5 5M7 17l5 5 5-5"/></svg><div class="stat-value" id="statAvgMargin">0%</div><div class="stat-label">Margen Promedio</div></div></div>
-                <div class="col-6 col-lg-3"><div class="stat-card"><svg class="icon-svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 2v20M2 12h20"/></svg><div class="stat-value" id="statTotalValue">$0</div><div class="stat-label">Inventario Total</div></div></div>
-                <div class="col-6 col-lg-3"><div class="stat-card"><svg class="icon-svg" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><div class="stat-value" id="statTopProduct">--</div><div class="stat-label">Mejor Producto</div></div></div>
+    <!-- PDF Range Modal -->
+    <div class="modal fade tg-modal" id="pdfModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="bi bi-file-earmark-pdf text-danger me-2"></i>Generar Reporte PDF</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-muted small mb-3">Selecciona el rango de fechas para filtrar los productos en el reporte.</p>
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <label class="form-label text-muted small">Fecha Inicio</label>
+                            <input type="date" class="tg-input" id="pdfDateFrom">
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label text-muted small">Fecha Fin</label>
+                            <input type="date" class="tg-input" id="pdfDateTo">
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <small class="text-muted" id="pdfProductCount">Productos en rango: 0</small>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="tg-btn tg-btn-sm" style="background:var(--telegram-accent);color:var(--telegram-text);" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="tg-btn tg-btn-sm tg-btn-danger" onclick="ProductManager.generatePDF()">
+                        <i class="bi bi-file-earmark-pdf"></i> Generar PDF
+                    </button>
+                </div>
             </div>
-            <div class="row g-4"><div class="col-lg-6"><div class="tg-card"><div class="tg-card-header"><div class="tg-card-icon"><svg class="icon-svg" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-9-9"/><path d="M21 3v6h-6"/><circle cx="12" cy="12" r="3"/></svg></div><h5>Distribución de Precios</h5></div><div class="chart-container"><canvas id="priceDistributionChart"></canvas></div></div></div>
-                <div class="col-lg-6"><div class="tg-card"><div class="tg-card-header"><div class="tg-card-icon"><svg class="icon-svg" viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></div><h5>Utilidad por Producto</h5></div><div class="chart-container"><canvas id="profitChart"></canvas></div></div></div>
-                <div class="col-12"><div class="tg-card"><div class="tg-card-header"><div class="tg-card-icon"><svg class="icon-svg" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div><h5>Análisis Comparativo</h5></div><div class="chart-container-lg"><canvas id="comparisonChart"></canvas></div></div></div></div>
-        </div></section>
-
-        <!-- Products -->
-        <section id="section-products" class="section-page"><div class="container py-4">
-            <div class="row mb-4"><div class="col-12"><div class="tg-card"><form id="productForm" onsubmit="event.preventDefault(); ProductManager.saveProduct()"><div class="row g-3"><div class="col-12"><input type="text" class="tg-input" id="productName" placeholder="Nombre del Producto" required></div><div class="col-md-6"><input type="number" class="tg-input" id="totalCost" step="0.01" placeholder="Costo Total USD" required></div><div class="col-md-6"><input type="number" class="tg-input" id="units" placeholder="Unidades por empaque" required></div><div class="col-md-6"><input type="number" class="tg-input" id="empaques" placeholder="Cantidad de empaques" required></div><div class="col-md-6"><input type="number" class="tg-input" id="profit" step="0.01" placeholder="% Ganancia" required></div></div><div class="d-flex gap-2 mt-4"><button type="submit" class="tg-btn tg-btn-success flex-fill"><svg class="icon-svg" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Guardar</button><button type="button" class="tg-btn tg-btn-warning" onclick="ProductManager.clearForm()"><svg class="icon-svg" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div></form></div></div></div>
-            <div class="row"><div class="col-12"><div class="tg-card"><div class="d-flex justify-content-between align-items-center mb-3"><h5>Lista de Precios <span id="productCount">0</span></h5><div><button class="tg-btn tg-btn-sm tg-btn-danger" onclick="confirmReset()"><svg class="icon-svg" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button><button class="tg-btn tg-btn-sm tg-btn-primary ms-2" onclick="openPdfModal()"><svg class="icon-svg" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></button></div></div><div id="priceList"></div></div></div></div>
-        </div></section>
-
-        <!-- Calculator -->
-        <section id="section-calculator" class="section-page"><div class="container py-4"><div class="row justify-content-center"><div class="col-md-8"><div class="tg-card"><div class="tg-card-header"><div class="tg-card-icon"><svg class="icon-svg" viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="16" y1="14" x2="16" y2="18"/><line x1="12" y1="14" x2="12" y2="18"/><line x1="8" y1="14" x2="8" y2="18"/></svg></div><h5>Calculadora Rápida</h5></div><div class="mb-4"><input type="number" class="tg-input" id="calcUSD" placeholder="USD" oninput="convertToBs()"></div><div class="mb-4"><input type="number" class="tg-input" id="calcBs" placeholder="Bs" oninput="convertToUsd()"></div><div><small>Tasa BCV: <strong id="calcBcvRate">--</strong> Bs/USD</small></div></div></div></div></div></section>
-
-        <!-- Settings -->
-        <section id="section-settings" class="section-page"><div class="container py-4"><div class="row justify-content-center"><div class="col-md-8"><div class="tg-card mb-4"><h5>Configuración BCV</h5><div class="mb-3"><input type="number" class="tg-input" id="settingsBcv" readonly><button class="tg-btn mt-2" onclick="document.getElementById('settingsBcv').readOnly=false; document.getElementById('settingsBcv').focus()">Editar</button></div><button class="tg-btn tg-btn-success" onclick="saveBcvSettings()">Guardar</button></div><div class="tg-card"><h5>Apariencia</h5><div class="d-flex justify-content-between mb-2"><span>Tema Oscuro</span><label class="toggle-switch"><input type="checkbox" id="darkModeToggle" checked onchange="toggleTheme()"><span class="toggle-slider"></span></label></div><div class="d-flex justify-content-between"><span>Animaciones</span><label class="toggle-switch"><input type="checkbox" id="animationsToggle" checked onchange="toggleAnimations()"><span class="toggle-slider"></span></label></div></div></div></div></div></section>
-        <footer class="app-footer"><p>Calculadora de Costos Pro v2.0 | RogerWed</p></footer>
+        </div>
     </div>
 
-    <nav class="telegram-nav" id="telegramNav">
-        <button class="nav-item-tg active" onclick="showSection('dashboard', this)" data-section="dashboard"><svg class="icon-svg" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2h-5v-7H9v7H4a2 2 0 0 1-2-2z"/></svg><span>Inicio</span></button>
-        <button class="nav-item-tg" onclick="showSection('products', this)" data-section="products"><svg class="icon-svg" viewBox="0 0 24 24"><path d="M20 7h-4.18A3 3 0 0 0 16 5.18V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v1.18A3 3 0 0 0 8.18 7H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/><line x1="16" y1="11" x2="8" y2="11"/><line x1="16" y1="15" x2="8" y2="15"/></svg><span>Productos</span></button>
-        <button class="nav-item-tg" onclick="showSection('calculator', this)" data-section="calculator"><svg class="icon-svg" viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="16" y1="14" x2="16" y2="18"/><line x1="12" y1="14" x2="12" y2="18"/><line x1="8" y1="14" x2="8" y2="18"/></svg><span>Calculadora</span></button>
-        <button class="nav-item-tg" onclick="showSection('settings', this)" data-section="settings"><svg class="icon-svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H5.78a1.65 1.65 0 0 0-1.51 1 1.65 1.65 0 0 0 .33 1.82l.03.03A10 10 0 0 0 12 17.66a10 10 0 0 0 6.37-2.63z"/></svg><span>Ajustes</span></button>
-    </nav>
-
-    <div class="modal fade tg-modal" id="resetModal" tabindex="-1"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><h5>Eliminar todos los datos?</h5></div><div class="modal-body"><p>Esta acción no se puede deshacer.</p></div><div class="modal-footer"><button class="tg-btn" data-bs-dismiss="modal">Cancelar</button><button class="tg-btn tg-btn-danger" onclick="ProductManager.resetSystem()">Eliminar</button></div></div></div></div>
-    <div class="modal fade tg-modal" id="pdfModal" tabindex="-1"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><h5>Generar PDF</h5></div><div class="modal-body"><input type="date" id="pdfDateFrom" class="tg-input mb-2"><input type="date" id="pdfDateTo" class="tg-input"></div><div class="modal-footer"><button class="tg-btn" data-bs-dismiss="modal">Cancelar</button><button class="tg-btn tg-btn-primary" onclick="ProductManager.generatePDF()">Generar</button></div></div></div></div>
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
 
     <script>
+        // ===== SUPABASE CONFIGURATION =====
+        // REEMPLAZA ESTOS VALORES CON LOS DE TU PROYECTO SUPABASE
         const SUPABASE_URL = 'https://pbkeawvhdfncpuzehsrw.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_R2OiRBqSzP8mMVV8sjni7A_-oco6wu1';
-        let supabaseClient = null, currentUser = null;
-        function initSupabase(){ supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY); }
-        async function signInWithGoogle(){ if(!supabaseClient) return; const {error}=await supabaseClient.auth.signInWithOAuth({provider:'google',options:{redirectTo:window.location.origin}}); if(error) showToast('Error',error.message,'error'); }
-        async function signOut(){ if(supabaseClient) await supabaseClient.auth.signOut(); currentUser=null; document.getElementById('mainContent').style.display='none';document.getElementById('telegramNav').style.display='none';document.getElementById('loginScreen').classList.add('active');showToast('Sesión Cerrada','', 'info');}
-        async function checkAuth(){ if(!supabaseClient) return false; const {data:{session}}=await supabaseClient.auth.getSession(); if(session){currentUser=session.user; await loadUserData(); updateUserUI(); return true;} return false;}
-        function updateUserUI(){ if(!currentUser)return; const name=currentUser.user_metadata?.full_name||'Usuario'; document.getElementById('headerUserName').innerText=name.split(' ')[0]; document.getElementById('menuUserName').innerText=name; document.getElementById('menuUserEmail').innerText=currentUser.email||''; }
-        let currentBcvRate=36, animationsEnabled=true, particlesEnabled=true;
-        let ProductManager={ products:[], currentEditingId:null, async saveProduct(){/*similar*/}, calculatePrices(p){ const uc=p.totalCost/p.units; const sp=uc*(1+p.profit/100); const wp=sp*p.units; const tu=p.units*p.empaques; const tSale=sp*tu; const up=sp-uc; const tUtil=up*tu; return{unitCost:uc,salePrice:sp,wholesalePrice:wp,totalSalePrice:tSale,utilityPerUnit:up,totalUtility:tUtil};}, renderPriceList(){}, editProduct(){}, deleteProduct(){}, clearForm(){}, async resetSystem(){}, generatePDF(){} };
-        window.ProductManager=ProductManager;
-        function showToast(t,m,type){const c=document.getElementById('toastContainer');const div=document.createElement('div');div.className='tg-toast show';div.innerHTML=`<div><strong>${t}</strong><p>${m}</p></div>`;c.appendChild(div);setTimeout(()=>div.remove(),3000);}
-        function toggleTheme(){const html=document.documentElement;const isDark=html.getAttribute('data-bs-theme')==='dark';html.setAttribute('data-bs-theme',isDark?'light':'dark');localStorage.setItem('theme',isDark?'light':'dark');}
-        function showSection(section,btn){document.querySelectorAll('.section-page').forEach(s=>s.classList.remove('active'));document.getElementById(`section-${section}`).classList.add('active');document.querySelectorAll('.nav-item-tg').forEach(n=>n.classList.remove('active'));if(btn)btn.classList.add('active');if(section==='dashboard')updateCharts();}
-        function updateBcvDisplay(rate,src){currentBcvRate=rate;document.getElementById('bcvDisplay').innerText=rate.toFixed(2);document.getElementById('calcBcvRate').innerText=rate.toFixed(2);document.getElementById('settingsBcv').value=rate.toFixed(2);saveUserBcvRate(rate);}
-        function saveManualBcv(){const v=parseFloat(document.getElementById('tasaBcv').value);if(v>0)updateBcvDisplay(v,'Manual');showToast('Tasa actualizada',`${v} Bs/USD`,'success');ProductManager.renderPriceList();}
-        function saveBcvSettings(){const v=parseFloat(document.getElementById('settingsBcv').value);if(v>0)updateBcvDisplay(v,'Manual');}
-        function convertToBs(){const u=parseFloat(document.getElementById('calcUSD').value)||0;document.getElementById('calcBs').value=(u*currentBcvRate).toFixed(2);}
-        function convertToUsd(){const b=parseFloat(document.getElementById('calcBs').value)||0;document.getElementById('calcUSD').value=(b/currentBcvRate).toFixed(2);}
-        async function loadUserData(){ if(!supabaseClient||!currentUser)return; const{data:pData}=await supabaseClient.from('user_products').select('products').eq('user_id',currentUser.id).single(); if(pData)ProductManager.products=pData.products||[]; const{data:bData}=await supabaseClient.from('user_settings').select('bcv_rate').eq('user_id',currentUser.id).single(); if(bData&&bData.bcv_rate)currentBcvRate=parseFloat(bData.bcv_rate); updateBcvDisplay(currentBcvRate,'Cuenta'); ProductManager.renderPriceList(); updateStats();}
-        async function saveUserProducts(){ if(supabaseClient&&currentUser) await supabaseClient.from('user_products').upsert({user_id:currentUser.id,products:ProductManager.products,updated_at:new Date()}); else localStorage.setItem('products',JSON.stringify(ProductManager.products));}
-        async function saveUserBcvRate(rate){ if(supabaseClient&&currentUser) await supabaseClient.from('user_settings').upsert({user_id:currentUser.id,bcv_rate:rate,updated_at:new Date()}); else localStorage.setItem('bcvRate',rate);}
-        function updateStats(){ const count=ProductManager.products.length; document.getElementById('statTotalProducts').innerText=count; document.getElementById('productCount').innerText=count; if(count){ const avg=ProductManager.products.reduce((s,p)=>s+p.profit,0)/count; document.getElementById('statAvgMargin').innerText=avg.toFixed(1)+'%'; const totalVal=ProductManager.products.reduce((s,p)=>s+ProductManager.calculatePrices(p).totalSalePrice,0); document.getElementById('statTotalValue').innerText='$'+totalVal.toFixed(0); const top=ProductManager.products.reduce((a,b)=>ProductManager.calculatePrices(a).totalUtility>ProductManager.calculatePrices(b).totalUtility?a:b,ProductManager.products[0]); document.getElementById('statTopProduct').innerText=top.name.substring(0,12); }else{document.getElementById('statAvgMargin').innerText='0%';document.getElementById('statTotalValue').innerText='$0';document.getElementById('statTopProduct').innerText='--';} }
-        function initCharts(){} function updateCharts(){}
-        ProductManager.renderPriceList=function(){ const container=document.getElementById('priceList'); if(this.products.length===0){container.innerHTML='<div class="empty-state">No hay productos</div>';return;} let html='<table class="tg-table"><thead><tr><th>Producto</th><th>Costo Unit.</th><th>Precio Venta</th><th>Acciones</th></tr></thead><tbody>'; this.products.forEach(p=>{ const pr=this.calculatePrices(p); html+=`<tr><td><strong>${p.name}</strong></td><td>$${pr.unitCost.toFixed(2)}</td><td>$${pr.salePrice.toFixed(2)}</td><td><button class="tg-btn tg-btn-sm tg-btn-warning" onclick="ProductManager.editProduct(${p.id})"><svg class="icon-svg" viewBox="0 0 24 24"><path d="M17 3l4 4-7 7H10v-4l7-7z"/></svg></button> <button class="tg-btn tg-btn-sm tg-btn-danger" onclick="ProductManager.deleteProduct(${p.id})"><svg class="icon-svg" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button></td></tr>`; }); html+=`</tbody></table>`; container.innerHTML=html; };
-        ProductManager.editProduct=function(id){ const p=this.products.find(p=>p.id===id); if(p){ this.currentEditingId=id; document.getElementById('productName').value=p.name; document.getElementById('totalCost').value=p.totalCost; document.getElementById('units').value=p.units; document.getElementById('empaques').value=p.empaques; document.getElementById('profit').value=p.profit; showSection('products',null); } };
-        ProductManager.deleteProduct=async function(id){ this.products=this.products.filter(p=>p.id!==id); await saveUserProducts(); this.renderPriceList(); updateStats(); showToast('Eliminado','','warning'); };
-        ProductManager.clearForm=function(){ document.getElementById('productForm').reset(); this.currentEditingId=null; };
-        ProductManager.resetSystem=async function(){ this.products=[]; await saveUserProducts(); this.renderPriceList(); updateBcvDisplay(36,'default'); updateStats(); showToast('Sistema reiniciado','','info'); };
-        ProductManager.generatePDF=function(){ showToast('PDF','Reporte generado','success'); };
-        document.addEventListener('DOMContentLoaded', async ()=>{ initSupabase(); setTimeout(async()=>{ document.getElementById('splashScreen').classList.add('hidden'); const auth=await checkAuth(); if(auth){ document.getElementById('loginScreen').classList.remove('active'); document.getElementById('mainContent').style.display='block'; document.getElementById('telegramNav').style.display='flex'; const theme=localStorage.getItem('theme')||'dark'; document.documentElement.setAttribute('data-bs-theme',theme); initCharts(); }else{ document.getElementById('loginScreen').classList.add('active'); } },2000); supabaseClient?.auth.onAuthStateChange(async(event,session)=>{ if(event==='SIGNED_IN'&&session){ currentUser=session.user; document.getElementById('loginScreen').classList.remove('active'); document.getElementById('mainContent').style.display='block'; document.getElementById('telegramNav').style.display='flex'; updateUserUI(); await loadUserData(); } }); });
-        window.toggleUserMenu=function(){ document.getElementById('userProfileMenu').classList.toggle('show'); };
-        window.openPdfModal=function(){ new bootstrap.Modal(document.getElementById('pdfModal')).show(); };
-        window.confirmReset=function(){ new bootstrap.Modal(document.getElementById('resetModal')).show(); };
-        window.toggleAnimations=function(){}; window.toggleParticles=function(){};
+
+        let supabaseClient = null;
+        let currentUser = null;
+
+        // Initialize Supabase
+        function initSupabase() {
+            try {
+                supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                console.log('Supabase initialized');
+            } catch (e) {
+                console.error('Error initializing Supabase:', e);
+                showToast('Error', 'No se pudo conectar con Supabase', 'error');
+            }
+        }
+
+        // ===== AUTH FUNCTIONS =====
+        async function signInWithGoogle() {
+            if (!supabaseClient) {
+                showToast('Error', 'Supabase no est&aacute; configurado. Revisa las credenciales.', 'error');
+                return;
+            }
+
+            try {
+                const { data, error } = await supabaseClient.auth.signInWithOAuth({
+                    provider: 'google',
+                    options: {
+                        redirectTo: window.location.origin
+                    }
+                });
+
+                if (error) throw error;
+
+                if (data.url) {
+                    window.location.href = data.url;
+                }
+            } catch (error) {
+                console.error('Error signing in with Google:', error);
+                showToast('Error', 'No se pudo iniciar sesi&oacute;n con Google: ' + error.message, 'error');
+            }
+        }
+
+        async function signOut() {
+            if (!supabaseClient) return;
+
+            try {
+                const { error } = await supabaseClient.auth.signOut();
+                if (error) throw error;
+
+                currentUser = null;
+                ProductManager.products = [];
+
+                // Reset UI
+                document.getElementById('mainContent').style.display = 'none';
+                document.getElementById('telegramNav').style.display = 'none';
+                document.getElementById('loginScreen').classList.add('active');
+
+                showToast('Sesi&oacute;n Cerrada', 'Has cerrado sesi&oacute;n correctamente', 'info');
+            } catch (error) {
+                console.error('Error signing out:', error);
+                showToast('Error', 'No se pudo cerrar sesi&oacute;n', 'error');
+            }
+        }
+
+        async function checkAuth() {
+            if (!supabaseClient) return false;
+
+            try {
+                const { data: { session }, error } = await supabaseClient.auth.getSession();
+
+                if (error) throw error;
+
+                if (session) {
+                    currentUser = session.user;
+                    await loadUserData();
+                    updateUserUI();
+                    return true;
+                }
+                return false;
+            } catch (error) {
+                console.error('Error checking auth:', error);
+                return false;
+            }
+        }
+
+        function updateUserUI() {
+            if (!currentUser) return;
+
+            const avatarUrl = currentUser.user_metadata?.avatar_url || currentUser.user_metadata?.picture;
+            const fullName = currentUser.user_metadata?.full_name || currentUser.user_metadata?.name || 'Usuario';
+            const email = currentUser.email || 'email@example.com';
+
+            // Header avatar
+            const headerAvatar = document.getElementById('headerUserAvatar');
+            const headerFallback = document.getElementById('headerUserAvatarFallback');
+
+            if (avatarUrl) {
+                headerAvatar.src = avatarUrl;
+                headerAvatar.style.display = 'block';
+                headerFallback.style.display = 'none';
+            } else {
+                headerAvatar.style.display = 'none';
+                headerFallback.style.display = 'flex';
+            }
+
+            document.getElementById('headerUserName').textContent = fullName.split(' ')[0];
+            document.getElementById('menuUserName').textContent = fullName;
+            document.getElementById('menuUserEmail').textContent = email;
+
+            // Nav avatar
+            const navWrapper = document.getElementById('navUserAvatarWrapper');
+            if (avatarUrl) {
+                navWrapper.innerHTML = `<img src="${avatarUrl}" class="nav-user-avatar" alt="User">`;
+            } else {
+                navWrapper.innerHTML = '<i class="bi bi-person-fill"></i>';
+            }
+            document.getElementById('navUserName').textContent = fullName.split(' ')[0];
+        }
+
+        // ===== USER DATA MANAGEMENT (Supabase) =====
+        async function loadUserData() {
+            if (!supabaseClient || !currentUser) return;
+
+            try {
+                // Load products
+                const { data: productsData, error: productsError } = await supabaseClient
+                    .from('user_products')
+                    .select('products')
+                    .eq('user_id', currentUser.id)
+                    .single();
+
+                if (productsError && productsError.code !== 'PGRST116') {
+                    console.error('Error loading products:', productsError);
+                }
+
+                if (productsData && productsData.products) {
+                    ProductManager.products = productsData.products;
+                } else {
+                    ProductManager.products = [];
+                }
+
+                // Load BCV rate
+                const { data: bcvData, error: bcvError } = await supabaseClient
+                    .from('user_settings')
+                    .select('bcv_rate')
+                    .eq('user_id', currentUser.id)
+                    .single();
+
+                if (bcvError && bcvError.code !== 'PGRST116') {
+                    console.error('Error loading BCV rate:', bcvError);
+                }
+
+                if (bcvData && bcvData.bcv_rate) {
+                    currentBcvRate = parseFloat(bcvData.bcv_rate);
+                    updateBcvDisplay(currentBcvRate, 'Guardado en cuenta');
+                } else {
+                    currentBcvRate = 36;
+                    updateBcvDisplay(36, 'Por defecto');
+                }
+
+                ProductManager.renderPriceList();
+                updateStats();
+
+            } catch (error) {
+                console.error('Error loading user data:', error);
+            }
+        }
+
+        async function saveUserProducts() {
+            if (!supabaseClient || !currentUser) {
+                // Fallback to localStorage if not logged in
+                localStorage.setItem('products', JSON.stringify(ProductManager.products));
+                return;
+            }
+
+            try {
+                const { error } = await supabaseClient
+                    .from('user_products')
+                    .upsert({
+                        user_id: currentUser.id,
+                        products: ProductManager.products,
+                        updated_at: new Date().toISOString()
+                    }, { onConflict: 'user_id' });
+
+                if (error) throw error;
+            } catch (error) {
+                console.error('Error saving products:', error);
+                // Fallback to localStorage
+                localStorage.setItem('products', JSON.stringify(ProductManager.products));
+            }
+        }
+
+        async function saveUserBcvRate(rate) {
+            if (!supabaseClient || !currentUser) {
+                localStorage.setItem('bcvRate', rate);
+                return;
+            }
+
+            try {
+                const { error } = await supabaseClient
+                    .from('user_settings')
+                    .upsert({
+                        user_id: currentUser.id,
+                        bcv_rate: rate,
+                        updated_at: new Date().toISOString()
+                    }, { onConflict: 'user_id' });
+
+                if (error) throw error;
+            } catch (error) {
+                console.error('Error saving BCV rate:', error);
+                localStorage.setItem('bcvRate', rate);
+            }
+        }
+
+        // ===== USER MENU TOGGLE =====
+        function toggleUserMenu() {
+            const menu = document.getElementById('userProfileMenu');
+            menu.classList.toggle('show');
+        }
+
+        // Close menu when clicking outside
+        document.addEventListener('click', function(e) {
+            const dropdown = document.getElementById('userProfileDropdown');
+            const menu = document.getElementById('userProfileMenu');
+            if (dropdown && !dropdown.contains(e.target)) {
+                menu.classList.remove('show');
+            }
+        });
+
+        // ===== PARTICLES SYSTEM =====
+        const canvas = document.getElementById('particlesCanvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        let particlesEnabled = true;
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        class Particle {
+            constructor() {
+                this.reset();
+            }
+
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2 + 0.5;
+                this.speedX = (Math.random() - 0.5) * 0.5;
+                this.speedY = (Math.random() - 0.5) * 0.5;
+                this.opacity = Math.random() * 0.5 + 0.1;
+                this.color = `rgba(94, 181, 247, ${this.opacity})`;
+            }
+
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+                if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+            }
+        }
+
+        for (let i = 0; i < 50; i++) {
+            particles.push(new Particle());
+        }
+
+        function drawConnections() {
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    if (distance < 100) {
+                        ctx.beginPath();
+                        ctx.strokeStyle = `rgba(94, 181, 247, ${0.1 * (1 - distance / 100)})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        function animateParticles() {
+            if (!particlesEnabled) {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                requestAnimationFrame(animateParticles);
+                return;
+            }
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => { p.update(); p.draw(); });
+            drawConnections();
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
+
+        // ===== GSAP ANIMATIONS =====
+        gsap.registerPlugin(ScrollTrigger);
+
+        let animationsEnabled = true;
+
+        function initAnimations() {
+            if (!animationsEnabled) return;
+
+            gsap.utils.toArray('.fade-up').forEach((el, i) => {
+                gsap.fromTo(el,
+                    { opacity: 0, y: 30 },
+                    {
+                        opacity: 1, y: 0, duration: 0.6,
+                        delay: i * 0.1,
+                        ease: 'power3.out',
+                        scrollTrigger: {
+                            trigger: el,
+                            start: 'top 90%',
+                            toggleActions: 'play none none none'
+                        }
+                    }
+                );
+            });
+
+            gsap.fromTo('.stat-card',
+                { opacity: 0, scale: 0.9 },
+                { opacity: 1, scale: 1, duration: 0.5, stagger: 0.1, ease: 'back.out(1.7)', delay: 0.3 }
+            );
+        }
+
+        // ===== TOAST NOTIFICATIONS =====
+        function showToast(title, message, type = 'info', duration = 4000) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = 'tg-toast show';
+
+            const icons = {
+                success: 'bi-check-circle-fill',
+                error: 'bi-x-circle-fill',
+                warning: 'bi-exclamation-triangle-fill',
+                info: 'bi-info-circle-fill'
+            };
+
+            toast.innerHTML = `
+                <div class="toast-icon ${type}"><i class="bi ${icons[type]}"></i></div>
+                <div class="toast-content">
+                    <div class="toast-title">${title}</div>
+                    <div class="toast-message">${message}</div>
+                </div>
+                <button class="btn-close btn-close-white" style="opacity:0.3;" onclick="this.parentElement.remove()"></button>
+            `;
+
+            container.appendChild(toast);
+
+            if (animationsEnabled) {
+                gsap.fromTo(toast,
+                    { x: 120, opacity: 0 },
+                    { x: 0, opacity: 1, duration: 0.5, ease: 'power3.out' }
+                );
+            }
+
+            setTimeout(() => {
+                toast.classList.add('hide');
+                if (animationsEnabled) {
+                    gsap.to(toast, { x: 120, opacity: 0, duration: 0.4, ease: 'power3.in', onComplete: () => toast.remove() });
+                } else {
+                    setTimeout(() => toast.remove(), 400);
+                }
+            }, duration);
+        }
+
+        // ===== THEME TOGGLE =====
+        function toggleTheme() {
+            const html = document.documentElement;
+            const isDark = html.getAttribute('data-bs-theme') === 'dark';
+            const newTheme = isDark ? 'light' : 'dark';
+            html.setAttribute('data-bs-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            document.getElementById('themeIcon').className = isDark ? 'bi bi-sun-fill' : 'bi bi-moon-stars';
+            document.getElementById('darkModeToggle').checked = !isDark;
+            updateCharts();
+        }
+
+        // ===== PARTICLES TOGGLE =====
+        function toggleParticles() {
+            particlesEnabled = document.getElementById('particlesToggle').checked;
+            localStorage.setItem('particlesEnabled', particlesEnabled);
+        }
+
+        // ===== ANIMATIONS TOGGLE =====
+        function toggleAnimations() {
+            animationsEnabled = document.getElementById('animationsToggle').checked;
+            localStorage.setItem('animationsEnabled', animationsEnabled);
+        }
+
+        // ===== SECTION NAVIGATION =====
+        function showSection(sectionName, navElement) {
+            document.querySelectorAll('.section-page').forEach(s => {
+                if (animationsEnabled) {
+                    gsap.to(s, {
+                        opacity: 0, y: 20, duration: 0.3, ease: 'power2.in',
+                        onComplete: () => {
+                            s.classList.remove('active');
+                            const target = document.getElementById(`section-${sectionName}`);
+                            target.classList.add('active');
+                            gsap.fromTo(target, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.4, ease: 'power3.out', delay: 0.1 });
+                            if (sectionName === 'dashboard') updateCharts();
+                        }
+                    });
+                } else {
+                    s.classList.remove('active');
+                    document.getElementById(`section-${sectionName}`).classList.add('active');
+                    if (sectionName === 'dashboard') updateCharts();
+                }
+            });
+
+            document.querySelectorAll('.nav-item-tg').forEach(n => n.classList.remove('active'));
+            if (navElement) navElement.classList.add('active');
+            else document.querySelector(`[data-section="${sectionName}"]`)?.classList.add('active');
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // ===== BCV RATE MANAGEMENT (MANUAL ONLY) =====
+        let currentBcvRate = 36;
+
+        function updateBcvDisplay(rate, source) {
+            currentBcvRate = rate;
+            document.getElementById('bcvDisplay').textContent = rate.toFixed(2);
+            document.getElementById('headerBcvRate').textContent = rate.toFixed(2);
+            document.getElementById('calcBcvRate').textContent = rate.toFixed(2);
+            document.getElementById('settingsBcv').value = rate.toFixed(2);
+            document.getElementById('bcvSource').innerHTML = `<i class="bi bi-pencil-fill me-1"></i>${source}`;
+            document.getElementById('bcvLastUpdate').innerHTML = `<i class="bi bi-clock-history me-1"></i>${new Date().toLocaleTimeString()}`;
+
+            // Save to Supabase if logged in
+            saveUserBcvRate(rate);
+        }
+
+        function saveManualBcv() {
+            const val = parseFloat(document.getElementById('tasaBcv').value);
+            if (!val || val <= 0) {
+                showToast('Error', 'Ingresa un valor v&aacute;lido', 'error');
+                return;
+            }
+            updateBcvDisplay(val, 'Manual');
+            showToast('&iexcl;Tasa actualizada!', `Nueva tasa: ${val.toFixed(2)} Bs/USD`, 'success');
+            ProductManager.renderPriceList();
+        }
+
+        function saveBcvSettings() {
+            const val = parseFloat(document.getElementById('settingsBcv').value);
+            if (!val || val <= 0) {
+                showToast('Error', 'Ingresa un valor v&aacute;lido', 'error');
+                return;
+            }
+            updateBcvDisplay(val, 'Manual');
+            showToast('Configuraci&oacute;n Guardada', 'La tasa BCV se ha actualizado', 'success');
+        }
+
+        // ===== CONVERSION CALCULATOR =====
+        function convertToBs() {
+            const usd = parseFloat(document.getElementById('calcUSD').value) || 0;
+            document.getElementById('calcBs').value = (usd * currentBcvRate).toFixed(2);
+        }
+
+        function convertToUsd() {
+            const bs = parseFloat(document.getElementById('calcBs').value) || 0;
+            document.getElementById('calcUSD').value = (bs / currentBcvRate).toFixed(2);
+        }
+
+        // ===== PRICE SIMULATOR =====
+        function simulatePrice() {
+            const cost = parseFloat(document.getElementById('simCost').value) || 0;
+            const profit = parseFloat(document.getElementById('simProfit').value) || 0;
+            const multiplier = 1 + (profit / 100);
+            const salePrice = cost * multiplier;
+            const utility = salePrice - cost;
+
+            document.getElementById('simSalePrice').textContent = `$${salePrice.toFixed(2)}`;
+            document.getElementById('simSaleBs').textContent = `Bs ${(salePrice * currentBcvRate).toFixed(2)}`;
+            document.getElementById('simUtility').textContent = `$${utility.toFixed(2)}`;
+            document.getElementById('simMultiplier').textContent = `${multiplier.toFixed(1)}x`;
+        }
+
+        // ===== DATA MANAGEMENT =====
+        function exportData() {
+            const data = {
+                products: ProductManager.products,
+                bcvRate: currentBcvRate,
+                exportDate: new Date().toISOString(),
+                version: '2.0',
+                user: currentUser ? currentUser.email : 'local'
+            };
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `costos_backup_${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast('Exportaci&oacute;n Exitosa', 'Datos exportados correctamente', 'success');
+        }
+
+        function importData(input) {
+            const file = input.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = async (e) => {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    if (data.products) {
+                        ProductManager.products = data.products;
+                        await saveUserProducts();
+                    }
+                    if (data.bcvRate) {
+                        updateBcvDisplay(data.bcvRate, 'Importado');
+                    }
+                    ProductManager.renderPriceList();
+                    updateStats();
+                    showToast('Importaci&oacute;n Exitosa', 'Datos importados correctamente', 'success');
+                } catch (err) {
+                    showToast('Error', 'El archivo no es v&aacute;lido', 'error');
+                }
+            };
+            reader.readAsText(file);
+            input.value = '';
+        }
+
+        function confirmReset() {
+            document.getElementById('resetProductCount').textContent = ProductManager.products.length;
+            new bootstrap.Modal(document.getElementById('resetModal')).show();
+        }
+
+        // ===== PDF MODAL =====
+        function openPdfModal() {
+            // Set default dates
+            const today = new Date().toISOString().split('T')[0];
+            const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+            document.getElementById('pdfDateFrom').value = thirtyDaysAgo;
+            document.getElementById('pdfDateTo').value = today;
+            updatePdfProductCount();
+
+            new bootstrap.Modal(document.getElementById('pdfModal')).show();
+        }
+
+        function updatePdfProductCount() {
+            const from = document.getElementById('pdfDateFrom').value;
+            const to = document.getElementById('pdfDateTo').value;
+
+            if (!from || !to) {
+                document.getElementById('pdfProductCount').textContent = 'Productos en rango: 0';
+                return;
+            }
+
+            const fromDate = new Date(from + 'T00:00:00');
+            const toDate = new Date(to + 'T23:59:59');
+
+            const filtered = ProductManager.products.filter(p => {
+                const pDate = p.created_at ? new Date(p.created_at) : new Date(p.id);
+                return pDate >= fromDate && pDate <= toDate;
+            });
+
+            document.getElementById('pdfProductCount').textContent = `Productos en rango: ${filtered.length}`;
+        }
+
+        document.getElementById('pdfDateFrom')?.addEventListener('change', updatePdfProductCount);
+        document.getElementById('pdfDateTo')?.addEventListener('change', updatePdfProductCount);
+
+        // ===== CHARTS =====
+        let priceChart, profitChart, comparisonChart;
+
+        function initCharts() {
+            const isDark = document.documentElement.getAttribute('data-bs-theme') === 'dark';
+            const textColor = isDark ? '#8e9ba8' : '#6b7280';
+            const gridColor = isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)';
+
+            Chart.defaults.color = textColor;
+            Chart.defaults.borderColor = gridColor;
+
+            const products = ProductManager.products.slice(0, 8);
+            const labels = products.map(p => p.name.substring(0, 15));
+
+            // Price Distribution Chart
+            const priceCtx = document.getElementById('priceDistributionChart');
+            if (priceCtx) {
+                priceChart = new Chart(priceCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: labels.length ? labels : ['Sin datos'],
+                        datasets: [{
+                            data: labels.length ? products.map(p => ProductManager.calculatePrices(p).salePrice) : [1],
+                            backgroundColor: [
+                                '#0d6efd', '#0dcaf0', '#198754', '#20c997',
+                                '#6f42c1', '#d63384', '#fd7e14', '#ffc107'
+                            ],
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { position: 'bottom', labels: { padding: 15, usePointStyle: true } }
+                        },
+                        cutout: '65%'
+                    }
+                });
+            }
+
+            // Profit Chart
+            const profitCtx = document.getElementById('profitChart');
+            if (profitCtx) {
+                profitChart = new Chart(profitCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels.length ? labels : ['Sin datos'],
+                        datasets: [{
+                            label: 'Utilidad (USD)',
+                            data: labels.length ? products.map(p => ProductManager.calculatePrices(p).totalUtility) : [0],
+                            backgroundColor: 'rgba(25, 135, 84, 0.7)',
+                            borderColor: '#198754',
+                            borderWidth: 1,
+                            borderRadius: 8
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            y: { beginAtZero: true, grid: { color: gridColor } },
+                            x: { grid: { display: false } }
+                        }
+                    }
+                });
+            }
+
+            // Comparison Chart
+            const compCtx = document.getElementById('comparisonChart');
+            if (compCtx) {
+                comparisonChart = new Chart(compCtx, {
+                    type: 'line',
+                    data: {
+                        labels: labels.length ? labels : ['Sin datos'],
+                        datasets: [
+                            {
+                                label: 'Costo Unitario',
+                                data: labels.length ? products.map(p => ProductManager.calculatePrices(p).unitCost) : [0],
+                                borderColor: '#dc3545',
+                                backgroundColor: 'rgba(220, 53, 69, 0.1)',
+                                fill: true,
+                                tension: 0.4,
+                                pointRadius: 4
+                            },
+                            {
+                                label: 'Precio Venta',
+                                data: labels.length ? products.map(p => ProductManager.calculatePrices(p).salePrice) : [0],
+                                borderColor: '#198754',
+                                backgroundColor: 'rgba(25, 135, 84, 0.1)',
+                                fill: true,
+                                tension: 0.4,
+                                pointRadius: 4
+                            },
+                            {
+                                label: 'Utilidad',
+                                data: labels.length ? products.map(p => ProductManager.calculatePrices(p).utilityPerUnit) : [0],
+                                borderColor: '#0dcaf0',
+                                backgroundColor: 'rgba(13, 202, 240, 0.1)',
+                                fill: true,
+                                tension: 0.4,
+                                pointRadius: 4
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { position: 'bottom' } },
+                        scales: {
+                            y: { beginAtZero: true, grid: { color: gridColor } },
+                            x: { grid: { display: false } }
+                        },
+                        interaction: { intersect: false, mode: 'index' }
+                    }
+                });
+            }
+        }
+
+        function updateCharts() {
+            if (!priceChart && !profitChart && !comparisonChart) {
+                initCharts();
+                return;
+            }
+
+            const products = ProductManager.products.slice(0, 8);
+            const labels = products.map(p => p.name.substring(0, 15));
+
+            const isDark = document.documentElement.getAttribute('data-bs-theme') === 'dark';
+            const textColor = isDark ? '#8e9ba8' : '#6b7280';
+            const gridColor = isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)';
+
+            [priceChart, profitChart, comparisonChart].forEach(chart => {
+                if (chart) {
+                    chart.options.plugins.legend.labels.color = textColor;
+                    if (chart.options.scales.y) chart.options.scales.y.grid.color = gridColor;
+                    if (chart.options.scales.x) chart.options.scales.x.grid.color = gridColor;
+                }
+            });
+
+            if (labels.length) {
+                if (priceChart) {
+                    priceChart.data.labels = labels;
+                    priceChart.data.datasets[0].data = products.map(p => ProductManager.calculatePrices(p).salePrice);
+                    priceChart.update();
+                }
+                if (profitChart) {
+                    profitChart.data.labels = labels;
+                    profitChart.data.datasets[0].data = products.map(p => ProductManager.calculatePrices(p).totalUtility);
+                    profitChart.update();
+                }
+                if (comparisonChart) {
+                    comparisonChart.data.labels = labels;
+                    comparisonChart.data.datasets[0].data = products.map(p => ProductManager.calculatePrices(p).unitCost);
+                    comparisonChart.data.datasets[1].data = products.map(p => ProductManager.calculatePrices(p).salePrice);
+                    comparisonChart.data.datasets[2].data = products.map(p => ProductManager.calculatePrices(p).utilityPerUnit);
+                    comparisonChart.update();
+                }
+            }
+        }
+
+        // ===== STATISTICS =====
+        function updateStats() {
+            const products = ProductManager.products;
+            const count = products.length;
+
+            document.getElementById('statTotalProducts').textContent = count;
+            document.getElementById('productCount').textContent = count;
+
+            if (count > 0) {
+                const avgProfit = products.reduce((sum, p) => sum + p.profit, 0) / count;
+                document.getElementById('statAvgMargin').textContent = avgProfit.toFixed(1) + '%';
+
+                const totalValue = products.reduce((sum, p) => {
+                    const prices = ProductManager.calculatePrices(p);
+                    return sum + prices.totalSalePrice;
+                }, 0);
+                document.getElementById('statTotalValue').textContent = '$' + totalValue.toFixed(0);
+
+                const topProduct = products.reduce((best, p) => {
+                    const pPrices = ProductManager.calculatePrices(p);
+                    const bPrices = ProductManager.calculatePrices(best);
+                    return pPrices.totalUtility > bPrices.totalUtility ? p : best;
+                }, products[0]);
+                document.getElementById('statTopProduct').textContent = topProduct.name.substring(0, 12);
+            } else {
+                document.getElementById('statAvgMargin').textContent = '0%';
+                document.getElementById('statTotalValue').textContent = '$0';
+                document.getElementById('statTopProduct').textContent = '--';
+            }
+
+            // Recent activity table
+            const tbody = document.getElementById('recentActivityTable');
+            if (tbody) {
+                if (count === 0) {
+                    tbody.innerHTML = `<tr><td colspan="4" class="text-center text-muted py-4">No hay productos registrados</td></tr>`;
+                } else {
+                    tbody.innerHTML = products.slice(-5).reverse().map(p => {
+                        const prices = ProductManager.calculatePrices(p);
+                        return `
+                            <tr>
+                                <td><strong>${p.name}</strong></td>
+                                <td class="price-usd">$${prices.salePrice.toFixed(2)}</td>
+                                <td class="text-success">$${prices.utilityPerUnit.toFixed(2)}</td>
+                                <td><span class="badge bg-success">${p.profit}%</span></td>
+                            </tr>
+                        `;
+                    }).join('');
+                }
+            }
+
+            updateCharts();
+        }
+
+        // ===== PRODUCT MANAGER =====
+        const ProductManager = {
+            currentEditingId: null,
+            products: [],
+
+            init() {
+                this.renderPriceList();
+                updateStats();
+            },
+
+            async saveProduct() {
+                const now = new Date().toISOString();
+                const product = {
+                    id: this.currentEditingId || Date.now(),
+                    name: document.getElementById('productName').value,
+                    totalCost: parseFloat(document.getElementById('totalCost').value),
+                    units: parseInt(document.getElementById('units').value),
+                    empaques: parseInt(document.getElementById('empaques').value),
+                    profit: parseFloat(document.getElementById('profit').value),
+                    created_at: this.currentEditingId ? 
+                        (this.products.find(p => p.id === this.currentEditingId)?.created_at || now) : now
+                };
+
+                const index = this.products.findIndex(p => p.id === product.id);
+                if (index > -1) this.products[index] = product;
+                else this.products.push(product);
+
+                // Save to Supabase (or localStorage as fallback)
+                await saveUserProducts();
+
+                this.clearForm();
+                this.renderPriceList();
+                updateStats();
+
+                const isEdit = this.currentEditingId !== null;
+                showToast(isEdit ? 'Producto Actualizado' : 'Producto Guardado', `${product.name} fue ${isEdit ? 'actualizado' : 'agregado'} correctamente`, 'success');
+            },
+
+            calculatePrices(product) {
+                const unitCost = product.totalCost / product.units;
+                const salePrice = unitCost * (1 + (product.profit / 100));
+                const wholesalePrice = salePrice * product.units;
+                const totalUnits = product.units * product.empaques;
+                const totalSalePrice = salePrice * totalUnits;
+                const utilityPerUnit = salePrice - unitCost;
+                const totalUtility = utilityPerUnit * totalUnits;
+
+                return { unitCost, salePrice, wholesalePrice, totalSalePrice, utilityPerUnit, totalUtility };
+            },
+
+            editProduct(id) {
+                const product = this.products.find(p => p.id === id);
+                this.currentEditingId = id;
+                document.getElementById('productName').value = product.name;
+                document.getElementById('totalCost').value = product.totalCost;
+                document.getElementById('units').value = product.units;
+                document.getElementById('empaques').value = product.empaques;
+                document.getElementById('profit').value = product.profit;
+                document.getElementById('formTitle').textContent = 'Editar Producto';
+                document.getElementById('saveBtnText').textContent = 'Actualizar Producto';
+                showSection('products', document.querySelector('[data-section="products"]'));
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            },
+
+            async deleteProduct(id) {
+                this.products = this.products.filter(p => p.id !== id);
+                await saveUserProducts();
+                this.renderPriceList();
+                updateStats();
+                showToast('Producto Eliminado', 'El producto fue eliminado correctamente', 'warning');
+            },
+
+            renderPriceList() {
+                const container = document.getElementById('priceList');
+                if (this.products.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <i class="bi bi-inbox"></i>
+                            <h5>No hay productos</h5>
+                            <p>Agrega tu primer producto usando el formulario</p>
+                        </div>`;
+                    return;
+                }
+
+                container.innerHTML = `
+                    <table class="tg-table">
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th>Costo Unit.</th>
+                                <th>Precio Venta</th>
+                                <th>Precio Mayor</th>
+                                <th>Venta Total</th>
+                                <th>Utilidad</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${this.products.map(product => {
+                                const prices = this.calculatePrices(product);
+                                return `
+                                    <tr>
+                                        <td><strong>${product.name}</strong></td>
+                                        <td>
+                                            <div class="price-display">
+                                                <span class="price-usd">$${prices.unitCost.toFixed(2)}</span>
+                                                <span class="price-bs">Bs ${(prices.unitCost * currentBcvRate).toFixed(2)}</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="price-display">
+                                                <span class="price-usd">$${prices.salePrice.toFixed(2)}</span>
+                                                <span class="price-bs">Bs ${(prices.salePrice * currentBcvRate).toFixed(2)}</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="price-display">
+                                                <span class="price-usd">$${prices.wholesalePrice.toFixed(2)}</span>
+                                                <span class="price-bs">Bs ${(prices.wholesalePrice * currentBcvRate).toFixed(2)}</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="price-display">
+                                                <span class="price-usd">$${prices.totalSalePrice.toFixed(2)}</span>
+                                                <span class="price-bs">Bs ${(prices.totalSalePrice * currentBcvRate).toFixed(2)}</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="price-display">
+                                                <span class="price-usd">$${prices.utilityPerUnit.toFixed(2)}/u</span>
+                                                <span class="text-success">$${prices.totalUtility.toFixed(2)}</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="d-flex gap-1">
+                                                <button class="tg-btn tg-btn-sm tg-btn-warning" onclick="ProductManager.editProduct(${product.id})" title="Editar">
+                                                    <i class="bi bi-pencil-fill"></i>
+                                                </button>
+                                                <button class="tg-btn tg-btn-sm tg-btn-danger" onclick="ProductManager.deleteProduct(${product.id})" title="Eliminar">
+                                                    <i class="bi bi-trash3-fill"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                `;
+                            }).join('')}
+                        </tbody>
+                    </table>`;
+            },
+
+            generatePDF() {
+                const from = document.getElementById('pdfDateFrom').value;
+                const to = document.getElementById('pdfDateTo').value;
+
+                let filteredProducts = this.products;
+
+                if (from && to) {
+                    const fromDate = new Date(from + 'T00:00:00');
+                    const toDate = new Date(to + 'T23:59:59');
+
+                    filteredProducts = this.products.filter(p => {
+                        const pDate = p.created_at ? new Date(p.created_at) : new Date(p.id);
+                        return pDate >= fromDate && pDate <= toDate;
+                    });
+                }
+
+                if (filteredProducts.length === 0) {
+                    showToast('Error', 'No hay productos en el rango de fechas seleccionado', 'error');
+                    return;
+                }
+
+                const doc = new jspdf.jsPDF();
+                const date = new Date().toLocaleDateString('es-VE');
+                const rangeText = from && to ? ` (${from} al ${to})` : '';
+
+                doc.setFontSize(20);
+                doc.text('Reporte de Productos' + rangeText, 14, 22);
+                doc.setFontSize(11);
+                doc.setTextColor(100);
+                doc.text(`Fecha: ${date} | Tasa BCV: ${currentBcvRate.toFixed(2)} Bs/USD | Usuario: ${currentUser ? currentUser.email : 'Local'}`, 14, 30);
+                doc.setTextColor(0);
+
+                const headers = ['Producto', 'Costo Unit.', 'Precio Venta', 'Precio Mayor', 'Venta Total', 'Utilidad Total'];
+                const data = filteredProducts.map(product => {
+                    const prices = this.calculatePrices(product);
+                    return [
+                        product.name,
+                        `$${prices.unitCost.toFixed(2)}`,
+                        `$${prices.salePrice.toFixed(2)}`,
+                        `$${prices.wholesalePrice.toFixed(2)}`,
+                        `$${prices.totalSalePrice.toFixed(2)}`,
+                        `$${prices.totalUtility.toFixed(2)}`
+                    ];
+                });
+
+                doc.autoTable({
+                    startY: 38,
+                    head: [headers],
+                    body: data,
+                    theme: 'grid',
+                    styles: { fontSize: 8, cellPadding: 3 },
+                    headStyles: { fillColor: [13, 110, 253], textColor: 255, fontStyle: 'bold' },
+                    alternateRowStyles: { fillColor: [245, 247, 250] },
+                    columnStyles: {
+                        0: { cellWidth: 35 },
+                        1: { cellWidth: 25, halign: 'right' },
+                        2: { cellWidth: 25, halign: 'right' },
+                        3: { cellWidth: 28, halign: 'right' },
+                        4: { cellWidth: 28, halign: 'right' },
+                        5: { cellWidth: 28, halign: 'right' }
+                    }
+                });
+
+                const totalUtility = filteredProducts.reduce((sum, p) => sum + this.calculatePrices(p).totalUtility, 0);
+                const finalY = doc.lastAutoTable.finalY + 10;
+                doc.setFontSize(12);
+                doc.setTextColor(13, 110, 253);
+                doc.text(`Utilidad Total Estimada: $${totalUtility.toFixed(2)}`, 14, finalY);
+
+                doc.save(`reporte_costos_${date.replace(/\//g, '-')}${rangeText ? '_rango' : ''}.pdf`);
+
+                // Close modal
+                bootstrap.Modal.getInstance(document.getElementById('pdfModal'))?.hide();
+
+                showToast('PDF Generado', `Reporte con ${filteredProducts.length} productos descargado`, 'success');
+            },
+
+            clearForm() {
+                document.getElementById('productForm').reset();
+                this.currentEditingId = null;
+                document.getElementById('formTitle').textContent = 'Nuevo Producto';
+                document.getElementById('saveBtnText').textContent = 'Guardar Producto';
+            },
+
+            async resetSystem() {
+                this.products = [];
+                this.currentEditingId = null;
+                currentBcvRate = 36;
+
+                // Clear from Supabase
+                if (supabaseClient && currentUser) {
+                    try {
+                        await supabaseClient.from('user_products').delete().eq('user_id', currentUser.id);
+                        await supabaseClient.from('user_settings').delete().eq('user_id', currentUser.id);
+                    } catch (e) {
+                        console.error('Error clearing Supabase data:', e);
+                    }
+                }
+
+                // Clear localStorage fallback
+                localStorage.removeItem('products');
+                localStorage.removeItem('bcvRate');
+
+                this.clearForm();
+                this.renderPriceList();
+                updateBcvDisplay(36, 'Por defecto');
+                updateStats();
+                showToast('Sistema Reiniciado', 'Todos los datos han sido eliminados', 'warning');
+            }
+        };
+
+        // ===== INITIALIZATION =====
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Initialize Supabase
+            initSupabase();
+
+            // Show splash screen for 2.5 seconds
+            setTimeout(async () => {
+                document.getElementById('splashScreen').classList.add('hidden');
+
+                // Check auth after splash
+                const isAuthenticated = await checkAuth();
+
+                if (isAuthenticated) {
+                    // User is logged in, show app
+                    document.getElementById('loginScreen').classList.remove('active');
+                    document.getElementById('mainContent').style.display = 'block';
+                    document.getElementById('telegramNav').style.display = 'flex';
+
+                    // Load theme
+                    const savedTheme = localStorage.getItem('theme') || 'dark';
+                    document.documentElement.setAttribute('data-bs-theme', savedTheme);
+                    document.getElementById('themeIcon').className = savedTheme === 'dark' ? 'bi bi-moon-stars' : 'bi bi-sun-fill';
+                    document.getElementById('darkModeToggle').checked = savedTheme === 'dark';
+
+                    // Load settings
+                    particlesEnabled = localStorage.getItem('particlesEnabled') !== 'false';
+                    document.getElementById('particlesToggle').checked = particlesEnabled;
+
+                    animationsEnabled = localStorage.getItem('animationsEnabled') !== 'false';
+                    document.getElementById('animationsToggle').checked = animationsEnabled;
+
+                    // Init Charts
+                    setTimeout(() => initCharts(), 500);
+
+                    // Init Animations
+                    setTimeout(() => initAnimations(), 300);
+
+                    // Welcome toast
+                    setTimeout(() => {
+                        showToast('&iexcl;Bienvenido!', `Hola ${currentUser?.user_metadata?.full_name?.split(' ')[0] || 'Usuario'}`, 'success', 3000);
+                    }, 1000);
+                } else {
+                    // Show login screen
+                    document.getElementById('loginScreen').classList.add('active');
+                }
+            }, 2500);
+
+            // Listen for auth state changes
+            if (supabaseClient) {
+                supabaseClient.auth.onAuthStateChange(async (event, session) => {
+                    if (event === 'SIGNED_IN' && session) {
+                        currentUser = session.user;
+                        document.getElementById('loginScreen').classList.remove('active');
+                        document.getElementById('mainContent').style.display = 'block';
+                        document.getElementById('telegramNav').style.display = 'flex';
+
+                        updateUserUI();
+                        await loadUserData();
+
+                        // Load theme
+                        const savedTheme = localStorage.getItem('theme') || 'dark';
+                        document.documentElement.setAttribute('data-bs-theme', savedTheme);
+                        document.getElementById('themeIcon').className = savedTheme === 'dark' ? 'bi bi-moon-stars' : 'bi bi-sun-fill';
+                        document.getElementById('darkModeToggle').checked = savedTheme === 'dark';
+
+                        particlesEnabled = localStorage.getItem('particlesEnabled') !== 'false';
+                        document.getElementById('particlesToggle').checked = particlesEnabled;
+
+                        animationsEnabled = localStorage.getItem('animationsEnabled') !== 'false';
+                        document.getElementById('animationsToggle').checked = animationsEnabled;
+
+                        setTimeout(() => initCharts(), 500);
+                        setTimeout(() => initAnimations(), 300);
+
+                        showToast('&iexcl;Bienvenido!', `Hola ${currentUser?.user_metadata?.full_name?.split(' ')[0] || 'Usuario'}`, 'success', 3000);
+                    }
+                });
+            }
+        });
     </script>
 </body>
 </html>
