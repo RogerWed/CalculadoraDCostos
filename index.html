@@ -1,3157 +1,492 @@
 <!DOCTYPE html>
-<html lang="es" data-bs-theme="dark">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
-    <!-- Viewport optimizado para móviles -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="theme-color" content="#0d6efd">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Costos Pro•">
-    <meta name="description" content="Sistema de Gestión">
-    
-    <!-- MANIFEST JSON - Esencial para PWA -->
-    <link rel="manifest" href="manifest.json">
-    
-    <!-- Favicon estándar -->
-    <link rel="icon" type="image/jpg" sizes="32x32" href="icon.jpg">
-    <link rel="icon" type="image/jpg" sizes="16x16" href="icon.jpg">
-    
-    <!-- Iconos Apple/iOS -->
-    <link rel="apple-touch-icon" sizes="57x57" href="icon.jpg">
-    <link rel="apple-touch-icon" sizes="60x60" href="icon.jpg">
-    <link rel="apple-touch-icon" sizes="72x72" href="icon.jpg">
-    <link rel="apple-touch-icon" sizes="76x76" href="icon.jpg">
-    <link rel="apple-touch-icon" sizes="114x114" href="icon.jpg">
-    <link rel="apple-touch-icon" sizes="120x120" href="icon.jpg">
-    <link rel="apple-touch-icon" sizes="144x144" href="icon.jpg">
-    <link rel="apple-touch-icon" sizes="152x152" href="icon.jpg">
-    <link rel="apple-touch-icon" sizes="180x180" href="icon.jpg">
-    <link rel="apple-touch-icon" sizes="192x192" href="icon.jpg">
-    
-    <!-- Iconos Android/Chrome -->
-    <link rel="icon" type="image/jpg" sizes="192x192" href="icon.jpg">
-    <link rel="icon" type="image/jpg" sizes="512x512" href="icon.jpg">
-    
-    <!-- Icono Legacy -->
-    <link rel="shortcut icon" href="icon.png">
-    
-    <!-- Microsoft Tiles -->
-    <meta name="msapplication-TileColor" content="#0d6efd">
-    <meta name="msapplication-TileImage" content="icon.jpg">
-    <meta name="msapplication-config" content="browserconfig.xml">
-
-
-
-
-
-
-
-
-    
-    <title>Calculadora de Costos Pro</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+    <title>SmartCost · Login con Google</title>
     <link href="icon.jpg" rel="icon">
-    <!-- Bootstrap 5.3 -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- GSAP -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-    <!-- Supabase -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.0/dist/umd/supabase.min.js"></script>
-
+    <!-- Bootstrap 5.3 + Icons SVG + Fonts -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- GSAP + Chart.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+    <!-- Supabase JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        :root {
-            --primary: #0d6efd;
-            --secondary: #6c757d;
-            --success: #198754;
-            --info: #0dcaf0;
-            --warning: #ffc107;
-            --danger: #dc3545;
-            --telegram-bg: #17212b;
-            --telegram-card: #242f3d;
-            --telegram-text: #ffffff;
-            --telegram-muted: #8e9ba8;
-            --telegram-accent: #2b5278;
-            --telegram-highlight: #5eb5f7;
-            --glass-bg: rgba(36, 47, 61, 0.85);
-            --glass-border: rgba(94, 181, 247, 0.15);
-        }
-
-        [data-bs-theme="light"] {
-            --telegram-bg: #f5f7fa;
-            --telegram-card: #ffffff;
-            --telegram-text: #1a1a2e;
-            --telegram-muted: #6b7280;
-            --telegram-accent: #e3f0ff;
-            --telegram-highlight: #0d6efd;
-            --glass-bg: rgba(255, 255, 255, 0.9);
-            --glass-border: rgba(13, 110, 253, 0.1);
-        }
-
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
         }
-
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--telegram-bg);
-            color: var(--telegram-text);
-            min-height: 100vh;
-            padding-bottom: 100px;
-            overflow-x: hidden;
+            background: #f0f2f8;
+            font-family: 'Inter', sans-serif;
+            padding-bottom: 90px;
+            color: #1a2634;
         }
-
-        /* ===== SPLASH SCREEN ===== */
-        #splashScreen {
+        /* Splash screen con icon.jpg redondo y holo de carga */
+        #splash {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: var(--telegram-bg);
-            z-index: 99999;
+            background: linear-gradient(135deg, #ffffff 0%, #f0f4fc 100%);
+            z-index: 10000;
             display: flex;
+            align-items: center;
+            justify-content: center;
             flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            transition: opacity 0.8s ease, visibility 0.8s ease;
         }
-
-        #splashScreen.hidden {
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
-        }
-
-        .splash-logo-wrapper {
-            position: relative;
-            width: 140px;
-            height: 140px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .splash-logo-img {
+        .splash-logo {
             width: 120px;
             height: 120px;
             border-radius: 50%;
             object-fit: cover;
-            box-shadow: 0 10px 40px rgba(13, 110, 253, 0.4);
-            animation: splashPulse 2s ease-in-out infinite;
+            box-shadow: 0 20px 30px -8px rgba(0,0,0,0.15);
+            border: 3px solid white;
+        }
+        .ring-loader {
             position: relative;
-            z-index: 2;
+            width: 150px;
+            height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-
-        .splash-halo {
+        .ring-progress {
             position: absolute;
-            top: -8px;
-            left: -8px;
-            right: -8px;
-            bottom: -8px;
+            width: 100%;
+            height: 100%;
             border-radius: 50%;
-            border: 3px solid transparent;
-            border-top-color: var(--telegram-highlight);
-            border-right-color: rgba(94, 181, 247, 0.4);
-            animation: spin 1.2s linear infinite;
-            z-index: 1;
+            border: 5px solid rgba(59, 130, 246, 0.2);
+            border-top: 5px solid #3b82f6;
+            border-right: 5px solid #3b82f6;
+            animation: spinRing 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
         }
-
-        .splash-title {
-            margin-top: 24px;
-            font-size: 1.8rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, var(--telegram-text), var(--telegram-highlight));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+        @keyframes spinRing {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
-
-        .splash-version {
-            margin-top: 8px;
-            font-size: 0.9rem;
-            color: var(--telegram-muted);
-        }
-
-        @keyframes splashPulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-
-        /* ===== LOGIN SCREEN ===== */
-        #loginScreen {
+        /* Pantalla de login - con ícono de Google (G) */
+        #loginContainer {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: var(--telegram-bg);
-            z-index: 99998;
-            display: none;
-            flex-direction: column;
+            background: linear-gradient(145deg, #f8fafc 0%, #eef2ff 100%);
+            z-index: 10001;
+            display: flex;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            flex-direction: column;
+            backdrop-filter: blur(2px);
         }
-
-        #loginScreen.active {
-            display: flex;
-        }
-
         .login-card {
-            background: var(--telegram-card);
-            border: 1px solid var(--glass-border);
-            border-radius: 24px;
-            padding: 40px;
-            width: 100%;
-            max-width: 420px;
+            background: white;
+            border-radius: 48px;
+            padding: 2rem 2rem;
+            box-shadow: 0 25px 45px -12px rgba(0,0,0,0.25);
             text-align: center;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 380px;
+            width: 85%;
+            animation: floatUp 0.5s ease;
         }
-
-        .login-logo {
+        @keyframes floatUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* Logo de Google grande (la G clásica) */
+        .google-logo-big {
             width: 80px;
             height: 80px;
+            margin: 0 auto 1rem auto;
             background: white;
-            border-radius: 20px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 24px;
-            box-shadow: 0 8px 30px rgba(13, 110, 253, 0.3);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
-
-        .login-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-
-        .login-subtitle {
-            color: var(--telegram-muted);
-            font-size: 0.9rem;
-            margin-bottom: 32px;
-        }
-
         .google-btn {
+            background: white;
+            border: 1px solid #dadce0;
+            border-radius: 60px;
+            padding: 12px 18px;
+            font-weight: 500;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 12px;
             width: 100%;
-            padding: 14px 24px;
-            border: 1px solid var(--glass-border);
-            border-radius: 14px;
-            background: var(--telegram-bg);
-            color: var(--telegram-text);
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
+            transition: all 0.2s;
+            color: #3c4043;
         }
-
         .google-btn:hover {
-            background: var(--telegram-accent);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            background: #f8f9fa;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transform: scale(0.98);
         }
-
-        .google-btn img {
-            width: 20px;
-            height: 20px;
-        }
-
-        .login-footer {
-            margin-top: 24px;
-            color: var(--telegram-muted);
-            font-size: 0.8rem;
-        }
-
-        /* ===== USER AVATAR IN NAV ===== */
-        .nav-user-avatar {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid var(--telegram-highlight);
-            box-shadow: 0 0 10px rgba(94, 181, 247, 0.3);
-        }
-
-        .nav-item-tg .user-avatar-wrapper {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: linear-gradient(135deg, var(--primary), var(--info));
-        }
-
-        .nav-item-tg .user-avatar-wrapper svg,
-        .nav-item-tg .user-avatar-wrapper i {
-            color: white;
-        }
-
-        /* ===== ANIMATED BACKGROUND ===== */
-        .bg-mesh {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 0;
-            overflow: hidden;
-        }
-
-        .bg-mesh .orb {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(80px);
-            opacity: 0.15;
-            animation: orbFloat 20s ease-in-out infinite;
-        }
-
-        .bg-mesh .orb:nth-child(1) {
-            width: 400px;
-            height: 400px;
-            background: var(--primary);
-            top: -100px;
-            left: -100px;
-            animation-delay: 0s;
-        }
-
-        .bg-mesh .orb:nth-child(2) {
-            width: 300px;
-            height: 300px;
-            background: var(--info);
-            top: 40%;
-            right: -80px;
-            animation-delay: -7s;
-        }
-
-        .bg-mesh .orb:nth-child(3) {
-            width: 250px;
-            height: 250px;
-            background: var(--success);
-            bottom: 10%;
-            left: 20%;
-            animation-delay: -14s;
-        }
-
-        @keyframes orbFloat {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            33% { transform: translate(30px, -30px) scale(1.1); }
-            66% { transform: translate(-20px, 20px) scale(0.9); }
-        }
-
-        /* ===== PARTICLES CANVAS ===== */
-        #particlesCanvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 1;
-        }
-
-        /* ===== CONTENT LAYER ===== */
-        .content-layer {
-            position: relative;
-            z-index: 2;
-        }
-
-        /* ===== TELEGRAM FLOATING NAVBAR ===== */
-        .telegram-nav {
+        /* Floating Nav */
+        .floating-nav {
             position: fixed;
             bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            border-radius: 24px;
-            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(18px);
+            border-radius: 56px;
+            padding: 8px 24px;
+            box-shadow: 0 10px 28px -6px rgba(0,0,0,0.12);
             display: flex;
-            gap: 4px;
-            z-index: 1000;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(94, 181, 247, 0.1);
-            max-width: 95vw;
-            overflow-x: auto;
-            scrollbar-width: none;
+            gap: 28px;
+            z-index: 1050;
         }
-
-        .telegram-nav::-webkit-scrollbar { display: none; }
-
-        .nav-item-tg {
+        .nav-item {
+            background: transparent;
+            border: none;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 4px;
-            padding: 10px 16px;
-            border-radius: 18px;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            color: var(--telegram-muted);
-            text-decoration: none;
-            position: relative;
-            min-width: 64px;
-            border: none;
-            background: transparent;
-        }
-
-        .nav-item-tg:hover {
-            color: var(--telegram-highlight);
-            background: rgba(94, 181, 247, 0.08);
-        }
-
-        .nav-item-tg.active {
-            color: var(--telegram-highlight);
-            background: rgba(94, 181, 247, 0.15);
-        }
-
-        .nav-item-tg.active::after {
-            content: '';
-            position: absolute;
-            bottom: 4px;
-            width: 20px;
-            height: 3px;
-            background: var(--telegram-highlight);
-            border-radius: 2px;
-        }
-
-        .nav-item-tg svg,
-        .nav-item-tg i {
-            transition: transform 0.3s ease;
-        }
-
-        .nav-item-tg:hover svg,
-        .nav-item-tg:hover i {
-            transform: translateY(-2px);
-        }
-
-        .nav-item-tg span {
-            font-size: 0.65rem;
+            gap: 5px;
+            font-size: 12px;
             font-weight: 500;
-            white-space: nowrap;
-        }
-
-        /* ===== SECTIONS ===== */
-        .section-page {
-            display: none;
-            opacity: 0;
-        }
-
-        .section-page.active {
-            display: block;
-        }
-
-        /* ===== CARDS ===== */
-        .tg-card {
-            background: var(--telegram-card);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 24px;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .tg-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, var(--primary), var(--info));
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .tg-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-        }
-
-        .tg-card:hover::before {
-            opacity: 1;
-        }
-
-        .tg-card-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-
-        .tg-card-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.4rem;
-            background: linear-gradient(135deg, var(--primary), var(--info));
-            color: white;
-            box-shadow: 0 4px 15px rgba(13, 110, 253, 0.3);
-        }
-
-        .tg-card-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin: 0;
-            color: var(--telegram-text);
-        }
-
-        .tg-card-subtitle {
-            font-size: 0.8rem;
-            color: var(--telegram-muted);
-            margin: 0;
-        }
-
-        /* ===== STAT CARDS ===== */
-        .stat-card {
-            background: linear-gradient(135deg, var(--telegram-card), var(--telegram-accent));
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 24px;
-            position: relative;
-            overflow: hidden;
-            transition: all 0.4s ease;
-        }
-
-        .stat-card:hover {
-            transform: translateY(-4px) scale(1.02);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-        }
-
-        .stat-card .stat-icon {
-            position: absolute;
-            top: -10px;
-            right: -10px;
-            font-size: 5rem;
-            opacity: 0.05;
-            transform: rotate(-15deg);
-        }
-
-        .stat-value {
-            font-size: 2rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, var(--telegram-text), var(--telegram-highlight));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .stat-label {
-            font-size: 0.85rem;
-            color: var(--telegram-muted);
-            margin-top: 4px;
-        }
-
-        .stat-change {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            margin-top: 8px;
-        }
-
-        .stat-change.up {
-            background: rgba(25, 135, 84, 0.15);
-            color: var(--success);
-        }
-
-        .stat-change.down {
-            background: rgba(220, 53, 69, 0.15);
-            color: var(--danger);
-        }
-
-        /* ===== FORM STYLES ===== */
-        .tg-input {
-            background: var(--telegram-bg);
-            border: 2px solid var(--glass-border);
-            border-radius: 14px;
-            padding: 14px 18px;
-            color: var(--telegram-text);
-            font-size: 0.95rem;
-            width: 100%;
-            transition: all 0.3s ease;
-        }
-
-        .tg-input:focus {
-            outline: none;
-            border-color: var(--telegram-highlight);
-            box-shadow: 0 0 0 4px rgba(94, 181, 247, 0.1);
-        }
-
-        .tg-input::placeholder {
-            color: var(--telegram-muted);
-        }
-
-        .tg-btn {
-            border: none;
-            border-radius: 14px;
-            padding: 14px 24px;
-            font-weight: 600;
-            font-size: 0.95rem;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .tg-btn::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            transition: width 0.6s, height 0.6s;
-        }
-
-        .tg-btn:active::before {
-            width: 300px;
-            height: 300px;
-        }
-
-        .tg-btn-primary {
-            background: linear-gradient(135deg, var(--primary), #0b5ed7);
-            color: white;
-            box-shadow: 0 4px 15px rgba(13, 110, 253, 0.3);
-        }
-
-        .tg-btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(13, 110, 253, 0.4);
-        }
-
-        .tg-btn-success {
-            background: linear-gradient(135deg, var(--success), #146c43);
-            color: white;
-            box-shadow: 0 4px 15px rgba(25, 135, 84, 0.3);
-        }
-
-        .tg-btn-success:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(25, 135, 84, 0.4);
-        }
-
-        .tg-btn-danger {
-            background: linear-gradient(135deg, var(--danger), #b02a37);
-            color: white;
-            box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
-        }
-
-        .tg-btn-warning {
-            background: linear-gradient(135deg, var(--warning), #e0a800);
-            color: #000;
-            box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3);
-        }
-
-        .tg-btn-sm {
-            padding: 8px 14px;
-            font-size: 0.85rem;
-            border-radius: 10px;
-        }
-
-        /* ===== TOAST NOTIFICATIONS ===== */
-        .toast-container-custom {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 9999;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .tg-toast {
-            background: var(--telegram-card);
-            border: 1px solid var(--glass-border);
-            border-radius: 16px;
-            padding: 16px 20px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            min-width: 300px;
-            max-width: 400px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(20px);
-            transform: translateX(120%);
-            opacity: 0;
-        }
-
-        .tg-toast.show {
-            animation: toastSlideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-        }
-
-        .tg-toast.hide {
-            animation: toastSlideOut 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-        }
-
-        @keyframes toastSlideIn {
-            to { transform: translateX(0); opacity: 1; }
-        }
-
-        @keyframes toastSlideOut {
-            to { transform: translateX(120%); opacity: 0; }
-        }
-
-        .toast-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-            flex-shrink: 0;
-        }
-
-        .toast-icon.success { background: rgba(25, 135, 84, 0.15); color: var(--success); }
-        .toast-icon.error { background: rgba(220, 53, 69, 0.15); color: var(--danger); }
-        .toast-icon.warning { background: rgba(255, 193, 7, 0.15); color: var(--warning); }
-        .toast-icon.info { background: rgba(13, 110, 253, 0.15); color: var(--primary); }
-
-        .toast-content { flex: 1; }
-        .toast-title { font-weight: 600; font-size: 0.95rem; margin: 0; }
-        .toast-message { font-size: 0.85rem; color: var(--telegram-muted); margin: 2px 0 0; }
-
-        /* ===== PRODUCT TABLE ===== */
-        .tg-table-container {
-            background: var(--telegram-card);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            overflow: hidden;
-        }
-
-        .tg-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .tg-table thead th {
-            background: var(--telegram-accent);
-            padding: 16px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: var(--telegram-muted);
-            border: none;
-            white-space: nowrap;
-        }
-
-        .tg-table tbody tr {
-            border-bottom: 1px solid var(--glass-border);
-            transition: all 0.2s ease;
-        }
-
-        .tg-table tbody tr:hover {
-            background: rgba(94, 181, 247, 0.05);
-        }
-
-        .tg-table tbody td {
-            padding: 16px;
-            font-size: 0.9rem;
-            vertical-align: middle;
-        }
-
-        .price-display {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-        }
-
-        .price-usd {
-            font-weight: 600;
-            color: var(--success);
-        }
-
-        .price-bs {
-            font-size: 0.85rem;
-            color: var(--telegram-highlight);
-        }
-
-        /* ===== BCV RATE SECTION ===== */
-        .bcv-section {
-            background: linear-gradient(135deg, var(--primary), #0b5ed7);
-            border-radius: 24px;
-            padding: 28px;
-            color: white;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .bcv-section::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -20%;
-            width: 300px;
-            height: 300px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 50%;
-        }
-
-        .bcv-section::after {
-            content: '';
-            position: absolute;
-            bottom: -30%;
-            left: -10%;
-            width: 200px;
-            height: 200px;
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 50%;
-        }
-
-        .bcv-value {
-            font-size: 3rem;
-            font-weight: 800;
-            letter-spacing: -1px;
-        }
-
-        .bcv-label {
-            opacity: 0.8;
-            font-size: 0.9rem;
-        }
-
-        .bcv-input-group {
-            display: flex;
-            gap: 10px;
-            margin-top: 16px;
-        }
-
-        .bcv-input-group .tg-input {
-            background: rgba(255, 255, 255, 0.15);
-            border-color: rgba(255, 255, 255, 0.2);
-            color: white;
-        }
-
-        .bcv-input-group .tg-input::placeholder {
-            color: rgba(255, 255, 255, 0.5);
-        }
-
-        .bcv-input-group .tg-input:focus {
-            border-color: rgba(255, 255, 255, 0.5);
-            box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.1);
-        }
-
-        .bcv-input-group .tg-btn {
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            white-space: nowrap;
-        }
-
-        .bcv-input-group .tg-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
-        }
-
-        /* ===== TOGGLE SWITCHES ===== */
-        .toggle-switch {
-            position: relative;
-            width: 52px;
-            height: 28px;
-        }
-
-        .toggle-switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .toggle-slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: var(--telegram-accent);
-            transition: 0.3s;
-            border-radius: 28px;
-        }
-
-        .toggle-slider::before {
-            content: '';
-            position: absolute;
-            height: 22px;
-            width: 22px;
-            left: 3px;
-            bottom: 3px;
-            background: white;
-            transition: 0.3s;
-            border-radius: 50%;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-        }
-
-        .toggle-switch input:checked + .toggle-slider {
-            background: var(--primary);
-        }
-
-        .toggle-switch input:checked + .toggle-slider::before {
-            transform: translateX(24px);
-        }
-
-        /* ===== CHARTS ===== */
-        .chart-container {
-            position: relative;
-            height: 300px;
-            width: 100%;
-        }
-
-        .chart-container-lg {
-            height: 350px;
-        }
-
-        /* ===== HEADER ===== */
-        .app-header {
-            padding: 20px 0;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            background: rgba(23, 33, 43, 0.8);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--glass-border);
-        }
-
-        [data-bs-theme="light"] .app-header {
-            background: rgba(245, 247, 250, 0.8);
-        }
-
-        .header-title {
-            font-size: 1.5rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, var(--telegram-text), var(--telegram-highlight));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        /* ===== MODAL ===== */
-        .tg-modal .modal-content {
-            background: var(--telegram-card);
-            border: 1px solid var(--glass-border);
-            border-radius: 24px;
-        }
-
-        .tg-modal .modal-header {
-            border-bottom: 1px solid var(--glass-border);
-            padding: 24px;
-        }
-
-        .tg-modal .modal-body {
-            padding: 24px;
-        }
-
-        .tg-modal .modal-footer {
-            border-top: 1px solid var(--glass-border);
-            padding: 20px 24px;
-        }
-
-        .tg-modal .btn-close {
-            filter: invert(1);
-            opacity: 0.5;
-        }
-
-        [data-bs-theme="light"] .tg-modal .btn-close {
-            filter: none;
-        }
-
-        /* ===== SPINNER ===== */
-        .spinner-ring {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-        }
-
-        .spinner-ring::after {
-            content: '';
-            display: block;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            border: 2px solid transparent;
-            border-top-color: currentColor;
-            animation: spin 0.8s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        /* ===== EMPTY STATE ===== */
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: var(--telegram-muted);
-        }
-
-        .empty-state svg {
-            opacity: 0.3;
-        }
-
-        /* ===== ANIMATIONS ===== */
-        .fade-up {
-            opacity: 0;
-            transform: translateY(30px);
-        }
-
-        .fade-in {
-            opacity: 0;
-        }
-
-        .scale-in {
-            opacity: 0;
-            transform: scale(0.9);
-        }
-
-        /* ===== FOOTER ===== */
-        .app-footer {
-            text-align: center;
-            padding: 40px 20px 120px;
-            color: var(--telegram-muted);
-            font-size: 0.85rem;
-        }
-
-        .apps-footer {
-            text-align: center;
-            padding: 20px 16px;
-            color: #6b7280;
-            font-size: 0.85rem;
-            margin-top: 30px;
-            border-top: 1px solid #e5e7eb;
-            margin-bottom: calc(20px + var(--safe-area-bottom));
-        }
-
-        /* ===== SCROLLBAR ===== */
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: var(--telegram-accent);
-            border-radius: 3px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--telegram-highlight);
-        }
-
-        /* ===== MOBILE OPTIMIZATIONS ===== */
-        @media (max-width: 768px) {
-            .bcv-value { font-size: 2.2rem; }
-            .stat-value { font-size: 1.6rem; }
-            .tg-card { padding: 18px; }
-            .chart-container { height: 250px; }
-            .chart-container-lg { height: 280px; }
-            .header-title { font-size: 1.2rem; }
-            .nav-item-tg { padding: 8px 12px; min-width: 56px; }
-            .nav-item-tg span { font-size: 0.6rem; }
-            .nav-item-tg svg,
-            .nav-item-tg i { width: 20px; height: 20px; }
-            .telegram-nav { bottom: 12px; border-radius: 20px; padding: 6px 10px; }
-            body { padding-bottom: 90px; }
-            .login-card { padding: 30px 20px; }
-            .splash-logo-wrapper { width: 110px; height: 110px; }
-            .splash-logo-img { width: 90px; height: 90px; }
-            .splash-title { font-size: 1.4rem; }
-        }
-
-        @media (max-width: 576px) {
-            .bcv-input-group { flex-direction: column; }
-            .bcv-input-group .tg-btn { width: 100%; }
-            .tg-table-container { border-radius: 14px; }
-            .tg-table tbody td { padding: 12px; font-size: 0.8rem; }
-        }
-
-        /* Pulse animation for live indicator */
-        .pulse-dot {
-            width: 8px;
-            height: 8px;
-            background: var(--success);
-            border-radius: 50%;
-            position: relative;
-            display: inline-block;
-        }
-
-        .pulse-dot::after {
-            content: '';
-            position: absolute;
-            top: -4px;
-            left: -4px;
-            right: -4px;
-            bottom: -4px;
-            border-radius: 50%;
-            background: var(--success);
-            opacity: 0;
-            animation: pulseRing 2s ease-out infinite;
-        }
-
-        @keyframes pulseRing {
-            0% { transform: scale(0.8); opacity: 0.5; }
-            100% { transform: scale(2); opacity: 0; }
-        }
-
-        /* Shimmer loading effect */
-        .shimmer {
-            background: linear-gradient(
-                90deg,
-                var(--telegram-card) 25%,
-                rgba(94, 181, 247, 0.1) 50%,
-                var(--telegram-card) 75%
-            );
-            background-size: 200% 100%;
-            animation: shimmer 1.5s infinite;
-        }
-
-        @keyframes shimmer {
-            0% { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
-        }
-
-        /* Ripple effect */
-        .ripple {
-            position: absolute;
-            border-radius: 50%;
-            background: rgba(94, 181, 247, 0.3);
-            transform: scale(0);
-            animation: rippleEffect 0.6s ease-out;
-            pointer-events: none;
-        }
-
-        @keyframes rippleEffect {
-            to { transform: scale(4); opacity: 0; }
-        }
-
-        /* Quick calc section */
-        .quick-calc-display {
-            background: var(--telegram-bg);
-            border-radius: 16px;
-            padding: 20px;
-            font-family: 'Courier New', monospace;
-            font-size: 1.5rem;
-            font-weight: 700;
-            text-align: right;
-            color: var(--telegram-text);
-            min-height: 64px;
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            border: 2px solid var(--glass-border);
-            transition: all 0.3s ease;
-        }
-
-        .quick-calc-display:focus-within {
-            border-color: var(--telegram-highlight);
-        }
-
-        .calc-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-        }
-
-        .calc-btn {
-            aspect-ratio: 1;
-            border: none;
-            border-radius: 16px;
-            background: var(--telegram-card);
-            color: var(--telegram-text);
-            font-size: 1.3rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .calc-btn:hover {
-            background: var(--telegram-accent);
-            transform: scale(1.05);
-        }
-
-        .calc-btn:active {
-            transform: scale(0.95);
-        }
-
-        .calc-btn.op {
-            background: var(--telegram-accent);
-            color: var(--telegram-highlight);
-        }
-
-        .calc-btn.equals {
-            background: linear-gradient(135deg, var(--primary), var(--info));
-            color: white;
-            grid-column: span 2;
-            aspect-ratio: auto;
-        }
-
-        .calc-btn.zero {
-            grid-column: span 2;
-            aspect-ratio: auto;
-        }
-
-        /* User profile dropdown */
-        .user-profile-dropdown {
-            position: relative;
-        }
-
-        .user-profile-btn {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: var(--telegram-card);
-            border: 1px solid var(--glass-border);
-            border-radius: 50px;
-            padding: 6px 14px 6px 6px;
-            color: var(--telegram-text);
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .user-profile-btn:hover {
-            background: var(--telegram-accent);
-        }
-
-        .user-profile-btn img {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-
-        .user-profile-menu {
-            position: absolute;
-            top: calc(100% + 8px);
-            right: 0;
-            background: var(--telegram-card);
-            border: 1px solid var(--glass-border);
-            border-radius: 16px;
-            padding: 8px;
-            min-width: 200px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-            display: none;
-            z-index: 1001;
-        }
-
-        .user-profile-menu.show {
-            display: block;
-            animation: menuSlideIn 0.3s ease;
-        }
-
-        @keyframes menuSlideIn {
-            from { opacity: 0; transform: translateY(-10px); }
+            color: #4a5b6e;
+            transition: 0.2s;
+            padding: 6px 12px;
+            border-radius: 40px;
+        }
+        .nav-item i { font-size: 24px; }
+        .nav-item.active {
+            background: #eff4ff;
+            color: #2563eb;
+        }
+        .app-view { display: none; animation: fadeSlide 0.35s ease-out; }
+        .app-view.active-view { display: block; }
+        @keyframes fadeSlide {
+            from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
-        .user-profile-menu .menu-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px 14px;
-            border-radius: 10px;
-            color: var(--telegram-text);
-            text-decoration: none;
-            font-size: 0.9rem;
-            transition: all 0.2s ease;
-            cursor: pointer;
+        .dashboard-card {
+            background: #ffffff;
+            border-radius: 28px;
             border: none;
-            background: transparent;
-            width: 100%;
-            text-align: left;
+            box-shadow: 0 8px 20px -6px rgba(0, 0, 0, 0.05);
+            padding: 1.25rem;
+            margin-bottom: 1.5rem;
         }
-
-        .user-profile-menu .menu-item:hover {
-            background: var(--telegram-accent);
+        .metric-card {
+            background: white;
+            border-radius: 24px;
+            padding: 1rem;
+            border: 1px solid #eef2f6;
         }
-
-        .user-profile-menu .menu-divider {
-            height: 1px;
-            background: var(--glass-border);
-            margin: 8px 0;
+        .btn-primary-modern { background: #2563eb; border: none; border-radius: 40px; padding: 8px 20px; color: white; font-weight: 500; }
+        .btn-outline-modern { border-radius: 40px; border: 1px solid #dce3ec; background: white; padding: 6px 16px; }
+        .user-avatar { width: 38px; height: 38px; border-radius: 40px; object-fit: cover; cursor: pointer; }
+        @media (max-width: 576px) {
+            .floating-nav { gap: 12px; padding: 6px 16px; }
+            .nav-item span { font-size: 10px; }
         }
-
-        .user-profile-menu .menu-user-info {
-            padding: 10px 14px;
-            border-bottom: 1px solid var(--glass-border);
-            margin-bottom: 8px;
-        }
-
-        .user-profile-menu .menu-user-name {
-            font-weight: 600;
-            font-size: 0.95rem;
-        }
-
-        .user-profile-menu .menu-user-email {
-            font-size: 0.8rem;
-            color: var(--telegram-muted);
-        }
+        footer { text-align: center; font-size: 0.7rem; color: #6c7a8a; margin-top: 2rem; }
     </style>
-<base target="_blank">
 </head>
 <body>
-    <!-- Splash Screen -->
-    <div id="splashScreen">
-        <div class="splash-logo-wrapper">
-            <div class="splash-halo"></div>
-            <img src="icon.jpg" alt="Costos Pro" class="splash-logo-img">
+
+<!-- SPLASH (con icon.jpg redondo y holo circular) -->
+<div id="splash">
+    <div class="ring-loader">
+        <div class="ring-progress"></div>
+        <img src="icon.jpg" alt="logo" class="splash-logo">
+    </div>
+    <p class="mt-4 fw-semibold text-primary">SmartCost <span class="text-secondary">| Secure Access</span></p>
+</div>
+
+<!-- LOGIN CON GOOGLE (reemplazado logo por la G de Google) -->
+<div id="loginContainer" style="display: flex;">
+    <div class="login-card">
+        <!-- Aquí va el logo de Google (G) en lugar de icon.jpg -->
+        <div class="google-logo-big">
+            <svg width="48" height="48" viewBox="0 0 24 24">
+                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+            </svg>
         </div>
-        <div class="splash-title">Costos Pro</div>
-        <div class="splash-version">Versi&oacute;n 2.6.0</div>
+        <h3 class="fw-bold mb-2">Bienvenido</h3>
+        <p class="text-secondary mb-4">Accede con tu cuenta Google para usar SmartCost</p>
+        <button id="googleLoginBtn" class="google-btn">
+            <svg width="20" height="20" viewBox="0 0 24 24">
+                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+            </svg>
+            Iniciar sesión con Google
+        </button>
+        <p class="small text-muted mt-3">🔐 Autenticación segura vía Supabase</p>
     </div>
+</div>
 
-    <!-- Login Screen -->
-    <div id="loginScreen">
-        <div class="login-card">
-            <div class="login-logo">
-                <svg width="40" height="40" viewBox="0 0 24 24">
-                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/>
-                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-                </svg>
+<!-- MAIN APP (oculto hasta login) -->
+<main id="mainApp" style="display: none;">
+    <div class="container px-3 px-md-4 py-3">
+        <!-- header con avatar de usuario y logout -->
+        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
+            <div>
+                <h1 class="fw-bold" style="font-size: 1.8rem; background: linear-gradient(135deg, #1E2A3E, #2C3E66); -webkit-background-clip: text; background-clip: text; color: transparent;">✨ SmartCost Dashboard</h1>
+                <p class="text-muted small">Performance · Costos · Control</p>
             </div>
-            <h2 class="login-title">Bienvenido 🤗</h2>
-            <p class="login-subtitle">Inicia sesi&oacute;n para gestionar tus productos y costos</p>
-            <button class="google-btn" onclick="signInWithGoogle()">
-                <svg width="20" height="20" viewBox="0 0 24 24">
-                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/>
-                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-                </svg>
-                Continuar con Google
-            </button>
-            <p class="login-footer">Al iniciar sesi&oacute;n, aceptas nuestros t&eacute;rminos de uso.</p>
-                    <!-- Footer -->
-            <div class="apps-footer">
-                <p class="mb-1">©2026 Todos los derechos reservados</p>
-                <p class="mb-0 fw-bold text-primary">&lt;Dev RogerWeb&gt;</p>
-            </div>
-
-        </div>
-
-    </div>
-
-
-
-    <!-- Background Mesh -->
-    <div class="bg-mesh">
-        <div class="orb"></div>
-        <div class="orb"></div>
-        <div class="orb"></div>
-    </div>
-
-    <!-- Particles Canvas -->
-    <canvas id="particlesCanvas"></canvas>
-
-    <!-- Toast Container -->
-    <div class="toast-container-custom" id="toastContainer"></div>
-
-    <!-- Content Layer -->
-    <div class="content-layer" id="mainContent" style="display:none;">
-        <!-- Header -->
-        <header class="app-header">
-            <div class="container">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div class="d-flex align-items-center gap-3">
-                        <div class="tg-card-icon" style="width:40px;height:40px;">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:white;"><rect width="16" height="20" x="4" y="2" rx="2"/><line x1="8" x2="16" y1="6" y2="6"/><line x1="16" x2="16" y1="14" y2="18"/><path d="M16 10h.01"/><path d="M12 10h.01"/><path d="M8 10h.01"/><path d="M12 14h.01"/><path d="M8 14h.01"/><path d="M12 18h.01"/><path d="M8 18h.01"/></svg>
-                        </div>
-                        <div>
-                            <h1 class="header-title mb-0">Costos Pro</h1>
-                        </div>
-                    </div>
-                    <div class="d-flex align-items-center gap-3">
-                        <div class="d-flex align-items-center gap-2 d-none d-md-flex">
-                            <span class="pulse-dot"></span>
-                            <small class="text-muted">BCV: <strong id="headerBcvRate">--</strong> Bs/USD</small>
-                        </div>
-                        <button class="tg-btn tg-btn-sm tg-btn-primary" onclick="toggleTheme()" title="Cambiar tema">
-                            <svg id="themeIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:white;"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
-                        </button>
-                        <!-- User Profile Dropdown -->
-                        <div class="user-profile-dropdown" id="userProfileDropdown">
-                            <button class="user-profile-btn" onclick="toggleUserMenu()">
-                                <img id="headerUserAvatar" src="" alt="User" style="display:none;">
-                                <div class="user-avatar-wrapper" id="headerUserAvatarFallback">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:white;"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                                </div>
-                                <span id="headerUserName" class="d-none d-sm-inline" style="font-size:0.85rem;font-weight:500;">Usuario</span>
-                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
-                            </button>
-                            <div class="user-profile-menu" id="userProfileMenu">
-                                <div class="menu-user-info">
-                                    <div class="menu-user-name" id="menuUserName">Usuario</div>
-                                    <div class="menu-user-email" id="menuUserEmail">email@example.com</div>
-                                </div>
-                                <button class="menu-item" onclick="showSection('settings', document.querySelector('[data-section=\'settings\']')); toggleUserMenu();">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg> Configuraci&oacute;n
-                                </button>
-                                <div class="menu-divider"></div>
-                                <button class="menu-item" onclick="signOut()" style="color:var(--danger);">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg> Cerrar Sesi&oacute;n
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </header>
-
-        <!-- ===== SECTION: DASHBOARD ===== -->
-        <section id="section-dashboard" class="section-page active">
-            <div class="container py-4">
-                <!-- BCV Section -->
-                <div class="row mb-4 fade-up">
-                    <div class="col-12">
-                        <div class="bcv-section" id="bcvCard">
-                            <div class="row align-items-center">
-                                <div class="col-md-6">
-                                    <div class="d-flex align-items-center gap-2 mb-2">
-                                        <span class="pulse-dot"></span>
-                                        <span class="bcv-label">TASA BCV MANUAL</span>
-                                    </div>
-                                    <div class="bcv-value" id="bcvDisplay">--</div>
-                                    <div class="bcv-label mt-2">Bs / USD</div>
-                                    <div class="d-flex gap-3 mt-3">
-                                        <small id="bcvLastUpdate" class="opacity-75"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:2px;"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg>Actualizado manualmente</small>
-                                        <small id="bcvSource" class="opacity-75"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:2px;"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>Manual</small>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 mt-3 mt-md-0">
-                                    <div class="bcv-input-group">
-                                        <input type="number" id="tasaBcv" class="tg-input" step="0.01" placeholder="Ingresa tasa BCV">
-                                        <button class="tg-btn" onclick="saveManualBcv()">
-                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;"><path d="M20 6 9 17l-5-5"/></svg> Guardar
-                                        </button>
-                                    </div>
-                                    <p class="opacity-75 mt-2" style="font-size:0.8rem;">
-                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:2px;"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
-                                        Ingresa manualmente la tasa del BCV. Se guardar&aacute; en tu cuenta.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Stats Cards -->
-                <div class="row g-3 mb-4" id="statsContainer">
-                    <div class="col-6 col-lg-3 fade-up">
-                        <div class="stat-card">
-                            <svg class="stat-icon" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m21 8-2 2-1.5-3.5L17 5l-3 3-1.5-3.5L12 3 9.5 6.5 8 5 5 8l-1.5 3.5L2 13l3 3 1.5-3.5L8 11l3 3 1.5-3.5L14 9l3 3 1.5-3.5L20 7l1-1z"/><path d="M4.5 16.5 3 21l4.5-1.5"/><path d="M20.5 7.5 22 3l-4.5 1.5"/><line x1="12" x2="12" y1="3" y2="21"/></svg>
-                            <div class="stat-value" id="statTotalProducts">0</div>
-                            <div class="stat-label">Productos</div>
-                            <div class="stat-change up">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg> <span id="statProductsTrend">Registrados</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-6 col-lg-3 fade-up">
-                        <div class="stat-card">
-                            <svg class="stat-icon" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" x2="12" y1="2" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-                            <div class="stat-value" id="statAvgMargin">0%</div>
-                            <div class="stat-label">Margen Promedio</div>
-                            <div class="stat-change up">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 4-4 4 4"/><path d="M7 5v14"/><path d="m21 15-4 4-4-4"/><path d="M17 19V9"/></svg> Ganancia
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-6 col-lg-3 fade-up">
-                        <div class="stat-card">
-                            <svg class="stat-icon" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="12" x="2" y="6" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg>
-                            <div class="stat-value" id="statTotalValue">$0</div>
-                            <div class="stat-label">Inventario Total</div>
-                            <div class="stat-change up">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h10"/><path d="M9 4v16"/><path d="m3 9 3 3-3 3"/><path d="M12 7l5 5-5 5"/><path d="m21 9-3 3 3 3"/><path d="M12 7h10"/><path d="M12 17h10"/></svg> Valorizado
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-6 col-lg-3 fade-up">
-                        <div class="stat-card">
-                            <svg class="stat-icon" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
-                            <div class="stat-value" id="statTopProduct">--</div>
-                            <div class="stat-label">Mejor Producto</div>
-                            <div class="stat-change up">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> Mayor utilidad
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Charts Section -->
-                <div class="row g-4 mb-4" id="chartsContainer">
-                    <div class="col-lg-6 fade-up">
-                        <div class="tg-card">
-                            <div class="tg-card-header">
-                                <div class="tg-card-icon">
-                                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:white;"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>
-                                </div>
-                                <div>
-                                    <h5 class="tg-card-title">Distribuci&oacute;n de Precios</h5>
-                                    <p class="tg-card-subtitle">Costo vs Venta por producto</p>
-                                </div>
-                            </div>
-                            <div class="chart-container">
-                                <canvas id="priceDistributionChart"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-6 fade-up">
-                        <div class="tg-card">
-                            <div class="tg-card-header">
-                                <div class="tg-card-icon" style="background:linear-gradient(135deg, #fd7e14, #ffc107);">
-                                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:white;"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
-                                </div>
-                                <div>
-                                    <h5 class="tg-card-title">Utilidad por Producto</h5>
-                                    <p class="tg-card-subtitle">Ganancia en USD</p>
-                                </div>
-                            </div>
-                            <div class="chart-container">
-                                <canvas id="profitChart"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 fade-up">
-                        <div class="tg-card">
-                            <div class="tg-card-header">
-                                <div class="tg-card-icon" style="background:linear-gradient(135deg, #6f42c1, #d63384);">
-                                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:white;"><path d="M3 3v18h18"/><path d="M7 16v-3"/><path d="M11 16v-8"/><path d="M15 16v-5"/><path d="M19 16V6"/></svg>
-                                </div>
-                                <div>
-                                    <h5 class="tg-card-title">An&aacute;lisis Comparativo</h5>
-                                    <p class="tg-card-subtitle">Costo unitario, precio venta y utilidad</p>
-                                </div>
-                            </div>
-                            <div class="chart-container chart-container-lg">
-                                <canvas id="comparisonChart"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Recent Activity -->
-                <div class="row fade-up">
-                    <div class="col-12">
-                        <div class="tg-card">
-                            <div class="tg-card-header">
-                                <div class="tg-card-icon" style="background:linear-gradient(135deg, #20c997, #0dcaf0);">
-                                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:white;"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg>
-                                </div>
-                                <div>
-                                    <h5 class="tg-card-title">Actividad Reciente</h5>
-                                    <p class="tg-card-subtitle">&Uacute;ltimos productos agregados</p>
-                                </div>
-                            </div>
-                            <div class="table-responsive">
-                                <table class="tg-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Producto</th>
-                                            <th>Precio Venta</th>
-                                            <th>Utilidad</th>
-                                            <th>Margen</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="recentActivityTable"></tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ===== SECTION: PRODUCTS ===== -->
-        <section id="section-products" class="section-page">
-            <div class="container py-4">
-                <!-- Product Form -->
-                <div class="row mb-4">
-                    <div class="col-12 fade-up">
-                        <div class="tg-card">
-                            <div class="tg-card-header">
-                                <div class="tg-card-icon" style="background:linear-gradient(135deg, #198754, #20c997);">
-                                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:white;"><circle cx="12" cy="12" r="10"/><path d="M12 8v8"/><path d="M8 12h8"/></svg>
-                                </div>
-                                <div>
-                                    <h5 class="tg-card-title" id="formTitle">Nuevo Producto</h5>
-                                    <p class="tg-card-subtitle">Completa los datos del producto</p>
-                                </div>
-                            </div>
-                            <form id="productForm" onsubmit="event.preventDefault(); ProductManager.saveProduct()">
-                                <div class="row g-3">
-                                    <div class="col-12">
-                                        <label class="form-label text-muted small">Nombre del Producto</label>
-                                        <input type="text" class="tg-input" id="productName" placeholder="Ej: Arroz Premium 1kg" required>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label text-muted small">Costo Total (USD)</label>
-                                        <input type="number" class="tg-input" id="totalCost" step="0.01" placeholder="0.00" required>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label text-muted small">Unidades por Empaque</label>
-                                        <input type="number" class="tg-input" id="units" placeholder="Ej: 12" required>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label text-muted small">Cantidad de Empaques</label>
-                                        <input type="number" class="tg-input" id="empaques" placeholder="Ej: 10" required>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label text-muted small">% de Ganancia</label>
-                                        <input type="number" class="tg-input" id="profit" step="0.01" placeholder="Ej: 30" required>
-                                    </div>
-                                </div>
-                                <div class="d-flex gap-2 mt-4">
-                                    <button type="submit" class="tg-btn tg-btn-success flex-fill" id="saveBtn">
-                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> <span id="saveBtnText">Guardar Producto</span>
-                                    </button>
-                                    <button type="button" class="tg-btn tg-btn-warning" onclick="ProductManager.clearForm()">
-                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Product List -->
-                <div class="row fade-up">
-                    <div class="col-12">
-                        <div class="tg-card">
-                            <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
-                                <div class="tg-card-header mb-0">
-                                    <div class="tg-card-icon" style="background:linear-gradient(135deg, #0dcaf0, #0d6efd);">
-                                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:white;"><path d="M11 12H3"/><path d="M16 6H3"/><path d="M16 18H3"/><path d="m18 9 3 3-3 3"/><path d="m21 3-6 6"/><path d="m21 9-6-6"/></svg>
-                                    </div>
-                                    <div>
-                                        <h5 class="tg-card-title mb-0">Lista de Precios</h5>
-                                        <p class="tg-card-subtitle mb-0"><span id="productCount">0</span> productos</p>
-                                    </div>
-                                </div>
-                                <div class="d-flex gap-2">
-                                    <button class="tg-btn tg-btn-sm tg-btn-danger" onclick="confirmReset()">
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><path d="M10 11v6"/><path d="M14 11v6"/></svg> <span class="d-none d-sm-inline">Reiniciar</span>
-                                    </button>
-                                    <button class="tg-btn tg-btn-sm tg-btn-primary" onclick="openPdfModal()">
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg> <span class="d-none d-sm-inline">PDF</span>
-                                    </button>
-                                </div>
-                            </div>
-                            <div id="priceList" class="table-responsive">
-                                <div class="empty-state">
-                                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.3;margin-bottom:16px;"><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg>
-                                    <h5>No hay productos</h5>
-                                    <p>Agrega tu primer producto usando el formulario</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ===== SECTION: CALCULATOR ===== -->
-        <section id="section-calculator" class="section-page">
-            <div class="container py-4">
-                <div class="row justify-content-center">
-                    <div class="col-md-8 col-lg-6 fade-up">
-                        <div class="tg-card">
-                            <div class="tg-card-header">
-                                <div class="tg-card-icon" style="background:linear-gradient(135deg, #fd7e14, #ffc107);">
-                                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:white;"><rect width="16" height="20" x="4" y="2" rx="2"/><line x1="8" x2="16" y1="6" y2="6"/><line x1="16" x2="16" y1="14" y2="18"/><path d="M16 10h.01"/><path d="M12 10h.01"/><path d="M8 10h.01"/><path d="M12 14h.01"/><path d="M8 14h.01"/><path d="M12 18h.01"/><path d="M8 18h.01"/></svg>
-                                </div>
-                                <div>
-                                    <h5 class="tg-card-title">Calculadora R&aacute;pida</h5>
-                                    <p class="tg-card-subtitle">Conversi&oacute;n USD &harr; Bs</p>
-                                </div>
-                            </div>
-
-                            <div class="mb-4">
-                                <label class="form-label text-muted small">Monto en USD</label>
-                                <div class="input-group">
-                                    <span class="input-group-text tg-input" style="border-radius:14px 0 0 14px; border-right:none; width:50px; justify-content:center;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" x2="12" y1="2" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span>
-                                    <input type="number" class="tg-input" id="calcUSD" step="0.01" placeholder="0.00" oninput="convertToBs()" style="border-radius:0 14px 14px 0;">
-                                </div>
-                            </div>
-
-                            <div class="text-center my-3">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--telegram-highlight);"><path d="m3 16 4 4 4-4"/><path d="M7 20V4"/><path d="m21 8-4-4-4 4"/><path d="M17 4v16"/></svg>
-                            </div>
-
-                            <div class="mb-4">
-                                <label class="form-label text-muted small">Monto en Bs</label>
-                                <div class="input-group">
-                                    <span class="input-group-text tg-input" style="border-radius:14px 0 0 14px; border-right:none; width:50px; justify-content:center;"><strong>Bs</strong></span>
-                                    <input type="number" class="tg-input" id="calcBs" step="0.01" placeholder="0.00" oninput="convertToUsd()" style="border-radius:0 14px 14px 0;">
-                                </div>
-                            </div>
-
-                            <div class="alert" style="background:var(--telegram-accent); border:none; border-radius:14px;">
-                                <small class="text-muted"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px;"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>Tasa usada: <strong id="calcBcvRate">--</strong> Bs/USD</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Price Simulator -->
-                <div class="row justify-content-center mt-4">
-                    <div class="col-md-8 col-lg-6 fade-up">
-                        <div class="tg-card">
-                            <div class="tg-card-header">
-                                <div class="tg-card-icon" style="background:linear-gradient(135deg, #6f42c1, #d63384);">
-                                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:white;"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/><path d="M5 3v4"/><path d="M9 5H5"/><path d="M19 18v2"/><path d="M21 17v4"/></svg>
-                                </div>
-                                <div>
-                                    <h5 class="tg-card-title">Simulador de Precio</h5>
-                                    <p class="tg-card-subtitle">Calcula el precio de venta ideal</p>
-                                </div>
-                            </div>
-
-                            <div class="row g-3">
-                                <div class="col-12">
-                                    <label class="form-label text-muted small">Costo Unitario (USD)</label>
-                                    <input type="number" class="tg-input" id="simCost" step="0.01" placeholder="0.00" oninput="simulatePrice()">
-                                </div>
-                                <div class="col-12">
-                                    <label class="form-label text-muted small">% de Ganancia Deseado</label>
-                                    <input type="range" class="form-range" id="simProfitSlider" min="0" max="200" value="30" oninput="document.getElementById('simProfit').value=this.value; simulatePrice()">
-                                    <div class="d-flex justify-content-between">
-                                        <input type="number" class="tg-input" id="simProfit" value="30" style="max-width:100px; text-align:center;" oninput="document.getElementById('simProfitSlider').value=this.value; simulatePrice()">
-                                        <span class="align-self-center text-muted">%</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="mt-4 p-4" style="background:var(--telegram-bg); border-radius:16px;">
-                                <div class="row text-center">
-                                    <div class="col-4">
-                                        <div class="text-muted small">Precio Venta</div>
-                                        <div class="fs-4 fw-bold text-success" id="simSalePrice">$0.00</div>
-                                        <div class="small" style="color:var(--telegram-highlight);" id="simSaleBs">Bs 0.00</div>
-                                    </div>
-                                    <div class="col-4">
-                                        <div class="text-muted small">Ganancia</div>
-                                        <div class="fs-4 fw-bold text-info" id="simUtility">$0.00</div>
-                                    </div>
-                                    <div class="col-4">
-                                        <div class="text-muted small">Multiplicador</div>
-                                        <div class="fs-4 fw-bold" style="color:var(--warning);" id="simMultiplier">1.0x</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ===== SECTION: SETTINGS ===== -->
-        <section id="section-settings" class="section-page">
-            <div class="container py-4">
-                <div class="row justify-content-center">
-                    <div class="col-md-8 col-lg-6">
-                        <!-- BCV Settings -->
-                        <div class="tg-card mb-4 fade-up">
-                            <div class="tg-card-header">
-                                <div class="tg-card-icon">
-                                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:white;"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-                                </div>
-                                <div>
-                                    <h5 class="tg-card-title">Configuraci&oacute;n BCV</h5>
-                                    <p class="tg-card-subtitle">Tasa de cambio manual</p>
-                                </div>
-                            </div>
-
-                            <div class="mb-4">
-                                <p class="text-muted small">
-                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:2px;"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
-                                    La tasa BCV se gestiona manualmente. Ingresa el valor actual y se guardar&aacute; en tu cuenta de Supabase.
-                                </p>
-                            </div>
-
-                            <div class="mb-4">
-                                <label class="form-label text-muted small">Tasa BCV Actual</label>
-                                <div class="input-group">
-                                    <input type="number" class="tg-input" id="settingsBcv" step="0.01" readonly>
-                                    <button class="tg-btn tg-btn-primary" onclick="document.getElementById('settingsBcv').readOnly=false; document.getElementById('settingsBcv').focus();" title="Editar manualmente">
-                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
-                                    </button>
-                                </div>
-                            </div>
-
-                            <button class="tg-btn tg-btn-success w-100" onclick="saveBcvSettings()">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;"><path d="M20 6 9 17l-5-5"/></svg> Guardar Configuraci&oacute;n
-                            </button>
-                        </div>
-
-                        <!-- Appearance -->
-                        <div class="tg-card mb-4 fade-up">
-                            <div class="tg-card-header">
-                                <div class="tg-card-icon" style="background:linear-gradient(135deg, #6f42c1, #0dcaf0);">
-                                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:white;"><path d="M12 22a1 1 0 0 1 0-20 10 9 0 0 1 10 9 5 5 0 0 1-5 5h-2.25a1.75 1.75 0 0 0-1.4 2.8l.3.4a1.75 1.75 0 0 1-1.4 2.8z"/><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/></svg>
-                                </div>
-                                <div>
-                                    <h5 class="tg-card-title">Apariencia</h5>
-                                    <p class="tg-card-subtitle">Personaliza la interfaz</p>
-                                </div>
-                            </div>
-
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <div>
-                                    <div>Tema Oscuro</div>
-                                    <small class="text-muted">Activa el modo oscuro</small>
-                                </div>
-                                <label class="toggle-switch">
-                                    <input type="checkbox" id="darkModeToggle" checked onchange="toggleTheme()">
-                                    <span class="toggle-slider"></span>
-                                </label>
-                            </div>
-
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <div>
-                                    <div>Animaciones</div>
-                                    <small class="text-muted">Efectos visuales y transiciones</small>
-                                </div>
-                                <label class="toggle-switch">
-                                    <input type="checkbox" id="animationsToggle" checked onchange="toggleAnimations()">
-                                    <span class="toggle-slider"></span>
-                                </label>
-                            </div>
-
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <div>Part&iacute;culas</div>
-                                    <small class="text-muted">Efecto de part&iacute;culas en fondo</small>
-                                </div>
-                                <label class="toggle-switch">
-                                    <input type="checkbox" id="particlesToggle" checked onchange="toggleParticles()">
-                                    <span class="toggle-slider"></span>
-                                </label>
-                            </div>
-                        </div>
-
-                        <!-- Data Management -->
-                        <div class="tg-card mb-4 fade-up">
-                            <div class="tg-card-header">
-                                <div class="tg-card-icon" style="background:linear-gradient(135deg, #dc3545, #fd7e14);">
-                                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:white;"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5V19A9 3 0 0 0 21 19V5"/><path d="M3 12A9 3 0 0 0 21 12"/><path d="M12 5v14"/></svg>
-                                </div>
-                                <div>
-                                    <h5 class="tg-card-title">Gesti&oacute;n de Datos</h5>
-                                    <p class="tg-card-subtitle">Exportar o restaurar datos</p>
-                                </div>
-                            </div>
-
-                            <div class="d-grid gap-2">
-                                <button class="tg-btn tg-btn-primary" onclick="exportData()">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg> Exportar Datos (JSON)
-                                </button>
-                                <label class="tg-btn tg-btn-success mb-0" style="cursor:pointer;">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg> Importar Datos
-                                    <input type="file" id="importFile" accept=".json" style="display:none;" onchange="importData(this)">
-                                </label>
-                                <button class="tg-btn tg-btn-danger" onclick="confirmReset()">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><path d="M10 11v6"/><path d="M14 11v6"/></svg> Eliminar Todos los Datos
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- About -->
-                        <div class="tg-card fade-up">
-                            <div class="text-center py-4">
-                                <div class="tg-card-icon mx-auto mb-3" style="width:64px;height:64px;">
-                                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:white;"><rect width="16" height="20" x="4" y="2" rx="2"/><line x1="8" x2="16" y1="6" y2="6"/><line x1="16" x2="16" y1="14" y2="18"/><path d="M16 10h.01"/><path d="M12 10h.01"/><path d="M8 10h.01"/><path d="M12 14h.01"/><path d="M8 14h.01"/><path d="M12 18h.01"/><path d="M8 18h.01"/></svg>
-                                </div>
-                                <h5 class="tg-card-title">Calculadora de Costos Pro</h5>
-                                <p class="text-muted">Versi&oacute;n 2.0</p>
-                                <p class="text-muted small">Dise&ntilde;ado para emprendedores y comerciantes. Calcula precios de venta, gestiona productos y monitorea la tasa BCV.</p>
-                                <hr style="border-color:var(--glass-border); margin:24px 0;">
-                                <p class="text-muted" style="font-size:0.85rem;">
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;"><path d="m18 16 4-4-4-4"/><path d="m6 8-4 4 4 4"/><path d="m14.5 4-5 16"/></svg> Desarrollado con <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;color:var(--danger);"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg> por RogerWed<br>
-                                    &copy; 2025 Todos los derechos reservados
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Footer -->
-        <footer class="app-footer">
-            <p><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px;"><rect width="16" height="20" x="4" y="2" rx="2"/><line x1="8" x2="16" y1="6" y2="6"/><line x1="16" x2="16" y1="14" y2="18"/><path d="M16 10h.01"/><path d="M12 10h.01"/><path d="M8 10h.01"/><path d="M12 14h.01"/><path d="M8 14h.01"/><path d="M12 18h.01"/><path d="M8 18h.01"/></svg>Calculadora de Costos Pro v2.0</p>
-            <p class="small">RogerWed &copy; 2025</p>
-        </footer>
-    </div>
-
-    <!-- Telegram Floating Navigation -->
-    <nav class="telegram-nav" id="telegramNav">
-        <button class="nav-item-tg active" onclick="showSection('dashboard', this)" data-section="dashboard">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-            <span>Inicio</span>
-        </button>
-        <button class="nav-item-tg" onclick="showSection('products', this)" data-section="products">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21 8-2 2-1.5-3.5L17 5l-3 3-1.5-3.5L12 3 9.5 6.5 8 5 5 8l-1.5 3.5L2 13l3 3 1.5-3.5L8 11l3 3 1.5-3.5L14 9l3 3 1.5-3.5L20 7l1-1z"/><path d="M4.5 16.5 3 21l4.5-1.5"/><path d="m21 8-2 2-1.5-3.5L17 5l-3 3-1.5-3.5L12 3 9.5 6.5 8 5 5 8l-1.5 3.5L2 13l3 3 1.5-3.5L8 11l3 3 1.5-3.5L14 9l3 3 1.5-3.5L20 7l1-1z" opacity="0"/><path d="M20.5 7.5 22 3l-4.5 1.5"/><rect width="20" height="14" x="2" y="5" rx="2" opacity="0.2"/><path d="M12 3v18"/></svg>
-            <span>Productos</span>
-        </button>
-        <button class="nav-item-tg" onclick="showSection('calculator', this)" data-section="calculator">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="16" height="20" x="4" y="2" rx="2"/><line x1="8" x2="16" y1="6" y2="6"/><line x1="16" x2="16" y1="14" y2="18"/><path d="M16 10h.01"/><path d="M12 10h.01"/><path d="M8 10h.01"/><path d="M12 14h.01"/><path d="M8 14h.01"/><path d="M12 18h.01"/><path d="M8 18h.01"/></svg>
-            <span>Calculadora</span>
-        </button>
-        <button class="nav-item-tg" onclick="showSection('settings', this)" data-section="settings">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
-            <span>Ajustes</span>
-        </button>
-        <!-- User avatar in nav -->
-        <button class="nav-item-tg" id="navUserAvatarBtn" onclick="toggleUserMenu()" title="Perfil">
-            <div class="user-avatar-wrapper" id="navUserAvatarWrapper">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-            </div>
-            <span id="navUserName">Perfil</span>
-        </button>
-    </nav>
-
-    <!-- Reset Confirmation Modal -->
-    <div class="modal fade tg-modal" id="resetModal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--warning);margin-right:6px;vertical-align:-2px;"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>&iquest;Eliminar todos los datos?</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <p>Esta acci&oacute;n eliminar&aacute; todos los productos y configuraciones guardadas. Esta acci&oacute;n no se puede deshacer.</p>
-                    <p class="text-muted small">Productos guardados: <strong id="resetProductCount">0</strong></p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="tg-btn tg-btn-sm" style="background:var(--telegram-accent);color:var(--telegram-text);" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="tg-btn tg-btn-sm tg-btn-danger" onclick="ProductManager.resetSystem()" data-bs-dismiss="modal">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><path d="M10 11v6"/><path d="M14 11v6"/></svg> S&iacute;, eliminar todo
-                    </button>
+            <div class="d-flex gap-2 align-items-center">
+                <span class="badge bg-light rounded-pill px-3 py-2"><i class="bi bi-currency-exchange text-primary"></i> <span id="bcvDisplayHeader">--</span> Bs/USD</span>
+                <div class="dropdown">
+                    <img id="userAvatar" src="" alt="avatar" class="user-avatar" data-bs-toggle="dropdown" style="display: none;">
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><span id="userEmail" class="dropdown-item-text"></span></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item text-danger" href="#" id="logoutBtn"><i class="bi bi-box-arrow-right"></i> Cerrar sesión</a></li>
+                    </ul>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- PDF Range Modal -->
-    <div class="modal fade tg-modal" id="pdfModal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--danger);margin-right:6px;vertical-align:-2px;"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>Generar Reporte PDF</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <p class="text-muted small mb-3">Selecciona el rango de fechas para filtrar los productos en el reporte.</p>
-                    <div class="row g-3">
-                        <div class="col-6">
-                            <label class="form-label text-muted small">Fecha Inicio</label>
-                            <input type="date" class="tg-input" id="pdfDateFrom">
-                        </div>
-                        <div class="col-6">
-                            <label class="form-label text-muted small">Fecha Fin</label>
-                            <input type="date" class="tg-input" id="pdfDateTo">
-                        </div>
-                    </div>
-                    <div class="mt-3">
-                        <small class="text-muted" id="pdfProductCount">Productos en rango: 0</small>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="tg-btn tg-btn-sm" style="background:var(--telegram-accent);color:var(--telegram-text);" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="tg-btn tg-btn-sm tg-btn-danger" onclick="ProductManager.generatePDF()">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg> Generar PDF
-                    </button>
-                </div>
+        <!-- VISTA PRODUCTOS (mismo contenido que antes, adaptado) -->
+        <div id="viewProductos" class="app-view active-view">
+            <!-- métricas -->
+            <div class="row g-3 mb-4">
+                <div class="col-6 col-md-3"><div class="metric-card"><div class="metric-title">Revenue potencial</div><div class="metric-value" id="dashRevenue">$0</div><span class="trend-badge">+1%</span></div></div>
+                <div class="col-6 col-md-3"><div class="metric-card"><div class="metric-title">Utilidad total</div><div class="metric-value" id="dashUtility">$0</div><span class="trend-badge">+3%</span></div></div>
+                <div class="col-6 col-md-3"><div class="metric-card"><div class="metric-title">Productos activos</div><div class="metric-value" id="dashProducts">0</div><span class="trend-badge" id="newProductsTrend">nuevos 0</span></div></div>
+                <div class="col-6 col-md-3"><div class="metric-card"><div class="metric-title">Margen prom.</div><div class="metric-value" id="dashMargin">0%</div><span class="trend-badge">+2%</span></div></div>
             </div>
+            <div class="row g-4 mb-4">
+                <div class="col-md-6"><div class="dashboard-card"><h6 class="fw-bold">📊 Monthly data</h6><div class="row mt-2"><div class="col-6"><span class="text-secondary">Nuevos (30d)</span><div class="fw-bold fs-4" id="newProductsCount">0</div></div><div class="col-6"><span class="text-secondary">Unidades totales</span><div class="fw-bold fs-4" id="totalUnitsCount">0</div></div><div class="col-6 mt-2"><span class="text-secondary">Costo promedio</span><div class="fw-bold" id="avgCost">$0</div></div><div class="col-6 mt-2"><span class="text-secondary">Venta promedio</span><div class="fw-bold" id="avgSalePrice">$0</div></div></div></div></div>
+                <div class="col-md-6"><div class="dashboard-card"><h6 class="fw-bold">📄 Recently viewed & reports</h6><div id="recentProductsList" class="mt-2">Cargando...</div><hr><div class="d-flex gap-2"><button class="btn btn-outline-modern btn-sm w-100" onclick="ProductManager.generatePDF()"><i class="bi bi-filetype-pdf"></i> Reporte</button><button class="btn btn-outline-modern btn-sm w-100" onclick="ProductManager.resetSystem()">Reiniciar</button></div></div></div>
+            </div>
+            <!-- Tasa BCV + formulario -->
+            <div class="dashboard-card"><div class="d-flex justify-content-between align-items-center mb-3"><h5 class="fw-bold">💰 Tasa BCV & Gestión</h5><div><input type="number" id="tasaBcv" class="form-control-sm rounded-pill" step="0.0001" style="width:120px;"><button class="btn btn-primary-modern btn-sm ms-2" onclick="ProductManager.saveBcvRate()">Actualizar</button></div></div>
+                <form id="productForm" onsubmit="event.preventDefault(); ProductManager.saveProduct()"><div class="row g-2"><div class="col-12"><input type="text" class="form-control" id="productName" placeholder="Nombre producto" required></div><div class="col-6"><input type="number" class="form-control" id="totalCost" step="0.01" placeholder="Costo total USD"></div><div class="col-6"><input type="number" class="form-control" id="units" placeholder="Unidades/caja"></div><div class="col-6"><input type="number" class="form-control" id="empaques" placeholder="Empaques"></div><div class="col-6"><input type="number" class="form-control" id="profit" step="0.01" placeholder="% Ganancia"></div></div><div class="d-flex gap-2 mt-3"><button type="submit" class="btn btn-primary-modern w-100">Guardar</button><button type="button" class="btn btn-outline-modern w-100" onclick="ProductManager.clearForm()">Limpiar</button></div></form>
+            </div>
+            <div class="dashboard-card"><div class="d-flex justify-content-between"><h5 class="fw-bold">📋 Lista de precios</h5><span class="badge bg-light" id="productCountBadge">0 productos</span></div><div id="priceList" class="table-responsive"></div></div>
         </div>
+
+        <!-- VISTA ESTADÍSTICAS -->
+        <div id="viewEstadisticas" class="app-view"><div class="dashboard-card"><canvas id="utilityChart" style="max-height:280px"></canvas></div><div class="dashboard-card"><canvas id="salesChart" style="max-height:260px"></canvas></div><div class="dashboard-card"><div class="row"><div class="col-6"><span class="text-secondary">Utilidad promedio</span><div id="statAvgUtility" class="fw-bold fs-5">$0</div></div><div class="col-6"><span class="text-secondary">Productividad</span><div id="statProductivity" class="fw-bold fs-5">0%</div></div></div></div></div>
+
+        <!-- VISTA EXPORTAR PDF POR RANGO -->
+        <div id="viewExportar" class="app-view"><div class="dashboard-card"><h5 class="fw-bold">📅 Exportar por fecha</h5><div class="row g-2"><div class="col-6"><label>Desde</label><input type="date" id="fechaDesde" class="form-control rounded-pill"></div><div class="col-6"><label>Hasta</label><input type="date" id="fechaHasta" class="form-control rounded-pill"></div></div><div class="bg-light p-3 rounded-4 my-3 text-center" id="rangoResumen"></div><button class="btn btn-primary-modern w-100" onclick="ProductManager.exportPDFbyDateRange()"><i class="bi bi-filetype-pdf"></i> Generar PDF por fechas</button></div></div>
+        <footer>Copyright 2025 RogerWed · SmartCost con Supabase</footer>
     </div>
+</main>
 
-    <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+<!-- BOTTOM NAV -->
+<div class="floating-nav" id="bottomNav" style="display: none;">
+    <button class="nav-item active" data-view="productos"><i class="bi bi-grid-3x3-gap-fill"></i><span>Productos</span></button>
+    <button class="nav-item" data-view="estadisticas"><i class="bi bi-bar-chart-steps"></i><span>Estadísticas</span></button>
+    <button class="nav-item" data-view="exportar"><i class="bi bi-download"></i><span>Exportar</span></button>
+</div>
 
-    <script>
-        // ===== SUPABASE CONFIGURATION =====
-        // REEMPLAZA ESTOS VALORES CON LOS DE TU PROYECTO SUPABASE
-        const SUPABASE_URL = 'https://pbkeawvhdfncpuzehsrw.supabase.co';
-        const SUPABASE_ANON_KEY = 'sb_publishable_R2OiRBqSzP8mMVV8sjni7A_-oco6wu1';
-
-        let supabaseClient = null;
-        let currentUser = null;
-
-        // Initialize Supabase
-        function initSupabase() {
-            try {
-                supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-                console.log('Supabase initialized');
-            } catch (e) {
-                console.error('Error initializing Supabase:', e);
-                showToast('Error', 'No se pudo conectar con Supabase', 'error');
+<script>
+    // ================= CONFIGURACIÓN SUPABASE =================
+    // 🔴 REEMPLAZA ESTOS VALORES CON LOS DE TU PROYECTO SUPABASE 🔴
+    const SUPABASE_URL = "https://TU_PROYECTO.supabase.co";      // Ej: "https://abcdefghijklm.supabase.co"
+    const SUPABASE_ANON_KEY = "TU_ANON_KEY_AQUI";               // Obténla en Project Settings -> API
+    
+    // Inicializar cliente Supabase
+    let supabase;
+    let currentUser = null;
+    
+    // Manager de productos (mismo núcleo pero con integración de usuario)
+    const ProductManager = {
+        products: [],
+        bcvRate: 36,
+        currentEditingId: null,
+        chartUtility: null,
+        chartSales: null,
+        
+        init() {
+            this.loadFromStorage();
+            document.getElementById('tasaBcv').value = this.bcvRate;
+            this.updateBcvDisplay();
+            this.renderPriceList();
+            this.refreshDashboardMetrics();
+            this.updateStatsAndCharts();
+            this.initDateRangePicker();
+            this.updateRecentProducts();
+        },
+        loadFromStorage() {
+            const stored = localStorage.getItem(`products_${currentUser?.id || 'guest'}`);
+            if(stored) this.products = JSON.parse(stored);
+            else this.products = [];
+            // asegurar fechas
+            this.products = this.products.map(p => ({ ...p, dateCreated: p.dateCreated || new Date().toISOString() }));
+            const rate = localStorage.getItem(`bcvRate_${currentUser?.id || 'guest'}`);
+            this.bcvRate = rate ? parseFloat(rate) : 36;
+        },
+        persist() {
+            if(currentUser) localStorage.setItem(`products_${currentUser.id}`, JSON.stringify(this.products));
+            else localStorage.setItem(`products_guest`, JSON.stringify(this.products));
+            localStorage.setItem(`bcvRate_${currentUser?.id || 'guest'}`, this.bcvRate);
+            this.renderPriceList();
+            this.refreshDashboardMetrics();
+            this.updateStatsAndCharts();
+            this.updateRecentProducts();
+            this.updateDateRangeSummary();
+        },
+        saveBcvRate() {
+            let newRate = parseFloat(document.getElementById('tasaBcv').value);
+            if(!isNaN(newRate) && newRate>0) { this.bcvRate = newRate; this.persist(); this.updateBcvDisplay(); this.renderPriceList(); this.refreshDashboardMetrics(); this.showAlert('✅ Tasa actualizada','success');}
+            else this.showAlert('Valor inválido','danger');
+        },
+        updateBcvDisplay() { document.getElementById('bcvDisplayHeader').innerText = this.bcvRate.toFixed(2); },
+        saveProduct() {
+            const name = document.getElementById('productName').value.trim();
+            if(!name) return this.showAlert('Nombre requerido','warning');
+            const totalCost = parseFloat(document.getElementById('totalCost').value);
+            const units = parseInt(document.getElementById('units').value);
+            const empaques = parseInt(document.getElementById('empaques').value);
+            const profit = parseFloat(document.getElementById('profit').value);
+            if(isNaN(totalCost)||isNaN(units)||isNaN(empaques)||isNaN(profit)) return this.showAlert('Complete campos','danger');
+            if(this.currentEditingId) {
+                const idx = this.products.findIndex(p=>p.id===this.currentEditingId);
+                if(idx!==-1) this.products[idx] = {...this.products[idx], name, totalCost, units, empaques, profit, dateCreated: this.products[idx].dateCreated};
+                this.currentEditingId = null;
+            } else {
+                const newId = Date.now();
+                this.products.push({ id:newId, name, totalCost, units, empaques, profit, dateCreated: new Date().toISOString() });
             }
+            this.persist();
+            this.clearForm();
+            this.showAlert('Producto guardado','success');
+        },
+        calculatePrices(prod) {
+            const unitCost = prod.totalCost / prod.units;
+            const salePrice = unitCost * (1 + (prod.profit / 100));
+            const totalUnits = prod.units * prod.empaques;
+            const totalSalePrice = salePrice * totalUnits;
+            const utilityPerUnit = salePrice - unitCost;
+            const totalUtility = utilityPerUnit * totalUnits;
+            return { unitCost, salePrice, totalSalePrice, totalUtility, utilityPerUnit };
+        },
+        renderPriceList() {
+            const container = document.getElementById('priceList');
+            if(!container) return;
+            if(this.products.length===0){ container.innerHTML='<div class="alert alert-secondary">Sin productos</div>'; document.getElementById('productCountBadge').innerText='0 productos'; return; }
+            let html=`<table class="table table-sm"><thead class="table-light"><tr><th>Producto</th><th>Costo Unit</th><th>Precio Venta</th><th>Venta Total</th><th>Utilidad</th><th></th></tr></thead><tbody>`;
+            for(let p of this.products){
+                const pr = this.calculatePrices(p);
+                html+=`<tr><td class="fw-semibold">${p.name}</td><td>$${pr.unitCost.toFixed(2)}</td><td>$${pr.salePrice.toFixed(2)}</td><td>$${pr.totalSalePrice.toFixed(2)}</td><td>$${pr.totalUtility.toFixed(2)}</td><td><button class="btn btn-sm btn-outline-warning me-1" onclick="ProductManager.editProduct(${p.id})">✏️</button><button class="btn btn-sm btn-outline-danger" onclick="ProductManager.deleteProduct(${p.id})">🗑️</button></td></tr>`;
+            }
+            html+=`</tbody></table>`;
+            container.innerHTML=html;
+            document.getElementById('productCountBadge').innerText=`${this.products.length} productos`;
+        },
+        editProduct(id){ const p=this.products.find(p=>p.id===id); if(p){ this.currentEditingId=id; document.getElementById('productName').value=p.name; document.getElementById('totalCost').value=p.totalCost; document.getElementById('units').value=p.units; document.getElementById('empaques').value=p.empaques; document.getElementById('profit').value=p.profit; window.scrollTo(0,0); } },
+        deleteProduct(id){ this.products=this.products.filter(p=>p.id!==id); this.persist(); this.showAlert('Eliminado','danger'); if(this.currentEditingId===id) this.clearForm(); },
+        refreshDashboardMetrics(){ let rev=0,util=0,sumCost=0,sumUnits=0,sumProfit=0,sumSale=0; for(let p of this.products){ const c=this.calculatePrices(p); rev+=c.totalSalePrice; util+=c.totalUtility; sumCost+=p.totalCost; sumUnits+=p.units*p.empaques; sumProfit+=p.profit; sumSale+=c.salePrice; } const avgMargin=this.products.length?(sumProfit/this.products.length).toFixed(1):0; document.getElementById('dashRevenue').innerHTML=`$${rev.toFixed(2)}`; document.getElementById('dashUtility').innerHTML=`$${util.toFixed(2)}`; document.getElementById('dashProducts').innerHTML=this.products.length; document.getElementById('dashMargin').innerHTML=`${avgMargin}%`; document.getElementById('totalUnitsCount').innerHTML=sumUnits; document.getElementById('avgCost').innerHTML=`$${(sumCost/this.products.length||0).toFixed(2)}`; document.getElementById('avgSalePrice').innerHTML=`$${(sumSale/this.products.length||0).toFixed(2)}`; const newCount=this.products.filter(p=>new Date(p.dateCreated)>=new Date(Date.now()-30*86400000)).length; document.getElementById('newProductsCount').innerHTML=newCount; document.getElementById('newProductsTrend').innerHTML=`nuevos ${newCount}`; },
+        updateStatsAndCharts(){ if(this.products.length===0){ if(this.chartUtility) this.chartUtility.destroy(); if(this.chartSales) this.chartSales.destroy(); return; } let labels=[], utilData=[], salesData=[], totalUtil=0; for(let p of this.products){ const pr=this.calculatePrices(p); labels.push(p.name.length>12?p.name.slice(0,10)+'..':p.name); utilData.push(pr.totalUtility); salesData.push(pr.totalSalePrice); totalUtil+=pr.totalUtility; } document.getElementById('statAvgUtility').innerHTML=`$${(totalUtil/this.products.length).toFixed(2)}`; const totalSales=salesData.reduce((a,b)=>a+b,0); const prod=totalSales>0?((totalUtil/totalSales)*100).toFixed(1):0; document.getElementById('statProductivity').innerHTML=`${prod}%`; const ctxU=document.getElementById('utilityChart')?.getContext('2d'); if(ctxU){ if(this.chartUtility) this.chartUtility.destroy(); this.chartUtility=new Chart(ctxU,{type:'bar',data:{labels,datasets:[{label:'Utilidad USD',data:utilData,backgroundColor:'#3b82f6'}]}}); } const ctxS=document.getElementById('salesChart')?.getContext('2d'); if(ctxS){ if(this.chartSales) this.chartSales.destroy(); this.chartSales=new Chart(ctxS,{type:'doughnut',data:{labels,datasets:[{data:salesData,backgroundColor:['#3b82f6','#10b981','#f59e0b','#ef4444','#8b5cf6']}]}}); } },
+        updateRecentProducts(){ const container=document.getElementById('recentProductsList'); if(!container) return; if(this.products.length===0){ container.innerHTML='<div class="text-muted">Sin productos recientes</div>'; return; } const recent=[...this.products].sort((a,b)=>new Date(b.dateCreated)-new Date(a.dateCreated)).slice(0,3); let html=''; recent.forEach(prod=>{ const {salePrice}=this.calculatePrices(prod); html+=`<div class="d-flex align-items-center gap-2 mb-2"><i class="bi bi-box"></i><div><strong>${prod.name}</strong><br><small>$${salePrice.toFixed(2)}</small></div></div>`; }); container.innerHTML=html; },
+        getProductsInDateRange(start,end){ if(!start||!end) return this.products; const s=new Date(start), e=new Date(end); e.setHours(23,59,59,999); return this.products.filter(p=>new Date(p.dateCreated)>=s && new Date(p.dateCreated)<=e); },
+        updateDateRangeSummary(){ const desde=document.getElementById('fechaDesde')?.value, hasta=document.getElementById('fechaHasta')?.value; if(!desde||!hasta){ document.getElementById('rangoResumen').innerHTML=`📦 Total: ${this.products.length}`; return; } const filt=this.getProductsInDateRange(desde,hasta); document.getElementById('rangoResumen').innerHTML=`📦 En rango: ${filt.length} (${desde} → ${hasta})`; },
+        exportPDFbyDateRange(){ let desde=document.getElementById('fechaDesde').value, hasta=document.getElementById('fechaHasta').value; let prods=(desde&&hasta)?this.getProductsInDateRange(desde,hasta):this.products; if(prods.length===0) return this.showAlert('Sin datos en rango','warning'); const doc=new jspdf.jsPDF(); doc.text(`Reporte SmartCost - ${new Date().toLocaleDateString()}`,14,20); doc.text(`Tasa BCV: ${this.bcvRate} Bs/USD`,14,30); doc.text(`Rango: ${desde||'todos'} / ${hasta||'todos'}`,14,38); const headers=['Producto','Costo Unit','Precio Venta','Venta Total','Utilidad']; const body=prods.map(p=>{const c=this.calculatePrices(p); return [p.name,`$${c.unitCost.toFixed(2)}`,`$${c.salePrice.toFixed(2)}`,`$${c.totalSalePrice.toFixed(2)}`,`$${c.totalUtility.toFixed(2)}`];}); doc.autoTable({startY:45,head:[headers],body,styles:{fontSize:8}}); doc.save(`reporte_${desde||'all'}.pdf`); this.showAlert('PDF generado','success'); },
+        clearForm(){ document.getElementById('productForm').reset(); this.currentEditingId=null; },
+        resetSystem(){ if(confirm('Reiniciar TODOS los datos locales?')){ localStorage.clear(); this.products=[]; this.bcvRate=36; this.persist(); this.init(); this.showAlert('Sistema reiniciado','warning'); } },
+        showAlert(msg,type){ const a=document.createElement('div'); a.className=`alert alert-${type} position-fixed top-0 end-0 m-3 shadow animate__animated animate__bounceInRight`; a.style.zIndex=9999; a.innerHTML=`${msg} <button type="button" class="btn-close float-end" data-bs-dismiss="alert"></button>`; document.body.appendChild(a); setTimeout(()=>a.remove(),2800); },
+        initDateRangePicker(){ const hoy=new Date().toISOString().split('T')[0]; const ayer=new Date(); ayer.setDate(ayer.getDate()-30); document.getElementById('fechaDesde').value=ayer.toISOString().split('T')[0]; document.getElementById('fechaHasta').value=hoy; this.updateDateRangeSummary(); document.getElementById('fechaDesde').addEventListener('change',()=>this.updateDateRangeSummary()); document.getElementById('fechaHasta').addEventListener('change',()=>this.updateDateRangeSummary()); },
+        generatePDF(){ this.exportPDFbyDateRange(); } // alias
+    };
+    
+    // ========== FLUJO DE LOGIN ==========
+    async function initSupabaseAndAuth() {
+        // Validar que las credenciales no sean las de ejemplo
+        if(SUPABASE_URL === "https://TU_PROYECTO.supabase.co" || SUPABASE_ANON_KEY === "TU_ANON_KEY_AQUI") {
+            document.getElementById('loginContainer').innerHTML = `<div class="login-card"><h4>⚠️ Configuración requerida</h4><p>Debes reemplazar SUPABASE_URL y SUPABASE_ANON_KEY en el código con los datos de tu proyecto Supabase.</p><button class="btn btn-primary" onclick="location.reload()">Reintentar</button></div>`;
+            return;
         }
-
-        // ===== AUTH FUNCTIONS =====
-        async function signInWithGoogle() {
-            if (!supabaseClient) {
-                showToast('Error', 'Supabase no est&aacute; configurado. Revisa las credenciales.', 'error');
-                return;
-            }
-
-            try {
-                const { data, error } = await supabaseClient.auth.signInWithOAuth({
-                    provider: 'google',
-                    options: {
-                        redirectTo: window.location.origin
-                    }
-                });
-
-                if (error) throw error;
-
-                if (data.url) {
-                    window.location.href = data.url;
-                }
-            } catch (error) {
-                console.error('Error signing in with Google:', error);
-                showToast('Error', 'No se pudo iniciar sesi&oacute;n con Google: ' + error.message, 'error');
-            }
+        supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        // Verificar sesión actual
+        const { data: { session } } = await supabase.auth.getSession();
+        if(session) {
+            currentUser = session.user;
+            showMainApp();
+        } else {
+            // Mostrar login
+            document.getElementById('loginContainer').style.display = 'flex';
         }
-
-        async function signOut() {
-            if (!supabaseClient) return;
-
-            try {
-                const { error } = await supabaseClient.auth.signOut();
-                if (error) throw error;
-
+        // Listener de cambios de sesión
+        supabase.auth.onAuthStateChange((event, session) => {
+            if (event === 'SIGNED_IN' && session) {
+                currentUser = session.user;
+                showMainApp();
+            } else if (event === 'SIGNED_OUT') {
                 currentUser = null;
-                ProductManager.products = [];
-
-                // Reset UI
-                document.getElementById('mainContent').style.display = 'none';
-                document.getElementById('telegramNav').style.display = 'none';
-                document.getElementById('loginScreen').classList.add('active');
-
-                showToast('Sesi&oacute;n Cerrada', 'Has cerrado sesi&oacute;n correctamente', 'info');
-            } catch (error) {
-                console.error('Error signing out:', error);
-                showToast('Error', 'No se pudo cerrar sesi&oacute;n', 'error');
-            }
-        }
-
-        async function checkAuth() {
-            if (!supabaseClient) return false;
-
-            try {
-                const { data: { session }, error } = await supabaseClient.auth.getSession();
-
-                if (error) throw error;
-
-                if (session) {
-                    currentUser = session.user;
-                    await loadUserData();
-                    updateUserUI();
-                    return true;
-                }
-                return false;
-            } catch (error) {
-                console.error('Error checking auth:', error);
-                return false;
-            }
-        }
-
-        function updateUserUI() {
-            if (!currentUser) return;
-
-            const avatarUrl = currentUser.user_metadata?.avatar_url || currentUser.user_metadata?.picture;
-            const fullName = currentUser.user_metadata?.full_name || currentUser.user_metadata?.name || 'Usuario';
-            const email = currentUser.email || 'email@example.com';
-
-            // Header avatar
-            const headerAvatar = document.getElementById('headerUserAvatar');
-            const headerFallback = document.getElementById('headerUserAvatarFallback');
-
-            if (avatarUrl) {
-                headerAvatar.src = avatarUrl;
-                headerAvatar.style.display = 'block';
-                headerFallback.style.display = 'none';
-            } else {
-                headerAvatar.style.display = 'none';
-                headerFallback.style.display = 'flex';
-            }
-
-            document.getElementById('headerUserName').textContent = fullName.split(' ')[0];
-            document.getElementById('menuUserName').textContent = fullName;
-            document.getElementById('menuUserEmail').textContent = email;
-
-            // Nav avatar
-            const navWrapper = document.getElementById('navUserAvatarWrapper');
-            if (avatarUrl) {
-                navWrapper.innerHTML = `<img src="${avatarUrl}" class="nav-user-avatar" alt="User">`;
-            } else {
-                navWrapper.innerHTML = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>';
-            }
-            document.getElementById('navUserName').textContent = fullName.split(' ')[0];
-        }
-
-        // ===== USER DATA MANAGEMENT (Supabase) =====
-        async function loadUserData() {
-            if (!supabaseClient || !currentUser) return;
-
-            try {
-                // Load products
-                const { data: productsData, error: productsError } = await supabaseClient
-                    .from('user_products')
-                    .select('products')
-                    .eq('user_id', currentUser.id)
-                    .single();
-
-                if (productsError && productsError.code !== 'PGRST116') {
-                    console.error('Error loading products:', productsError);
-                }
-
-                if (productsData && productsData.products) {
-                    ProductManager.products = productsData.products;
-                } else {
-                    ProductManager.products = [];
-                }
-
-                // Load BCV rate
-                const { data: bcvData, error: bcvError } = await supabaseClient
-                    .from('user_settings')
-                    .select('bcv_rate')
-                    .eq('user_id', currentUser.id)
-                    .single();
-
-                if (bcvError && bcvError.code !== 'PGRST116') {
-                    console.error('Error loading BCV rate:', bcvError);
-                }
-
-                if (bcvData && bcvData.bcv_rate) {
-                    currentBcvRate = parseFloat(bcvData.bcv_rate);
-                    updateBcvDisplay(currentBcvRate, 'Guardado en cuenta');
-                } else {
-                    currentBcvRate = 36;
-                    updateBcvDisplay(36, 'Por defecto');
-                }
-
-                ProductManager.renderPriceList();
-                updateStats();
-
-            } catch (error) {
-                console.error('Error loading user data:', error);
-            }
-        }
-
-        async function saveUserProducts() {
-            if (!supabaseClient || !currentUser) {
-                // Fallback to localStorage if not logged in
-                localStorage.setItem('products', JSON.stringify(ProductManager.products));
-                return;
-            }
-
-            try {
-                const { error } = await supabaseClient
-                    .from('user_products')
-                    .upsert({
-                        user_id: currentUser.id,
-                        products: ProductManager.products,
-                        updated_at: new Date().toISOString()
-                    }, { onConflict: 'user_id' });
-
-                if (error) throw error;
-            } catch (error) {
-                console.error('Error saving products:', error);
-                // Fallback to localStorage
-                localStorage.setItem('products', JSON.stringify(ProductManager.products));
-            }
-        }
-
-        async function saveUserBcvRate(rate) {
-            if (!supabaseClient || !currentUser) {
-                localStorage.setItem('bcvRate', rate);
-                return;
-            }
-
-            try {
-                const { error } = await supabaseClient
-                    .from('user_settings')
-                    .upsert({
-                        user_id: currentUser.id,
-                        bcv_rate: rate,
-                        updated_at: new Date().toISOString()
-                    }, { onConflict: 'user_id' });
-
-                if (error) throw error;
-            } catch (error) {
-                console.error('Error saving BCV rate:', error);
-                localStorage.setItem('bcvRate', rate);
-            }
-        }
-
-        // ===== USER MENU TOGGLE =====
-        function toggleUserMenu() {
-            const menu = document.getElementById('userProfileMenu');
-            menu.classList.toggle('show');
-        }
-
-        // Close menu when clicking outside
-        document.addEventListener('click', function(e) {
-            const dropdown = document.getElementById('userProfileDropdown');
-            const menu = document.getElementById('userProfileMenu');
-            if (dropdown && !dropdown.contains(e.target)) {
-                menu.classList.remove('show');
+                hideMainAppAndShowLogin();
             }
         });
-
-        // ===== PARTICLES SYSTEM =====
-        const canvas = document.getElementById('particlesCanvas');
-        const ctx = canvas.getContext('2d');
-        let particles = [];
-        let particlesEnabled = true;
-
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-        resizeCanvas();
-        window.addEventListener('resize', resizeCanvas);
-
-        class Particle {
-            constructor() {
-                this.reset();
-            }
-
-            reset() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 2 + 0.5;
-                this.speedX = (Math.random() - 0.5) * 0.5;
-                this.speedY = (Math.random() - 0.5) * 0.5;
-                this.opacity = Math.random() * 0.5 + 0.1;
-                this.color = `rgba(94, 181, 247, ${this.opacity})`;
-            }
-
-            update() {
-                this.x += this.speedX;
-                this.y += this.speedY;
-                if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
-                if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
-            }
-
-            draw() {
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fillStyle = this.color;
-                ctx.fill();
-            }
-        }
-
-        for (let i = 0; i < 50; i++) {
-            particles.push(new Particle());
-        }
-
-        function drawConnections() {
-            for (let i = 0; i < particles.length; i++) {
-                for (let j = i + 1; j < particles.length; j++) {
-                    const dx = particles[i].x - particles[j].x;
-                    const dy = particles[i].y - particles[j].y;
-                    const distance = Math.sqrt(dx * dx + dy * dy);
-                    if (distance < 100) {
-                        ctx.beginPath();
-                        ctx.strokeStyle = `rgba(94, 181, 247, ${0.1 * (1 - distance / 100)})`;
-                        ctx.lineWidth = 0.5;
-                        ctx.moveTo(particles[i].x, particles[i].y);
-                        ctx.lineTo(particles[j].x, particles[j].y);
-                        ctx.stroke();
-                    }
-                }
-            }
-        }
-
-        function animateParticles() {
-            if (!particlesEnabled) {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                requestAnimationFrame(animateParticles);
-                return;
-            }
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            particles.forEach(p => { p.update(); p.draw(); });
-            drawConnections();
-            requestAnimationFrame(animateParticles);
-        }
-        animateParticles();
-
-        // ===== GSAP ANIMATIONS =====
-        gsap.registerPlugin(ScrollTrigger);
-
-        let animationsEnabled = true;
-
-        function initAnimations() {
-            if (!animationsEnabled) return;
-
-            gsap.utils.toArray('.fade-up').forEach((el, i) => {
-                gsap.fromTo(el,
-                    { opacity: 0, y: 30 },
-                    {
-                        opacity: 1, y: 0, duration: 0.6,
-                        delay: i * 0.1,
-                        ease: 'power3.out',
-                        scrollTrigger: {
-                            trigger: el,
-                            start: 'top 90%',
-                            toggleActions: 'play none none none'
-                        }
-                    }
-                );
-            });
-
-            gsap.fromTo('.stat-card',
-                { opacity: 0, scale: 0.9 },
-                { opacity: 1, scale: 1, duration: 0.5, stagger: 0.1, ease: 'back.out(1.7)', delay: 0.3 }
-            );
-        }
-
-        // ===== TOAST NOTIFICATIONS =====
-        function showToast(title, message, type = 'info', duration = 4000) {
-            const container = document.getElementById('toastContainer');
-            const toast = document.createElement('div');
-            toast.className = 'tg-toast show';
-
-            const icons = {
-                success: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>',
-                error: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" x2="9" y1="9" y2="15"/><line x1="9" x2="15" y1="9" y2="15"/></svg>',
-                warning: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>',
-                info: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>'
-            };
-
-            toast.innerHTML = `
-                <div class="toast-icon ${type}">${icons[type]}</div>
-                <div class="toast-content">
-                    <div class="toast-title">${title}</div>
-                    <div class="toast-message">${message}</div>
-                </div>
-                <button class="btn-close btn-close-white" style="opacity:0.3;" onclick="this.parentElement.remove()"></button>
-            `;
-
-            container.appendChild(toast);
-
-            if (animationsEnabled) {
-                gsap.fromTo(toast,
-                    { x: 120, opacity: 0 },
-                    { x: 0, opacity: 1, duration: 0.5, ease: 'power3.out' }
-                );
-            }
-
-            setTimeout(() => {
-                toast.classList.add('hide');
-                if (animationsEnabled) {
-                    gsap.to(toast, { x: 120, opacity: 0, duration: 0.4, ease: 'power3.in', onComplete: () => toast.remove() });
-                } else {
-                    setTimeout(() => toast.remove(), 400);
-                }
-            }, duration);
-        }
-
-        // ===== THEME TOGGLE =====
-        function toggleTheme() {
-            const html = document.documentElement;
-            const isDark = html.getAttribute('data-bs-theme') === 'dark';
-            const newTheme = isDark ? 'light' : 'dark';
-            html.setAttribute('data-bs-theme', newTheme);
-            localStorage.setItem('theme', newTheme);
-            const themeSvg = document.getElementById('themeIcon');
-            if (themeSvg) {
-                if (isDark) {
-                    themeSvg.innerHTML = '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>';
-                } else {
-                    themeSvg.innerHTML = '<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>';
-                }
-            }
-            document.getElementById('darkModeToggle').checked = !isDark;
-            updateCharts();
-        }
-
-        // ===== PARTICLES TOGGLE =====
-        function toggleParticles() {
-            particlesEnabled = document.getElementById('particlesToggle').checked;
-            localStorage.setItem('particlesEnabled', particlesEnabled);
-        }
-
-        // ===== ANIMATIONS TOGGLE =====
-        function toggleAnimations() {
-            animationsEnabled = document.getElementById('animationsToggle').checked;
-            localStorage.setItem('animationsEnabled', animationsEnabled);
-        }
-
-        // ===== SECTION NAVIGATION =====
-        function showSection(sectionName, navElement) {
-            document.querySelectorAll('.section-page').forEach(s => {
-                if (animationsEnabled) {
-                    gsap.to(s, {
-                        opacity: 0, y: 20, duration: 0.3, ease: 'power2.in',
-                        onComplete: () => {
-                            s.classList.remove('active');
-                            const target = document.getElementById(`section-${sectionName}`);
-                            target.classList.add('active');
-                            gsap.fromTo(target, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.4, ease: 'power3.out', delay: 0.1 });
-                            if (sectionName === 'dashboard') updateCharts();
-                        }
-                    });
-                } else {
-                    s.classList.remove('active');
-                    document.getElementById(`section-${sectionName}`).classList.add('active');
-                    if (sectionName === 'dashboard') updateCharts();
-                }
-            });
-
-            document.querySelectorAll('.nav-item-tg').forEach(n => n.classList.remove('active'));
-            if (navElement) navElement.classList.add('active');
-            else document.querySelector(`[data-section="${sectionName}"]`)?.classList.add('active');
-
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        // ===== BCV RATE MANAGEMENT (MANUAL ONLY) =====
-        let currentBcvRate = 36;
-
-        function updateBcvDisplay(rate, source) {
-            currentBcvRate = rate;
-            document.getElementById('bcvDisplay').textContent = rate.toFixed(2);
-            document.getElementById('headerBcvRate').textContent = rate.toFixed(2);
-            document.getElementById('calcBcvRate').textContent = rate.toFixed(2);
-            document.getElementById('settingsBcv').value = rate.toFixed(2);
-            document.getElementById('bcvSource').innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:2px;"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>${source}`;
-            document.getElementById('bcvLastUpdate').innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:2px;"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg>${new Date().toLocaleTimeString()}`;
-
-            // Save to Supabase if logged in
-            saveUserBcvRate(rate);
-        }
-
-        function saveManualBcv() {
-            const val = parseFloat(document.getElementById('tasaBcv').value);
-            if (!val || val <= 0) {
-                showToast('Error', 'Ingresa un valor v&aacute;lido', 'error');
-                return;
-            }
-            updateBcvDisplay(val, 'Manual');
-            showToast('&iexcl;Tasa actualizada!', `Nueva tasa: ${val.toFixed(2)} Bs/USD`, 'success');
-            ProductManager.renderPriceList();
-        }
-
-        function saveBcvSettings() {
-            const val = parseFloat(document.getElementById('settingsBcv').value);
-            if (!val || val <= 0) {
-                showToast('Error', 'Ingresa un valor v&aacute;lido', 'error');
-                return;
-            }
-            updateBcvDisplay(val, 'Manual');
-            showToast('Configuraci&oacute;n Guardada', 'La tasa BCV se ha actualizado', 'success');
-        }
-
-        // ===== CONVERSION CALCULATOR =====
-        function convertToBs() {
-            const usd = parseFloat(document.getElementById('calcUSD').value) || 0;
-            document.getElementById('calcBs').value = (usd * currentBcvRate).toFixed(2);
-        }
-
-        function convertToUsd() {
-            const bs = parseFloat(document.getElementById('calcBs').value) || 0;
-            document.getElementById('calcUSD').value = (bs / currentBcvRate).toFixed(2);
-        }
-
-        // ===== PRICE SIMULATOR =====
-        function simulatePrice() {
-            const cost = parseFloat(document.getElementById('simCost').value) || 0;
-            const profit = parseFloat(document.getElementById('simProfit').value) || 0;
-            const multiplier = 1 + (profit / 100);
-            const salePrice = cost * multiplier;
-            const utility = salePrice - cost;
-
-            document.getElementById('simSalePrice').textContent = `$${salePrice.toFixed(2)}`;
-            document.getElementById('simSaleBs').textContent = `Bs ${(salePrice * currentBcvRate).toFixed(2)}`;
-            document.getElementById('simUtility').textContent = `$${utility.toFixed(2)}`;
-            document.getElementById('simMultiplier').textContent = `${multiplier.toFixed(1)}x`;
-        }
-
-        // ===== DATA MANAGEMENT =====
-        function exportData() {
-            const data = {
-                products: ProductManager.products,
-                bcvRate: currentBcvRate,
-                exportDate: new Date().toISOString(),
-                version: '2.0',
-                user: currentUser ? currentUser.email : 'local'
-            };
-            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `costos_backup_${new Date().toISOString().split('T')[0]}.json`;
-            a.click();
-            URL.revokeObjectURL(url);
-            showToast('Exportaci&oacute;n Exitosa', 'Datos exportados correctamente', 'success');
-        }
-
-        function importData(input) {
-            const file = input.files[0];
-            if (!file) return;
-
-            const reader = new FileReader();
-            reader.onload = async (e) => {
-                try {
-                    const data = JSON.parse(e.target.result);
-                    if (data.products) {
-                        ProductManager.products = data.products;
-                        await saveUserProducts();
-                    }
-                    if (data.bcvRate) {
-                        updateBcvDisplay(data.bcvRate, 'Importado');
-                    }
-                    ProductManager.renderPriceList();
-                    updateStats();
-                    showToast('Importaci&oacute;n Exitosa', 'Datos importados correctamente', 'success');
-                } catch (err) {
-                    showToast('Error', 'El archivo no es v&aacute;lido', 'error');
-                }
-            };
-            reader.readAsText(file);
-            input.value = '';
-        }
-
-        function confirmReset() {
-            document.getElementById('resetProductCount').textContent = ProductManager.products.length;
-            new bootstrap.Modal(document.getElementById('resetModal')).show();
-        }
-
-        // ===== PDF MODAL =====
-        function openPdfModal() {
-            // Set default dates
-            const today = new Date().toISOString().split('T')[0];
-            const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
-            document.getElementById('pdfDateFrom').value = thirtyDaysAgo;
-            document.getElementById('pdfDateTo').value = today;
-            updatePdfProductCount();
-
-            new bootstrap.Modal(document.getElementById('pdfModal')).show();
-        }
-
-        function updatePdfProductCount() {
-            const from = document.getElementById('pdfDateFrom').value;
-            const to = document.getElementById('pdfDateTo').value;
-
-            if (!from || !to) {
-                document.getElementById('pdfProductCount').textContent = 'Productos en rango: 0';
-                return;
-            }
-
-            const fromDate = new Date(from + 'T00:00:00');
-            const toDate = new Date(to + 'T23:59:59');
-
-            const filtered = ProductManager.products.filter(p => {
-                const pDate = p.created_at ? new Date(p.created_at) : new Date(p.id);
-                return pDate >= fromDate && pDate <= toDate;
-            });
-
-            document.getElementById('pdfProductCount').textContent = `Productos en rango: ${filtered.length}`;
-        }
-
-        document.getElementById('pdfDateFrom')?.addEventListener('change', updatePdfProductCount);
-        document.getElementById('pdfDateTo')?.addEventListener('change', updatePdfProductCount);
-
-        // ===== CHARTS =====
-        let priceChart, profitChart, comparisonChart;
-
-        function initCharts() {
-            const isDark = document.documentElement.getAttribute('data-bs-theme') === 'dark';
-            const textColor = isDark ? '#8e9ba8' : '#6b7280';
-            const gridColor = isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)';
-
-            Chart.defaults.color = textColor;
-            Chart.defaults.borderColor = gridColor;
-
-            const products = ProductManager.products.slice(0, 8);
-            const labels = products.map(p => p.name.substring(0, 15));
-
-            // Price Distribution Chart
-            const priceCtx = document.getElementById('priceDistributionChart');
-            if (priceCtx) {
-                priceChart = new Chart(priceCtx, {
-                    type: 'doughnut',
-                    data: {
-                        labels: labels.length ? labels : ['Sin datos'],
-                        datasets: [{
-                            data: labels.length ? products.map(p => ProductManager.calculatePrices(p).salePrice) : [1],
-                            backgroundColor: [
-                                '#0d6efd', '#0dcaf0', '#198754', '#20c997',
-                                '#6f42c1', '#d63384', '#fd7e14', '#ffc107'
-                            ],
-                            borderWidth: 0
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: { position: 'bottom', labels: { padding: 15, usePointStyle: true } }
-                        },
-                        cutout: '65%'
-                    }
-                });
-            }
-
-            // Profit Chart
-            const profitCtx = document.getElementById('profitChart');
-            if (profitCtx) {
-                profitChart = new Chart(profitCtx, {
-                    type: 'bar',
-                    data: {
-                        labels: labels.length ? labels : ['Sin datos'],
-                        datasets: [{
-                            label: 'Utilidad (USD)',
-                            data: labels.length ? products.map(p => ProductManager.calculatePrices(p).totalUtility) : [0],
-                            backgroundColor: 'rgba(25, 135, 84, 0.7)',
-                            borderColor: '#198754',
-                            borderWidth: 1,
-                            borderRadius: 8
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: { legend: { display: false } },
-                        scales: {
-                            y: { beginAtZero: true, grid: { color: gridColor } },
-                            x: { grid: { display: false } }
-                        }
-                    }
-                });
-            }
-
-            // Comparison Chart
-            const compCtx = document.getElementById('comparisonChart');
-            if (compCtx) {
-                comparisonChart = new Chart(compCtx, {
-                    type: 'line',
-                    data: {
-                        labels: labels.length ? labels : ['Sin datos'],
-                        datasets: [
-                            {
-                                label: 'Costo Unitario',
-                                data: labels.length ? products.map(p => ProductManager.calculatePrices(p).unitCost) : [0],
-                                borderColor: '#dc3545',
-                                backgroundColor: 'rgba(220, 53, 69, 0.1)',
-                                fill: true,
-                                tension: 0.4,
-                                pointRadius: 4
-                            },
-                            {
-                                label: 'Precio Venta',
-                                data: labels.length ? products.map(p => ProductManager.calculatePrices(p).salePrice) : [0],
-                                borderColor: '#198754',
-                                backgroundColor: 'rgba(25, 135, 84, 0.1)',
-                                fill: true,
-                                tension: 0.4,
-                                pointRadius: 4
-                            },
-                            {
-                                label: 'Utilidad',
-                                data: labels.length ? products.map(p => ProductManager.calculatePrices(p).utilityPerUnit) : [0],
-                                borderColor: '#0dcaf0',
-                                backgroundColor: 'rgba(13, 202, 240, 0.1)',
-                                fill: true,
-                                tension: 0.4,
-                                pointRadius: 4
-                            }
-                        ]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: { legend: { position: 'bottom' } },
-                        scales: {
-                            y: { beginAtZero: true, grid: { color: gridColor } },
-                            x: { grid: { display: false } }
-                        },
-                        interaction: { intersect: false, mode: 'index' }
-                    }
-                });
-            }
-        }
-
-        function updateCharts() {
-            if (!priceChart && !profitChart && !comparisonChart) {
-                initCharts();
-                return;
-            }
-
-            const products = ProductManager.products.slice(0, 8);
-            const labels = products.map(p => p.name.substring(0, 15));
-
-            const isDark = document.documentElement.getAttribute('data-bs-theme') === 'dark';
-            const textColor = isDark ? '#8e9ba8' : '#6b7280';
-            const gridColor = isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)';
-
-            [priceChart, profitChart, comparisonChart].forEach(chart => {
-                if (chart) {
-                    chart.options.plugins.legend.labels.color = textColor;
-                    if (chart.options.scales.y) chart.options.scales.y.grid.color = gridColor;
-                    if (chart.options.scales.x) chart.options.scales.x.grid.color = gridColor;
-                }
-            });
-
-            if (labels.length) {
-                if (priceChart) {
-                    priceChart.data.labels = labels;
-                    priceChart.data.datasets[0].data = products.map(p => ProductManager.calculatePrices(p).salePrice);
-                    priceChart.update();
-                }
-                if (profitChart) {
-                    profitChart.data.labels = labels;
-                    profitChart.data.datasets[0].data = products.map(p => ProductManager.calculatePrices(p).totalUtility);
-                    profitChart.update();
-                }
-                if (comparisonChart) {
-                    comparisonChart.data.labels = labels;
-                    comparisonChart.data.datasets[0].data = products.map(p => ProductManager.calculatePrices(p).unitCost);
-                    comparisonChart.data.datasets[1].data = products.map(p => ProductManager.calculatePrices(p).salePrice);
-                    comparisonChart.data.datasets[2].data = products.map(p => ProductManager.calculatePrices(p).utilityPerUnit);
-                    comparisonChart.update();
-                }
-            }
-        }
-
-        // ===== STATISTICS =====
-        function updateStats() {
-            const products = ProductManager.products;
-            const count = products.length;
-
-            document.getElementById('statTotalProducts').textContent = count;
-            document.getElementById('productCount').textContent = count;
-
-            if (count > 0) {
-                const avgProfit = products.reduce((sum, p) => sum + p.profit, 0) / count;
-                document.getElementById('statAvgMargin').textContent = avgProfit.toFixed(1) + '%';
-
-                const totalValue = products.reduce((sum, p) => {
-                    const prices = ProductManager.calculatePrices(p);
-                    return sum + prices.totalSalePrice;
-                }, 0);
-                document.getElementById('statTotalValue').textContent = '$' + totalValue.toFixed(0);
-
-                const topProduct = products.reduce((best, p) => {
-                    const pPrices = ProductManager.calculatePrices(p);
-                    const bPrices = ProductManager.calculatePrices(best);
-                    return pPrices.totalUtility > bPrices.totalUtility ? p : best;
-                }, products[0]);
-                document.getElementById('statTopProduct').textContent = topProduct.name.substring(0, 12);
-            } else {
-                document.getElementById('statAvgMargin').textContent = '0%';
-                document.getElementById('statTotalValue').textContent = '$0';
-                document.getElementById('statTopProduct').textContent = '--';
-            }
-
-            // Recent activity table
-            const tbody = document.getElementById('recentActivityTable');
-            if (tbody) {
-                if (count === 0) {
-                    tbody.innerHTML = `<tr><td colspan="4" class="text-center text-muted py-4">No hay productos registrados</td></tr>`;
-                } else {
-                    tbody.innerHTML = products.slice(-5).reverse().map(p => {
-                        const prices = ProductManager.calculatePrices(p);
-                        return `
-                            <tr>
-                                <td><strong>${p.name}</strong></td>
-                                <td class="price-usd">$${prices.salePrice.toFixed(2)}</td>
-                                <td class="text-success">$${prices.utilityPerUnit.toFixed(2)}</td>
-                                <td><span class="badge bg-success">${p.profit}%</span></td>
-                            </tr>
-                        `;
-                    }).join('');
-                }
-            }
-
-            updateCharts();
-        }
-
-        // ===== PRODUCT MANAGER =====
-        const ProductManager = {
-            currentEditingId: null,
-            products: [],
-
-            init() {
-                this.renderPriceList();
-                updateStats();
-            },
-
-            async saveProduct() {
-                const now = new Date().toISOString();
-                const product = {
-                    id: this.currentEditingId || Date.now(),
-                    name: document.getElementById('productName').value,
-                    totalCost: parseFloat(document.getElementById('totalCost').value),
-                    units: parseInt(document.getElementById('units').value),
-                    empaques: parseInt(document.getElementById('empaques').value),
-                    profit: parseFloat(document.getElementById('profit').value),
-                    created_at: this.currentEditingId ? 
-                        (this.products.find(p => p.id === this.currentEditingId)?.created_at || now) : now
-                };
-
-                const index = this.products.findIndex(p => p.id === product.id);
-                if (index > -1) this.products[index] = product;
-                else this.products.push(product);
-
-                // Save to Supabase (or localStorage as fallback)
-                await saveUserProducts();
-
-                this.clearForm();
-                this.renderPriceList();
-                updateStats();
-
-                const isEdit = this.currentEditingId !== null;
-                showToast(isEdit ? 'Producto Actualizado' : 'Producto Guardado', `${product.name} fue ${isEdit ? 'actualizado' : 'agregado'} correctamente`, 'success');
-            },
-
-            calculatePrices(product) {
-                const unitCost = product.totalCost / product.units;
-                const salePrice = unitCost * (1 + (product.profit / 100));
-                const wholesalePrice = salePrice * product.units;
-                const totalUnits = product.units * product.empaques;
-                const totalSalePrice = salePrice * totalUnits;
-                const utilityPerUnit = salePrice - unitCost;
-                const totalUtility = utilityPerUnit * totalUnits;
-
-                return { unitCost, salePrice, wholesalePrice, totalSalePrice, utilityPerUnit, totalUtility };
-            },
-
-            editProduct(id) {
-                const product = this.products.find(p => p.id === id);
-                this.currentEditingId = id;
-                document.getElementById('productName').value = product.name;
-                document.getElementById('totalCost').value = product.totalCost;
-                document.getElementById('units').value = product.units;
-                document.getElementById('empaques').value = product.empaques;
-                document.getElementById('profit').value = product.profit;
-                document.getElementById('formTitle').textContent = 'Editar Producto';
-                document.getElementById('saveBtnText').textContent = 'Actualizar Producto';
-                showSection('products', document.querySelector('[data-section="products"]'));
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            },
-
-            async deleteProduct(id) {
-                this.products = this.products.filter(p => p.id !== id);
-                await saveUserProducts();
-                this.renderPriceList();
-                updateStats();
-                showToast('Producto Eliminado', 'El producto fue eliminado correctamente', 'warning');
-            },
-
-            renderPriceList() {
-                const container = document.getElementById('priceList');
-                if (this.products.length === 0) {
-                    container.innerHTML = `
-                        <div class="empty-state">
-                            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.3;margin-bottom:16px;"><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg>
-                            <h5>No hay productos</h5>
-                            <p>Agrega tu primer producto usando el formulario</p>
-                        </div>`;
-                    return;
-                }
-
-                container.innerHTML = `
-                    <table class="tg-table">
-                        <thead>
-                            <tr>
-                                <th>Producto</th>
-                                <th>Costo Unit.</th>
-                                <th>Precio Venta</th>
-                                <th>Precio Mayor</th>
-                                <th>Venta Total</th>
-                                <th>Utilidad</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${this.products.map(product => {
-                                const prices = this.calculatePrices(product);
-                                return `
-                                    <tr>
-                                        <td><strong>${product.name}</strong></td>
-                                        <td>
-                                            <div class="price-display">
-                                                <span class="price-usd">$${prices.unitCost.toFixed(2)}</span>
-                                                <span class="price-bs">Bs ${(prices.unitCost * currentBcvRate).toFixed(2)}</span>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="price-display">
-                                                <span class="price-usd">$${prices.salePrice.toFixed(2)}</span>
-                                                <span class="price-bs">Bs ${(prices.salePrice * currentBcvRate).toFixed(2)}</span>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="price-display">
-                                                <span class="price-usd">$${prices.wholesalePrice.toFixed(2)}</span>
-                                                <span class="price-bs">Bs ${(prices.wholesalePrice * currentBcvRate).toFixed(2)}</span>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="price-display">
-                                                <span class="price-usd">$${prices.totalSalePrice.toFixed(2)}</span>
-                                                <span class="price-bs">Bs ${(prices.totalSalePrice * currentBcvRate).toFixed(2)}</span>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="price-display">
-                                                <span class="price-usd">$${prices.utilityPerUnit.toFixed(2)}/u</span>
-                                                <span class="text-success">$${prices.totalUtility.toFixed(2)}</span>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="d-flex gap-1">
-                                                <button class="tg-btn tg-btn-sm tg-btn-warning" onclick="ProductManager.editProduct(${product.id})" title="Editar">
-                                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
-                                                </button>
-                                                <button class="tg-btn tg-btn-sm tg-btn-danger" onclick="ProductManager.deleteProduct(${product.id})" title="Eliminar">
-                                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                `;
-                            }).join('')}
-                        </tbody>
-                    </table>`;
-            },
-
-            generatePDF() {
-                const from = document.getElementById('pdfDateFrom').value;
-                const to = document.getElementById('pdfDateTo').value;
-
-                let filteredProducts = this.products;
-
-                if (from && to) {
-                    const fromDate = new Date(from + 'T00:00:00');
-                    const toDate = new Date(to + 'T23:59:59');
-
-                    filteredProducts = this.products.filter(p => {
-                        const pDate = p.created_at ? new Date(p.created_at) : new Date(p.id);
-                        return pDate >= fromDate && pDate <= toDate;
-                    });
-                }
-
-                if (filteredProducts.length === 0) {
-                    showToast('Error', 'No hay productos en el rango de fechas seleccionado', 'error');
-                    return;
-                }
-
-                const doc = new jspdf.jsPDF();
-                const date = new Date().toLocaleDateString('es-VE');
-                const rangeText = from && to ? ` (${from} al ${to})` : '';
-
-                doc.setFontSize(20);
-                doc.text('Reporte de Productos' + rangeText, 14, 22);
-                doc.setFontSize(11);
-                doc.setTextColor(100);
-                doc.text(`Fecha: ${date} | Tasa BCV: ${currentBcvRate.toFixed(2)} Bs/USD | Usuario: ${currentUser ? currentUser.email : 'Local'}`, 14, 30);
-                doc.setTextColor(0);
-
-                const headers = ['Producto', 'Costo Unit.', 'Precio Venta', 'Precio Mayor', 'Venta Total', 'Utilidad Total'];
-                const data = filteredProducts.map(product => {
-                    const prices = this.calculatePrices(product);
-                    return [
-                        product.name,
-                        `$${prices.unitCost.toFixed(2)}`,
-                        `$${prices.salePrice.toFixed(2)}`,
-                        `$${prices.wholesalePrice.toFixed(2)}`,
-                        `$${prices.totalSalePrice.toFixed(2)}`,
-                        `$${prices.totalUtility.toFixed(2)}`
-                    ];
-                });
-
-                doc.autoTable({
-                    startY: 38,
-                    head: [headers],
-                    body: data,
-                    theme: 'grid',
-                    styles: { fontSize: 8, cellPadding: 3 },
-                    headStyles: { fillColor: [13, 110, 253], textColor: 255, fontStyle: 'bold' },
-                    alternateRowStyles: { fillColor: [245, 247, 250] },
-                    columnStyles: {
-                        0: { cellWidth: 35 },
-                        1: { cellWidth: 25, halign: 'right' },
-                        2: { cellWidth: 25, halign: 'right' },
-                        3: { cellWidth: 28, halign: 'right' },
-                        4: { cellWidth: 28, halign: 'right' },
-                        5: { cellWidth: 28, halign: 'right' }
-                    }
-                });
-
-                const totalUtility = filteredProducts.reduce((sum, p) => sum + this.calculatePrices(p).totalUtility, 0);
-                const finalY = doc.lastAutoTable.finalY + 10;
-                doc.setFontSize(12);
-                doc.setTextColor(13, 110, 253);
-                doc.text(`Utilidad Total Estimada: $${totalUtility.toFixed(2)}`, 14, finalY);
-
-                doc.save(`reporte_costos_${date.replace(/\//g, '-')}${rangeText ? '_rango' : ''}.pdf`);
-
-                // Close modal
-                bootstrap.Modal.getInstance(document.getElementById('pdfModal'))?.hide();
-
-                showToast('PDF Generado', `Reporte con ${filteredProducts.length} productos descargado`, 'success');
-            },
-
-            clearForm() {
-                document.getElementById('productForm').reset();
-                this.currentEditingId = null;
-                document.getElementById('formTitle').textContent = 'Nuevo Producto';
-                document.getElementById('saveBtnText').textContent = 'Guardar Producto';
-            },
-
-            async resetSystem() {
-                this.products = [];
-                this.currentEditingId = null;
-                currentBcvRate = 36;
-
-                // Clear from Supabase
-                if (supabaseClient && currentUser) {
-                    try {
-                        await supabaseClient.from('user_products').delete().eq('user_id', currentUser.id);
-                        await supabaseClient.from('user_settings').delete().eq('user_id', currentUser.id);
-                    } catch (e) {
-                        console.error('Error clearing Supabase data:', e);
-                    }
-                }
-
-                // Clear localStorage fallback
-                localStorage.removeItem('products');
-                localStorage.removeItem('bcvRate');
-
-                this.clearForm();
-                this.renderPriceList();
-                updateBcvDisplay(36, 'Por defecto');
-                updateStats();
-                showToast('Sistema Reiniciado', 'Todos los datos han sido eliminados', 'warning');
-            }
+        // Botón login Google
+        document.getElementById('googleLoginBtn').onclick = async () => {
+            const { error } = await supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: window.location.origin } });
+            if(error) alert('Error: ' + error.message);
         };
-
-        // ===== INITIALIZATION =====
-        document.addEventListener('DOMContentLoaded', async () => {
-            // Initialize Supabase
-            initSupabase();
-
-            // Show splash screen for 2.5 seconds
-            setTimeout(async () => {
-                document.getElementById('splashScreen').classList.add('hidden');
-
-                // Check auth after splash
-                const isAuthenticated = await checkAuth();
-
-                if (isAuthenticated) {
-                    // User is logged in, show app
-                    document.getElementById('loginScreen').classList.remove('active');
-                    document.getElementById('mainContent').style.display = 'block';
-                    document.getElementById('telegramNav').style.display = 'flex';
-
-                    // Load theme
-                    const savedTheme = localStorage.getItem('theme') || 'dark';
-                    document.documentElement.setAttribute('data-bs-theme', savedTheme);
-                    const themeIconEl = document.getElementById('themeIcon');
-                    if (themeIconEl) {
-                        if (savedTheme === 'dark') {
-                            themeIconEl.innerHTML = '<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>';
-                        } else {
-                            themeIconEl.innerHTML = '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>';
-                        }
-                    }
-                    document.getElementById('darkModeToggle').checked = savedTheme === 'dark';
-
-                    // Load settings
-                    particlesEnabled = localStorage.getItem('particlesEnabled') !== 'false';
-                    document.getElementById('particlesToggle').checked = particlesEnabled;
-
-                    animationsEnabled = localStorage.getItem('animationsEnabled') !== 'false';
-                    document.getElementById('animationsToggle').checked = animationsEnabled;
-
-                    // Init Charts
-                    setTimeout(() => initCharts(), 500);
-
-                    // Init Animations
-                    setTimeout(() => initAnimations(), 300);
-
-                    // Welcome toast
-                    setTimeout(() => {
-                        showToast('&iexcl;Bienvenido!', `Hola ${currentUser?.user_metadata?.full_name?.split(' ')[0] || 'Usuario'}`, 'success', 3000);
-                    }, 1000);
-                } else {
-                    // Show login screen
-                    document.getElementById('loginScreen').classList.add('active');
-                }
-            }, 2500);
-
-            // Listen for auth state changes
-            if (supabaseClient) {
-                supabaseClient.auth.onAuthStateChange(async (event, session) => {
-                    if (event === 'SIGNED_IN' && session) {
-                        currentUser = session.user;
-                        document.getElementById('loginScreen').classList.remove('active');
-                        document.getElementById('mainContent').style.display = 'block';
-                        document.getElementById('telegramNav').style.display = 'flex';
-
-                        updateUserUI();
-                        await loadUserData();
-
-                        // Load theme
-                        const savedTheme = localStorage.getItem('theme') || 'dark';
-                        document.documentElement.setAttribute('data-bs-theme', savedTheme);
-                        const themeIconEl2 = document.getElementById('themeIcon');
-                        if (themeIconEl2) {
-                            if (savedTheme === 'dark') {
-                                themeIconEl2.innerHTML = '<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>';
-                            } else {
-                                themeIconEl2.innerHTML = '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>';
-                            }
-                        }
-                        document.getElementById('darkModeToggle').checked = savedTheme === 'dark';
-
-                        particlesEnabled = localStorage.getItem('particlesEnabled') !== 'false';
-                        document.getElementById('particlesToggle').checked = particlesEnabled;
-
-                        animationsEnabled = local
+        // Botón logout
+        document.getElementById('logoutBtn').onclick = async () => {
+            await supabase.auth.signOut();
+        };
+    }
+    
+    function showMainApp() {
+        document.getElementById('loginContainer').style.display = 'none';
+        document.getElementById('mainApp').style.display = 'block';
+        document.getElementById('bottomNav').style.display = 'flex';
+        // mostrar info usuario
+        if(currentUser) {
+            document.getElementById('userAvatar').style.display = 'inline-block';
+            document.getElementById('userAvatar').src = currentUser.user_metadata?.avatar_url || 'https://ui-avatars.com/api/?background=0D8F81&color=fff&name='+encodeURIComponent(currentUser.email);
+            document.getElementById('userEmail').innerText = currentUser.email;
+        } else {
+            document.getElementById('userAvatar').style.display = 'none';
+        }
+        // Inicializar el gestor de productos
+        ProductManager.init();
+        // Navegación entre vistas
+        const btns = document.querySelectorAll('.nav-item');
+        const views = { productos:'viewProductos', estadisticas:'viewEstadisticas', exportar:'viewExportar' };
+        btns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const view = btn.getAttribute('data-view');
+                btns.forEach(b=>b.classList.remove('active'));
+                btn.classList.add('active');
+                Object.values(views).forEach(v=>document.getElementById(v)?.classList.remove('active-view'));
+                document.getElementById(views[view])?.classList.add('active-view');
+                if(view === 'estadisticas') ProductManager.updateStatsAndCharts();
+                if(view === 'exportar') ProductManager.updateDateRangeSummary();
+            });
+        });
+    }
+    
+    function hideMainAppAndShowLogin() {
+        document.getElementById('mainApp').style.display = 'none';
+        document.getElementById('bottomNav').style.display = 'none';
+        document.getElementById('loginContainer').style.display = 'flex';
+    }
+    
+    // Inicializar después del splash
+    window.addEventListener('DOMContentLoaded', () => {
+        setTimeout(() => {
+            const splash = document.getElementById('splash');
+            gsap.to(splash, { opacity: 0, duration: 0.5, onComplete: () => {
+                splash.style.display = 'none';
+                initSupabaseAndAuth();
+            }});
+        }, 1500);
+    });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
