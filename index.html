@@ -293,12 +293,10 @@
 </div>
 
 <script>
-    // ================= CONFIGURACIÓN SUPABASE =================
-    // 🔴 REEMPLAZA ESTOS VALORES CON LOS DE TU PROYECTO SUPABASE 🔴
-    const SUPABASE_URL = 'https://pbkeawvhdfncpuzehsrw.supabase.co';      // Ej: "https://abcdefghijklm.supabase.co"
-    const SUPABASE_ANON_KEY = 'sb_publishable_R2OiRBqSzP8mMVV8sjni7A_-oco6wu1';               // Obténla en Project Settings -> API
+    // ================= CONFIGURACIÓN SUPABASE (CREDENCIALES REALES) =================
+    const SUPABASE_URL = 'https://pbkeawvhdfncpuzehsrw.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_R2OiRBqSzP8mMVV8sjni7A_-oco6wu1';
     
-    // Inicializar cliente Supabase
     let supabase;
     let currentUser = null;
     
@@ -324,7 +322,6 @@
             const stored = localStorage.getItem(`products_${currentUser?.id || 'guest'}`);
             if(stored) this.products = JSON.parse(stored);
             else this.products = [];
-            // asegurar fechas
             this.products = this.products.map(p => ({ ...p, dateCreated: p.dateCreated || new Date().toISOString() }));
             const rate = localStorage.getItem(`bcvRate_${currentUser?.id || 'guest'}`);
             this.bcvRate = rate ? parseFloat(rate) : 36;
@@ -399,27 +396,23 @@
         resetSystem(){ if(confirm('Reiniciar TODOS los datos locales?')){ localStorage.clear(); this.products=[]; this.bcvRate=36; this.persist(); this.init(); this.showAlert('Sistema reiniciado','warning'); } },
         showAlert(msg,type){ const a=document.createElement('div'); a.className=`alert alert-${type} position-fixed top-0 end-0 m-3 shadow animate__animated animate__bounceInRight`; a.style.zIndex=9999; a.innerHTML=`${msg} <button type="button" class="btn-close float-end" data-bs-dismiss="alert"></button>`; document.body.appendChild(a); setTimeout(()=>a.remove(),2800); },
         initDateRangePicker(){ const hoy=new Date().toISOString().split('T')[0]; const ayer=new Date(); ayer.setDate(ayer.getDate()-30); document.getElementById('fechaDesde').value=ayer.toISOString().split('T')[0]; document.getElementById('fechaHasta').value=hoy; this.updateDateRangeSummary(); document.getElementById('fechaDesde').addEventListener('change',()=>this.updateDateRangeSummary()); document.getElementById('fechaHasta').addEventListener('change',()=>this.updateDateRangeSummary()); },
-        generatePDF(){ this.exportPDFbyDateRange(); } // alias
+        generatePDF(){ this.exportPDFbyDateRange(); }
     };
     
-    // ========== FLUJO DE LOGIN ==========
+    // ========== FLUJO DE LOGIN CON SUPABASE (CREDENCIALES REALES) ==========
     async function initSupabaseAndAuth() {
-        // Validar que las credenciales no sean las de ejemplo
-        if(SUPABASE_URL === "https://TU_PROYECTO.supabase.co" || SUPABASE_ANON_KEY === "TU_ANON_KEY_AQUI") {
-            document.getElementById('loginContainer').innerHTML = `<div class="login-card"><h4>⚠️ Configuración requerida</h4><p>Debes reemplazar SUPABASE_URL y SUPABASE_ANON_KEY en el código con los datos de tu proyecto Supabase.</p><button class="btn btn-primary" onclick="location.reload()">Reintentar</button></div>`;
-            return;
-        }
         supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        
         // Verificar sesión actual
         const { data: { session } } = await supabase.auth.getSession();
         if(session) {
             currentUser = session.user;
             showMainApp();
         } else {
-            // Mostrar login
             document.getElementById('loginContainer').style.display = 'flex';
         }
-        // Listener de cambios de sesión
+        
+        // Escuchar cambios de autenticación
         supabase.auth.onAuthStateChange((event, session) => {
             if (event === 'SIGNED_IN' && session) {
                 currentUser = session.user;
@@ -429,11 +422,21 @@
                 hideMainAppAndShowLogin();
             }
         });
-        // Botón login Google
+        
+        // Botón login con Google
         document.getElementById('googleLoginBtn').onclick = async () => {
-            const { error } = await supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: window.location.origin } });
-            if(error) alert('Error: ' + error.message);
+            try {
+                const { error } = await supabase.auth.signInWithOAuth({ 
+                    provider: 'google',
+                    options: { redirectTo: window.location.origin }
+                });
+                if (error) throw error;
+            } catch (err) {
+                console.error(err);
+                alert('Error al iniciar sesión: ' + err.message);
+            }
         };
+        
         // Botón logout
         document.getElementById('logoutBtn').onclick = async () => {
             await supabase.auth.signOut();
@@ -444,7 +447,6 @@
         document.getElementById('loginContainer').style.display = 'none';
         document.getElementById('mainApp').style.display = 'block';
         document.getElementById('bottomNav').style.display = 'flex';
-        // mostrar info usuario
         if(currentUser) {
             document.getElementById('userAvatar').style.display = 'inline-block';
             document.getElementById('userAvatar').src = currentUser.user_metadata?.avatar_url || 'https://ui-avatars.com/api/?background=0D8F81&color=fff&name='+encodeURIComponent(currentUser.email);
@@ -452,8 +454,8 @@
         } else {
             document.getElementById('userAvatar').style.display = 'none';
         }
-        // Inicializar el gestor de productos
         ProductManager.init();
+        
         // Navegación entre vistas
         const btns = document.querySelectorAll('.nav-item');
         const views = { productos:'viewProductos', estadisticas:'viewEstadisticas', exportar:'viewExportar' };
