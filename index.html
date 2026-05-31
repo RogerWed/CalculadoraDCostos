@@ -294,7 +294,8 @@
         
         init() {
             this.loadFromStorage();
-            document.getElementById('tasaBcv').value = this.bcvRate;
+            const tasaInput = document.getElementById('tasaBcv');
+            if (tasaInput) tasaInput.value = this.bcvRate;
             this.updateBcvDisplay();
             this.renderPriceList();
             this.refreshDashboardMetrics();
@@ -325,7 +326,10 @@
             if(!isNaN(newRate) && newRate>0) { this.bcvRate = newRate; this.persist(); this.updateBcvDisplay(); this.renderPriceList(); this.refreshDashboardMetrics(); this.showAlert('✅ Tasa actualizada','success');}
             else this.showAlert('Valor inválido','danger');
         },
-        updateBcvDisplay() { document.getElementById('bcvDisplayHeader').innerText = this.bcvRate.toFixed(2); },
+        updateBcvDisplay() { 
+            const span = document.getElementById('bcvDisplayHeader');
+            if (span) span.innerText = this.bcvRate.toFixed(2);
+        },
         saveProduct() {
             const name = document.getElementById('productName').value.trim();
             if(!name) return this.showAlert('Nombre requerido','warning');
@@ -364,7 +368,7 @@
                 const pr = this.calculatePrices(p);
                 html+=`<tr><td class="fw-semibold">${p.name}</td><td>$${pr.unitCost.toFixed(2)}</td><td>$${pr.salePrice.toFixed(2)}</td><td>$${pr.totalSalePrice.toFixed(2)}</td><td>$${pr.totalUtility.toFixed(2)}</td><td><button class="btn btn-sm btn-outline-warning me-1" onclick="ProductManager.editProduct(${p.id})">✏️</button><button class="btn btn-sm btn-outline-danger" onclick="ProductManager.deleteProduct(${p.id})">🗑️</button></td></tr>`;
             }
-            html+=`</tbody></table>`;
+            html+=`</tbody><table>`;
             container.innerHTML=html;
             document.getElementById('productCountBadge').innerText=`${this.products.length} productos`;
         },
@@ -383,38 +387,52 @@
         generatePDF(){ this.exportPDFbyDateRange(); }
     };
 
-    // ========== AUTENTICACIÓN CON SUPABASE ==========
+    // ========== AUTENTICACIÓN CON SUPABASE (con manejo robusto) ==========
     async function initAuth() {
-        supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        const { data: { session } } = await supabase.auth.getSession();
-        if (session) {
-            currentUser = session.user;
-            showApp();
-        } else {
-            document.getElementById('loginContainer').style.display = 'flex';
-        }
-        supabase.auth.onAuthStateChange((event, session) => {
-            if (event === 'SIGNED_IN' && session) {
+        try {
+            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            const { data: { session }, error } = await supabase.auth.getSession();
+            if (error) throw error;
+            if (session) {
                 currentUser = session.user;
                 showApp();
-            } else if (event === 'SIGNED_OUT') {
-                currentUser = null;
-                document.getElementById('mainApp').style.display = 'none';
-                document.getElementById('bottomNav').style.display = 'none';
+            } else {
                 document.getElementById('loginContainer').style.display = 'flex';
             }
-        });
-        document.getElementById('googleLoginBtn').onclick = async () => {
-            try {
-                const { error } = await supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: window.location.href } });
-                if (error) throw error;
-                console.log('Redirigiendo a Google...');
-            } catch (err) {
-                console.error(err);
-                alert('Error: ' + err.message + '\nVerifica que el proveedor Google esté habilitado en Supabase');
+            supabase.auth.onAuthStateChange((event, session) => {
+                if (event === 'SIGNED_IN' && session) {
+                    currentUser = session.user;
+                    showApp();
+                } else if (event === 'SIGNED_OUT') {
+                    currentUser = null;
+                    document.getElementById('mainApp').style.display = 'none';
+                    document.getElementById('bottomNav').style.display = 'none';
+                    document.getElementById('loginContainer').style.display = 'flex';
+                }
+            });
+            const googleBtn = document.getElementById('googleLoginBtn');
+            if (googleBtn) {
+                googleBtn.onclick = async () => {
+                    try {
+                        const { error } = await supabase.auth.signInWithOAuth({ 
+                            provider: 'google', 
+                            options: { redirectTo: window.location.href }
+                        });
+                        if (error) throw error;
+                    } catch (err) {
+                        console.error(err);
+                        alert('Error al iniciar sesión: ' + err.message + '\nVerifica que el proveedor Google esté habilitado en Supabase.');
+                    }
+                };
             }
-        };
-        document.getElementById('logoutBtn').onclick = () => supabase.auth.signOut();
+            const logoutBtn = document.getElementById('logoutBtn');
+            if (logoutBtn) logoutBtn.onclick = () => supabase.auth.signOut();
+        } catch (err) {
+            console.error('Error en initAuth:', err);
+            // Fallback: mostrar login manualmente
+            document.getElementById('loginContainer').style.display = 'flex';
+            document.getElementById('splash').style.display = 'none';
+        }
     }
 
     function showApp() {
@@ -444,14 +462,19 @@
         });
     }
 
-    // Inicialización con splash visible por 1.5 segundos
+    // Inicialización: ocultar splash después de 1.5s y luego iniciar auth
     window.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => {
             const splash = document.getElementById('splash');
-            gsap.to(splash, { opacity: 0, duration: 0.5, onComplete: () => {
-                splash.style.display = 'none';
+            if (splash) {
+                gsap.to(splash, { opacity: 0, duration: 0.5, onComplete: () => {
+                    splash.style.display = 'none';
+                    initAuth();
+                }});
+            } else {
+                // Si no existe splash, iniciar directamente
                 initAuth();
-            }});
+            }
         }, 1500);
     });
 </script>
