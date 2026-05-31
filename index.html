@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
-    <title>SmartCost · Login con Google</title>
+    <title>SmartCost · Dashboard de costos</title>
     <link href="icon.jpg" rel="icon">
-    <!-- Bootstrap 5.3 + Icons SVG + Fonts -->
+    <!-- Bootstrap 5.3 + Icons + Fonts -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700&display=swap" rel="stylesheet">
@@ -17,18 +17,14 @@
     <!-- Supabase JS -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             background: #f0f2f8;
             font-family: 'Inter', sans-serif;
             padding-bottom: 90px;
             color: #1a2634;
         }
-        /* Splash screen con icon.jpg redondo y holo de carga */
+        /* Splash screen con icon.jpg redondo y holo circular */
         #splash {
             position: fixed;
             top: 0;
@@ -72,7 +68,7 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-        /* Pantalla de login - con ícono de Google (G) */
+        /* Pantalla de login con G de Google */
         #loginContainer {
             position: fixed;
             top: 0;
@@ -90,7 +86,7 @@
         .login-card {
             background: white;
             border-radius: 48px;
-            padding: 2rem 2rem;
+            padding: 2rem;
             box-shadow: 0 25px 45px -12px rgba(0,0,0,0.25);
             text-align: center;
             max-width: 380px;
@@ -101,7 +97,6 @@
             from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        /* Logo de Google grande (la G clásica) */
         .google-logo-big {
             width: 80px;
             height: 80px;
@@ -127,11 +122,7 @@
             transition: all 0.2s;
             color: #3c4043;
         }
-        .google-btn:hover {
-            background: #f8f9fa;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            transform: scale(0.98);
-        }
+        .google-btn:hover { background: #f8f9fa; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transform: scale(0.98); }
         /* Floating Nav */
         .floating-nav {
             position: fixed;
@@ -162,10 +153,7 @@
             border-radius: 40px;
         }
         .nav-item i { font-size: 24px; }
-        .nav-item.active {
-            background: #eff4ff;
-            color: #2563eb;
-        }
+        .nav-item.active { background: #eff4ff; color: #2563eb; }
         .app-view { display: none; animation: fadeSlide 0.35s ease-out; }
         .app-view.active-view { display: block; }
         @keyframes fadeSlide {
@@ -194,23 +182,23 @@
             .nav-item span { font-size: 10px; }
         }
         footer { text-align: center; font-size: 0.7rem; color: #6c7a8a; margin-top: 2rem; }
+        .trend-badge { font-size: 0.7rem; background: #e6f7e6; color: #1f8b4c; border-radius: 20px; padding: 2px 8px; display: inline-block; }
     </style>
 </head>
 <body>
 
-<!-- SPLASH (con icon.jpg redondo y holo circular) -->
+<!-- SPLASH (icon.jpg redondo + holo giratorio) -->
 <div id="splash">
     <div class="ring-loader">
         <div class="ring-progress"></div>
-        <img src="icon.jpg" alt="logo" class="splash-logo">
+        <img src="icon.jpg" alt="SmartCost" class="splash-logo" onerror="this.src='https://via.placeholder.com/120?text=Logo'">
     </div>
-    <p class="mt-4 fw-semibold text-primary">SmartCost <span class="text-secondary">| Secure Access</span></p>
+    <p class="mt-4 fw-semibold text-primary">SmartCost <span class="text-secondary">| Cargando...</span></p>
 </div>
 
-<!-- LOGIN CON GOOGLE (reemplazado logo por la G de Google) -->
-<div id="loginContainer" style="display: flex;">
+<!-- LOGIN CON GOOGLE -->
+<div id="loginContainer" style="display: none;">
     <div class="login-card">
-        <!-- Aquí va el logo de Google (G) en lugar de icon.jpg -->
         <div class="google-logo-big">
             <svg width="48" height="48" viewBox="0 0 24 24">
                 <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -237,7 +225,6 @@
 <!-- MAIN APP (oculto hasta login) -->
 <main id="mainApp" style="display: none;">
     <div class="container px-3 px-md-4 py-3">
-        <!-- header con avatar de usuario y logout -->
         <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
             <div>
                 <h1 class="fw-bold" style="font-size: 1.8rem; background: linear-gradient(135deg, #1E2A3E, #2C3E66); -webkit-background-clip: text; background-clip: text; color: transparent;">✨ SmartCost Dashboard</h1>
@@ -256,9 +243,8 @@
             </div>
         </div>
 
-        <!-- VISTA PRODUCTOS (mismo contenido que antes, adaptado) -->
+        <!-- VISTA PRODUCTOS -->
         <div id="viewProductos" class="app-view active-view">
-            <!-- métricas -->
             <div class="row g-3 mb-4">
                 <div class="col-6 col-md-3"><div class="metric-card"><div class="metric-title">Revenue potencial</div><div class="metric-value" id="dashRevenue">$0</div><span class="trend-badge">+1%</span></div></div>
                 <div class="col-6 col-md-3"><div class="metric-card"><div class="metric-title">Utilidad total</div><div class="metric-value" id="dashUtility">$0</div><span class="trend-badge">+3%</span></div></div>
@@ -269,7 +255,6 @@
                 <div class="col-md-6"><div class="dashboard-card"><h6 class="fw-bold">📊 Monthly data</h6><div class="row mt-2"><div class="col-6"><span class="text-secondary">Nuevos (30d)</span><div class="fw-bold fs-4" id="newProductsCount">0</div></div><div class="col-6"><span class="text-secondary">Unidades totales</span><div class="fw-bold fs-4" id="totalUnitsCount">0</div></div><div class="col-6 mt-2"><span class="text-secondary">Costo promedio</span><div class="fw-bold" id="avgCost">$0</div></div><div class="col-6 mt-2"><span class="text-secondary">Venta promedio</span><div class="fw-bold" id="avgSalePrice">$0</div></div></div></div></div>
                 <div class="col-md-6"><div class="dashboard-card"><h6 class="fw-bold">📄 Recently viewed & reports</h6><div id="recentProductsList" class="mt-2">Cargando...</div><hr><div class="d-flex gap-2"><button class="btn btn-outline-modern btn-sm w-100" onclick="ProductManager.generatePDF()"><i class="bi bi-filetype-pdf"></i> Reporte</button><button class="btn btn-outline-modern btn-sm w-100" onclick="ProductManager.resetSystem()">Reiniciar</button></div></div></div>
             </div>
-            <!-- Tasa BCV + formulario -->
             <div class="dashboard-card"><div class="d-flex justify-content-between align-items-center mb-3"><h5 class="fw-bold">💰 Tasa BCV & Gestión</h5><div><input type="number" id="tasaBcv" class="form-control-sm rounded-pill" step="0.0001" style="width:120px;"><button class="btn btn-primary-modern btn-sm ms-2" onclick="ProductManager.saveBcvRate()">Actualizar</button></div></div>
                 <form id="productForm" onsubmit="event.preventDefault(); ProductManager.saveProduct()"><div class="row g-2"><div class="col-12"><input type="text" class="form-control" id="productName" placeholder="Nombre producto" required></div><div class="col-6"><input type="number" class="form-control" id="totalCost" step="0.01" placeholder="Costo total USD"></div><div class="col-6"><input type="number" class="form-control" id="units" placeholder="Unidades/caja"></div><div class="col-6"><input type="number" class="form-control" id="empaques" placeholder="Empaques"></div><div class="col-6"><input type="number" class="form-control" id="profit" step="0.01" placeholder="% Ganancia"></div></div><div class="d-flex gap-2 mt-3"><button type="submit" class="btn btn-primary-modern w-100">Guardar</button><button type="button" class="btn btn-outline-modern w-100" onclick="ProductManager.clearForm()">Limpiar</button></div></form>
             </div>
@@ -285,7 +270,6 @@
     </div>
 </main>
 
-<!-- BOTTOM NAV -->
 <div class="floating-nav" id="bottomNav" style="display: none;">
     <button class="nav-item active" data-view="productos"><i class="bi bi-grid-3x3-gap-fill"></i><span>Productos</span></button>
     <button class="nav-item" data-view="estadisticas"><i class="bi bi-bar-chart-steps"></i><span>Estadísticas</span></button>
@@ -293,14 +277,14 @@
 </div>
 
 <script>
-    // ================= CONFIGURACIÓN SUPABASE (CREDENCIALES REALES) =================
+    // ========== CONFIGURACIÓN SUPABASE (TUS CREDENCIALES) ==========
     const SUPABASE_URL = 'https://pbkeawvhdfncpuzehsrw.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_R2OiRBqSzP8mMVV8sjni7A_-oco6wu1';
     
     let supabase;
     let currentUser = null;
-    
-    // Manager de productos (mismo núcleo pero con integración de usuario)
+
+    // ========== PRODUCT MANAGER (toda la lógica de costos) ==========
     const ProductManager = {
         products: [],
         bcvRate: 36,
@@ -319,12 +303,12 @@
             this.updateRecentProducts();
         },
         loadFromStorage() {
-            const stored = localStorage.getItem(`products_${currentUser?.id || 'guest'}`);
-            if(stored) this.products = JSON.parse(stored);
-            else this.products = [];
+            const key = `products_${currentUser?.id || 'guest'}`;
+            const stored = localStorage.getItem(key);
+            this.products = stored ? JSON.parse(stored) : [];
             this.products = this.products.map(p => ({ ...p, dateCreated: p.dateCreated || new Date().toISOString() }));
-            const rate = localStorage.getItem(`bcvRate_${currentUser?.id || 'guest'}`);
-            this.bcvRate = rate ? parseFloat(rate) : 36;
+            const rateKey = `bcvRate_${currentUser?.id || 'guest'}`;
+            this.bcvRate = parseFloat(localStorage.getItem(rateKey)) || 36;
         },
         persist() {
             if(currentUser) localStorage.setItem(`products_${currentUser.id}`, JSON.stringify(this.products));
@@ -398,70 +382,58 @@
         initDateRangePicker(){ const hoy=new Date().toISOString().split('T')[0]; const ayer=new Date(); ayer.setDate(ayer.getDate()-30); document.getElementById('fechaDesde').value=ayer.toISOString().split('T')[0]; document.getElementById('fechaHasta').value=hoy; this.updateDateRangeSummary(); document.getElementById('fechaDesde').addEventListener('change',()=>this.updateDateRangeSummary()); document.getElementById('fechaHasta').addEventListener('change',()=>this.updateDateRangeSummary()); },
         generatePDF(){ this.exportPDFbyDateRange(); }
     };
-    
-    // ========== FLUJO DE LOGIN CON SUPABASE (CREDENCIALES REALES) ==========
-    async function initSupabaseAndAuth() {
+
+    // ========== AUTENTICACIÓN CON SUPABASE ==========
+    async function initAuth() {
         supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        
-        // Verificar sesión actual
         const { data: { session } } = await supabase.auth.getSession();
-        if(session) {
+        if (session) {
             currentUser = session.user;
-            showMainApp();
+            showApp();
         } else {
             document.getElementById('loginContainer').style.display = 'flex';
         }
-        
-        // Escuchar cambios de autenticación
         supabase.auth.onAuthStateChange((event, session) => {
             if (event === 'SIGNED_IN' && session) {
                 currentUser = session.user;
-                showMainApp();
+                showApp();
             } else if (event === 'SIGNED_OUT') {
                 currentUser = null;
-                hideMainAppAndShowLogin();
+                document.getElementById('mainApp').style.display = 'none';
+                document.getElementById('bottomNav').style.display = 'none';
+                document.getElementById('loginContainer').style.display = 'flex';
             }
         });
-        
-        // Botón login con Google
         document.getElementById('googleLoginBtn').onclick = async () => {
             try {
-                const { error } = await supabase.auth.signInWithOAuth({ 
-                    provider: 'google',
-                    options: { redirectTo: window.location.origin }
-                });
+                const { error } = await supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: window.location.href } });
                 if (error) throw error;
+                console.log('Redirigiendo a Google...');
             } catch (err) {
                 console.error(err);
-                alert('Error al iniciar sesión: ' + err.message);
+                alert('Error: ' + err.message + '\nVerifica que el proveedor Google esté habilitado en Supabase');
             }
         };
-        
-        // Botón logout
-        document.getElementById('logoutBtn').onclick = async () => {
-            await supabase.auth.signOut();
-        };
+        document.getElementById('logoutBtn').onclick = () => supabase.auth.signOut();
     }
-    
-    function showMainApp() {
+
+    function showApp() {
         document.getElementById('loginContainer').style.display = 'none';
         document.getElementById('mainApp').style.display = 'block';
         document.getElementById('bottomNav').style.display = 'flex';
-        if(currentUser) {
-            document.getElementById('userAvatar').style.display = 'inline-block';
-            document.getElementById('userAvatar').src = currentUser.user_metadata?.avatar_url || 'https://ui-avatars.com/api/?background=0D8F81&color=fff&name='+encodeURIComponent(currentUser.email);
+        if (currentUser) {
+            const avatar = document.getElementById('userAvatar');
+            avatar.style.display = 'inline-block';
+            avatar.src = currentUser.user_metadata?.avatar_url || `https://ui-avatars.com/api/?background=0D8F81&color=fff&name=${encodeURIComponent(currentUser.email)}`;
             document.getElementById('userEmail').innerText = currentUser.email;
-        } else {
-            document.getElementById('userAvatar').style.display = 'none';
         }
         ProductManager.init();
-        
-        // Navegación entre vistas
+        // navegación entre vistas
         const btns = document.querySelectorAll('.nav-item');
         const views = { productos:'viewProductos', estadisticas:'viewEstadisticas', exportar:'viewExportar' };
         btns.forEach(btn => {
             btn.addEventListener('click', () => {
-                const view = btn.getAttribute('data-view');
+                const view = btn.dataset.view;
                 btns.forEach(b=>b.classList.remove('active'));
                 btn.classList.add('active');
                 Object.values(views).forEach(v=>document.getElementById(v)?.classList.remove('active-view'));
@@ -471,20 +443,14 @@
             });
         });
     }
-    
-    function hideMainAppAndShowLogin() {
-        document.getElementById('mainApp').style.display = 'none';
-        document.getElementById('bottomNav').style.display = 'none';
-        document.getElementById('loginContainer').style.display = 'flex';
-    }
-    
-    // Inicializar después del splash
+
+    // Inicialización con splash visible por 1.5 segundos
     window.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => {
             const splash = document.getElementById('splash');
             gsap.to(splash, { opacity: 0, duration: 0.5, onComplete: () => {
                 splash.style.display = 'none';
-                initSupabaseAndAuth();
+                initAuth();
             }});
         }, 1500);
     });
